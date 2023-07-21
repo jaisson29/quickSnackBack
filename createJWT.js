@@ -8,8 +8,8 @@ const alg = 'HS256'
 const jwt = await new jose.SignJWT({ 'urn:example:claim': true, "username": "jay" })
   .setProtectedHeader({ alg })
   .setIssuedAt()
-  .setIssuer('qs')
-  .setAudience('user')
+  // .setIssuer('qs')
+  // .setAudience('user')
   .setExpirationTime('2h')
   .sign(secret)
 

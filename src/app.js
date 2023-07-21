@@ -1,19 +1,20 @@
-
 import express from 'express'
-import http from 'http';
 import cors from 'cors'
+import ProductRoutes from './routes/product.route.js'
 //instancias
 const app = express()
-const server = http.createServer(app)
 
 app.use(cors())
 
+app.use(express.json())
 // app.use('/api/product')
 app.get('/', (req, res) => {
   res.json({
-    value: "Hello",
-    value2 : "World!",
+    value: 'Hello',
+    value2: 'World!',
   })
 })
 
-export { app, server }
+app.use('/api/product/', ProductRoutes)
+
+export default app 
