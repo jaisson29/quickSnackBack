@@ -1,41 +1,40 @@
-import { pool } from '../config/db.js'
+import { db } from '../config/db.js'
 
-export default class ProductModel {
+class ProductModel {
   static getAllProducts() {
     return new Promise((resolve, reject) => {
       const query = 'SELECT * FROM product'
 
-      pool.query(query, (err, results) => {
+      db.query(query, (err, results) => {
         if (err) {
           reject(err)
         } else {
+          console.log(results)
           resolve(results)
         }
       })
     })
   }
 
-  static createProduct(productData) {
+  static createProduct(data) {
     return new Promise((resolve, reject) => {
       try {
-        console.log(productData);
         const query =
           'INSERT INTO product (catId, prodName, prodDescr, prodImg, prodPurchVal, prodSaleVal) VALUES (?, ?, ?, ?, ?, ?)'
 
-        pool.query(
+        db.query(
           query,
           [
-            productData.catId,
-            productData.prodName,
-            productData.prodDescr,
-            productData.prodImg,
-            productData.prodPurchVal,
-            productData.prodSaleVal,
+            data.catId,
+            data.prodName,
+            data.prodDescr,
+            data.prodImg,
+            data.prodPurchVal,
+            data.prodSaleVal,
           ],
           (err, result) => {
-            console.log(result);
             if (result.affectedRows === 1) {
-              resolve(result.insertId)
+              resolve(result)
             } else {
               reject(new Error(err))
             }
@@ -46,33 +45,61 @@ export default class ProductModel {
       }
     })
   }
+
+  static updateProduct(data) {
+    return new Promise((resolve, reject) => {
+      try {
+        const query =
+          'UPDATE product' +
+          ' ' +
+          'SET catId = ?, prodName = ?, prodDescr = ?, prodImg = ?, prodPurchVal = ?, prodSaleVal = ?' +
+          ' ' +
+          'WHERE prodId = ?'
+        db.query(
+          query,
+          [
+            data.catId,
+            data.prodName,
+            data.prodDescr,
+            data.prodImg,
+            data.prodPurchVal,
+            data.prodSaleVal,
+            data.prodId,
+          ],
+          (err, result) => {
+            if (result.affectedRows == 1) {
+              console.log(result)
+              resolve(`Se actualizo ${result.affectedRows} registro`)
+            } else {
+              reject(new Error(err))
+            }
+          }
+        )
+      } catch (error) {
+        reject(error)
+      }
+    })
+  }
+
+  static deleteProduct(data) {
+    return new Promise((resolve, reject) => {
+      try {
+        const query = 'DELETE FROM product WHERE prodId = ?'
+
+        db.query(query, [data.prodId], (err, result) => {
+          console.log(result);
+          if (result.affectedRows == 1) {
+            console.log(result)
+            resolve(`Se elimino ${result.affectedRows} registro`)
+          } else {
+            reject(new Error(err))
+          }
+        })
+      } catch (error) {
+        reject(new Error(error))
+      }
+    })
+  }
 }
 
-// Testeos
-
-// Creando un producto default
-const productData = {
-  catId: 1, // ID de la categoría a la que pertenece el producto
-  prodName: 'Producto de prueba',
-  productDescr: 'Descripción del producto de prueba',
-  productImg: 'imagen-del-producto.jpg',
-  prodPurchVal: 1000, // Valor de compra del producto
-  prodSaleVal: 1500, // Valor de venta del producto
-}
-
-// ProductModel.createProduct(productData)
-//   .then((productId) => {
-//     console.log(`Producto creado con ID: ${productId}`)
-//   })
-//   .catch((err) => {
-//     console.error(err)
-//   })
-
-// // Obteniendo todos los productos
-// ProductModel.getAllProducts()
-//   .then((products) => {
-//     console.log(products)
-//   })
-//   .catch((err) => {
-//     console.error(err)
-//   })
+export default ProductModel

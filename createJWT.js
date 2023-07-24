@@ -1,16 +1,29 @@
-import * as jose from 'jose'
+import 'dotenv/config'
+import jwt from 'jsonwebtoken'
 
-const secret = new TextEncoder().encode(
-  'cc7e0d44fd473002f1c42167459001140ec6389b7353f8088f4d9a95f2f596f2',
-)
 const alg = 'HS256'
 
-const jwt = await new jose.SignJWT({ 'urn:example:claim': true, "username": "jay" })
-  .setProtectedHeader({ alg })
-  .setIssuedAt()
-  // .setIssuer('qs')
-  // .setAudience('user')
-  .setExpirationTime('2h')
-  .sign(secret)
+const generateToken = async (payload) => {
+  return new Promise((resolve, reject) => {
+    jwt.sign(
+      payload,
+      process.env.SECRET_KEY,
+      { expiresIn: '2h', algorithm: alg },
+      (err, token) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(token)
+        }
+      }
+    )
+  })
+}
 
-console.log(jwt)
+console.log(await generateToken({ 
+  id: 1,
+  username: 'jay',
+  email : 'jais@gmail.com',
+  phone: '123456', 
+  lastLogin: '2023-07-23'
+}));

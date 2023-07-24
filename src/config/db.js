@@ -7,6 +7,6 @@ const dbConfig = {
   password: '',
 }
 
-const pool = mysql.createPool(dbConfig)
+const db = mysql.createPool(dbConfig)
 
-export { pool }
+export { db }

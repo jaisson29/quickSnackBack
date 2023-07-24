@@ -17,4 +17,4 @@ app.get('/', (req, res) => {
 
 app.use('/api/product/', ProductRoutes)
 
-export default app 
+export default app
