@@ -1,6 +1,8 @@
 import express from 'express'
 import cors from 'cors'
 import ProductRoutes from './routes/product.route.js'
+import UserRoutes from './routes/user.route.js'
+
 //instancias
 const app = express()
 
@@ -16,5 +18,6 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api/product/', ProductRoutes)
+app.use('/api/user/', UserRoutes)
 
 export default app

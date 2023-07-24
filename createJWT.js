@@ -25,5 +25,6 @@ console.log(await generateToken({
   username: 'jay',
   email : 'jais@gmail.com',
   phone: '123456', 
-  lastLogin: '2023-07-23'
+  lastLogin: '2023-07-23',
+  rol: 'admin'
 }));
