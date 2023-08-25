@@ -3,7 +3,8 @@ import { db } from '../config/db.js'
 class ProductModel {
   static getAllProducts() {
     return new Promise((resolve, reject) => {
-      const query = 'SELECT * FROM product'
+      const query =
+        'SELECT catId, prodNom, prodDescr, prodImg, prodValCom, prodValVen FROM producto'
 
       db.query(query, (err, results) => {
         if (err) {
@@ -20,17 +21,17 @@ class ProductModel {
     return new Promise((resolve, reject) => {
       try {
         const query =
-          'INSERT INTO product (catId, prodName, prodDescr, prodImg, prodPurchVal, prodSaleVal) VALUES (?, ?, ?, ?, ?, ?)'
+          'INSERT INTO producto (catId, prodNom, prodDescr, prodImg, prodValCom, prodValVen) VALUES (?, ?, ?, ?, ?, ?)'
 
         db.query(
           query,
           [
             data.catId,
-            data.prodName,
+            data.prodNom,
             data.prodDescr,
             data.prodImg,
-            data.prodPurchVal,
-            data.prodSaleVal,
+            data.prodValCom,
+            data.prodValVen,
           ],
           (err, result) => {
             if (result.affectedRows === 1) {
@@ -50,20 +51,20 @@ class ProductModel {
     return new Promise((resolve, reject) => {
       try {
         const query =
-          'UPDATE product' +
+          'UPDATE producto' +
           ' ' +
-          'SET catId = ?, prodName = ?, prodDescr = ?, prodImg = ?, prodPurchVal = ?, prodSaleVal = ?' +
+          'SET catId = ?, prodNom = ?, prodDescr = ?, prodImg = ?, prodValCom = ?, prodValVen = ?' +
           ' ' +
           'WHERE prodId = ?'
         db.query(
           query,
           [
             data.catId,
-            data.prodName,
+            data.prodNom,
             data.prodDescr,
             data.prodImg,
-            data.prodPurchVal,
-            data.prodSaleVal,
+            data.prodValCom,
+            data.prodValVen,
             data.prodId,
           ],
           (err, result) => {
@@ -84,10 +85,10 @@ class ProductModel {
   static deleteProduct(data) {
     return new Promise((resolve, reject) => {
       try {
-        const query = 'DELETE FROM product WHERE prodId = ?'
+        const query = 'DELETE FROM producto WHERE prodId = ?'
 
         db.query(query, [data.prodId], (err, result) => {
-          console.log(result);
+          console.log(result)
           if (result.affectedRows == 1) {
             console.log(result)
             resolve(`Se elimino ${result.affectedRows} registro`)

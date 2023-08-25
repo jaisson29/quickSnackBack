@@ -10,12 +10,14 @@ router.get('/getAll', async (req, res) => {
     res.json(products)
   } catch (error) {
     console.log(error)
-    res.json({ error: 'Failed to load the products' })
+    res.json({ code: 500, error: 'Failed to load the products' })
   }
 })
 
-
-router.post('/create', verifyToken(process.env.SECRET_KEY), async (req, res) => {
+router.post(
+  '/create',
+  verifyToken(process.env.SECRET_KEY),
+  async (req, res) => {
     const cont = req.body
     try {
       const create = await ProductModel.createProduct({
@@ -29,7 +31,7 @@ router.post('/create', verifyToken(process.env.SECRET_KEY), async (req, res) => 
 
       res.json(create)
     } catch (error) {
-      res.json({ error: 'Failed to create a new product' })
+      res.json({ code: 500, error: 'Failed to create a new product' })
     }
   }
 )
@@ -39,30 +41,34 @@ router.put('/update', verifyToken(process.env.SECRET_KEY), async (req, res) => {
   try {
     const update = await ProductModel.updateProduct({
       prodId: cont.prodId,
-      catId : cont.catId,
+      catId: cont.catId,
       prodName: cont.prodName,
       prodDescr: cont.prodDescr,
       prodImg: cont.prodImg,
       prodPurchVal: cont.prodPurchVal,
-      prodSaleVal: cont.prodSaleVal
+      prodSaleVal: cont.prodSaleVal,
     })
-    
+
     res.json(update)
   } catch (error) {
     res.json('Failed to update the product')
   }
 })
 
-router.delete('/delete', verifyToken(process.env.SECRET_KEY), async (req, res) => {
-  const cont = req.body
-  try {
-    const del = await ProductModel.deleteProduct({
-      prodId : cont.prodId
-    })
-    res.json(del)
-  } catch (error) {
-    res.json('Failed to delete the product')
+router.delete(
+  '/delete',
+  verifyToken(process.env.SECRET_KEY),
+  async (req, res) => {
+    const cont = req.body
+    try {
+      const del = await ProductModel.deleteProduct({
+        prodId: cont.prodId,
+      })
+      res.json(del)
+    } catch (error) {
+      res.json('Failed to delete the product')
+    }
   }
-})
+)
 
 export default router
