@@ -1,24 +1,23 @@
-import jwt from 'jsonwebtoken'
+import jwt from 'jsonwebtoken';
 function verifyToken(secretKey) {
   return (req, res, next) => {
-    const token = req.headers['authorization'].split(" ")[1]
+    const token = req.headers['authorization'].split(' ')[1];
     console.log(token);
     if (!token) {
       return res
         .status(401)
-        .json({ message: "The authorization token wasn't sended" })
+        .json({ message: "The authorization token wasn't sended" });
     }
 
     jwt.verify(token, secretKey, (err, decoded) => {
       if (err)
         return res
           .status(401)
-          .json({ message: 'Invalid or expired token', error: err })
-      req.user = decoded
-      console.log("paso");
-      next()
-    })
-  }
+          .json({ message: 'Invalid or expired token', error: err });
+      req.user = decoded;
+      next();
+    });
+  };
 }
 
-export default verifyToken
+export default verifyToken;
