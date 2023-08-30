@@ -1,41 +1,45 @@
-import express from 'express';
-import UserModel from '../models/user.model.js';
-import { generateToken } from '../utils/jwt.js';
+import express from 'express'
+import UserModel from '../models/user.model.js'
+import { generateToken, verifyToken } from '../utils/jwt.js'
 
-const router = express.Router();
+const router = express.Router()
 
-router.use('/verify', async (req, res) => {
-  res.json({ dasd: 'dasd' });
-});
+router.get('/verify', async (req, res) => {
+  try {
+    const head = req.headers.authorization
+    const verificado = await verifyToken(head)
+    res.json(verificado)
+  } catch (error) {
+    res.json(error)
+  }
+})
 
 router.post('/loguear', async (req, res) => {
   try {
-    const cont = req.body;
+    const cont = req.body
     const usuario = await UserModel.getOneXEmailXContra({
       usuEmail: cont.usuEmail,
       usuContra: cont.usuContra,
-    });
-
+    })
     const usuarioPlano = {
-      usuTipoDoc: usuario.usuTipoDoc,
-      usuGen: usuario.usuGen,
-      usuNom: usuario.usuNom,
-      usuEmail: usuario.usuEmail,
-      usuContra: usuario.usuContra,
-      usuImg: usuario.usuImg,
-      perfilId: usuario.perfilId,
-      usuFecha: usuario.usuFecha,
-      usuPassCode: usuario.usuPassCode,
-    };
-    const usuToken = await generateToken(usuarioPlano);
-    console.log(usuToken);
-    res.json(usuToken);
+      usuTipoDoc: usuario[0].usuTipoDoc,
+      usuGen: usuario[0].usuGen,
+      usuNom: usuario[0].usuNom,
+      usuEmail: usuario[0].usuEmail,
+      usuContra: usuario[0].usuContra,
+      usuImg: usuario[0].usuImg,
+      perfilId: usuario[0].perfilId,
+      usuFecha: usuario[0].usuFecha,
+      usuPassCode: usuario[0].usuPassCode,
+    }
+    const usuToken = await generateToken(usuarioPlano)
+    res.json(usuToken)
   } catch (error) {
-    res.json({
+    res.status(401).json({
       error: 'Fallo en retornar una respuesta',
       message: error,
-    });
+    })
   }
-});
+})
 
-export default router;
+export default router
