@@ -4,12 +4,11 @@ import verifyToken from '../middlewares/auth.js';
 
 const router = express.Router();
 
-router.get('/getAll', async (req, res) => {
+router.get('/getAll', verifyToken(process.env.SECRET_KEY), async (req, res) => {
   try {
     const products = await ProductModel.getAllProducts();
     res.json(products);
   } catch (error) {
-    console.log(error);
     res.json({ code: 500, error: 'Failed to load the products' });
   }
 });
@@ -20,14 +19,7 @@ router.post(
   async (req, res) => {
     const cont = req.body;
     try {
-      const create = await ProductModel.createProduct({
-        catId: cont.catId,
-        prodNom: cont.prodNom,
-        prodDescr: cont.prodDescr,
-        prodImg: cont.prodImg,
-        prodValCom: cont.prodValCom,
-        prodValVen: cont.prodValVen,
-      });
+      const create = await ProductModel.createProduct(cont);
 
       res.json(create);
     } catch (error) {

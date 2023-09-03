@@ -4,13 +4,12 @@ class ProductModel {
   static getAllProducts() {
     return new Promise((resolve, reject) => {
       const query =
-        'SELECT catId, prodNom, prodDescr, prodImg, prodValCom, prodValVen FROM producto';
+        'SELECT prodId, catId, prodNom, prodDescr, prodImg, prodValCom, prodValVen FROM producto';
 
       db.query(query, (err, results) => {
         if (err) {
           reject(err);
         } else {
-          console.log(results);
           resolve(results);
         }
       });

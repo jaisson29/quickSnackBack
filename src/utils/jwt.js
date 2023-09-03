@@ -7,7 +7,7 @@ export const generateToken = async (payload) => {
   return new Promise((resolve, reject) => {
     try {
       jwt.sign(
-        payload,
+        { payload },
         process.env.SECRET_KEY,
         { expiresIn: '2h', algorithm: alg },
         (err, token) => {
@@ -19,7 +19,7 @@ export const generateToken = async (payload) => {
         }
       );
     } catch (error) {
-      reject({ error: 'Fallo en crear el token', message: error });
+      reject(error);
     }
   });
 };
@@ -28,12 +28,12 @@ export const verifyToken = (token) => {
   token = token.split(' ')[1];
   return new Promise((resolve, reject) => {
     try {
-      jwt.verify(token, process.env.SECRET_KEY, (err, payload) => {
-        if (err) reject({ isAuth: falser });
-        else resolve({ isAuth: true, usuario: payload });
+      jwt.verify(token, process.env.SECRET_KEY, (err, data) => {
+        if (err) reject(new Error({ isAuth: false, error }));
+        else resolve(data);
       });
     } catch (error) {
-      reject({ error: 'Fallo en verificar el token', message: error });
+      reject(error);
     }
   });
 };
