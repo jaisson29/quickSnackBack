@@ -20,9 +20,18 @@ router.post('/getOne', async (req, res) => {
       usuEmail: cont.usuEmail,
       usuContra: cont.usuContra,
     });
-    res.json({ ...user });
+    res.json(user);
   } catch (error) {
     res.json({ error: 'Failed to obtain the user', message: error });
+  }
+});
+
+router.post('/crear', verifyToken(process.env.SECRET_KEY), async (req, res) => {
+  const cont = req.body;
+  try {
+    UserModel.createUser(cont);
+  } catch (error) {
+    res.status().json({ error });
   }
 });
 

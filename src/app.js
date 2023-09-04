@@ -18,8 +18,8 @@ app.get('/', (req, res) => {
   })
 })
 
-app.use('/api/product/', ProductRoutes)
-app.use('/api/user/', UserRoutes)
+app.use('/api/producto/', ProductRoutes)
+app.use('/api/usuario/', UserRoutes)
 app.use('/api/pagina/', PaginaRoutes)
 app.use('/api/login/', LoginRoutes)
 
