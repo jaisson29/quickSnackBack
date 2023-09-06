@@ -16,15 +16,21 @@ router.get('/verify', async (req, res) => {
 
 router.post('/loguear', async (req, res) => {
   const cont = req.body
+  console.log(cont)
   try {
-    const cont = req.body
     const usuario = await UserModel.getOneXEmailXContra({
       usuEmail: cont.usuEmail,
       usuContra: cont.usuContra,
     })
-
-    const usuToken = await generateToken(usuario)
-    res.status(200).json(usuToken)
+    if (usuario.length !== 0) {
+      const usuToken = await generateToken(usuario)
+      res.status(200).json(usuToken)
+    } else {
+      res.status(401).json({
+        error: 'No existe un usuario con las credenciales',
+        message: error,
+      })
+    }
   } catch (error) {
     res.status(401).json({
       error: 'No existe un usuario con las credenciales enviadas',
@@ -34,11 +40,12 @@ router.post('/loguear', async (req, res) => {
 })
 
 router.post('/crearUsu', async (req, res) => {
-  const cont = req.body
   try {
+    const cont = req.body
+    console.log(new Date())
     const usuario = await UserModel.createUser({
       ...cont,
-      usuIngreso: new Date().getDate(),
+      usuIngreso: new Date(),
       perfilId: 2,
     })
     res
