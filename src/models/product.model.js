@@ -4,7 +4,10 @@ class ProductModel {
   static getAllProducts() {
     return new Promise((resolve, reject) => {
       const query =
-        'SELECT prodId, catId, prodNom, prodDescr, prodImg, prodValCom, prodValVen FROM producto';
+        'SELECT p.prodId, c.catNom, p.prodNom, p.prodDescr, p.prodImg, p.prodValCom, p.prodValVen ' +
+        'FROM producto p ' +
+        'INNER JOIN categoria c ' +
+        'ON p.catId = c.catId';
 
       db.query(query, (err, results) => {
         if (err) {
