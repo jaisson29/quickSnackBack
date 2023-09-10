@@ -1,26 +1,20 @@
-import res from 'express/lib/response.js';
 import { db } from '../config/db.js';
 
 class UserModel {
-  static getAllUsers() {
+  static getAll() {
     return new Promise((resolve, reject) => {
       const query =
         'SELECT usu.usuId, usu.usuTipoDoc, usu.usuGen, usu.usuNom, usu.usuEmail, usu.usuContra, usu.usuIngreso, usu.usuImg, per.perfilNom, usu.usuFecha, usu.usuPassCode ' +
         'FROM usuario AS usu ' +
         'INNER JOIN perfil AS per ' +
         'ON usu.perfilId = per.perfilId ';
-      try {
-        db.query(query, (err, result) => {
-          if (err) {
-            console.log(err);
-            reject(new Error(err));
-          } else {
-            resolve(result); // returns an array of all the rows returned by the database from users
-          }
-        });
-      } catch (error) {
-        reject(new Error(`${error}`));
-      }
+      db.query(query, (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      });
     });
   }
 
@@ -32,17 +26,15 @@ class UserModel {
         'INNER JOIN perfil AS per ' +
         'ON usu.perfilId = per.perfilId ' +
         'WHERE usu.usuId = ? ';
-      try {
-        db.query(sql, [data.usuEmail, data.usuContra], (err, result) => {
-          if (err) {
-            reject(new Error(err));
-          } else {
-            resolve(result);
-          }
-        });
-      } catch (error) {
-        reject(new Error(`${error}`));
-      }
+      const { usuId } = data;
+
+      db.query(sql, [usuId], (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      });
     });
   }
 
@@ -54,7 +46,8 @@ class UserModel {
         'INNER JOIN perfil AS per ' +
         'ON usu.perfilId = per.perfilId ' +
         'WHERE usuEmail = ? AND usuContra = ?';
-      db.query(sql, [data.usuEmail, data.usuContra], (err, result) => {
+      const { usuEmail, usuContra } = data;
+      db.query(sql, [usuEmail, usuContra], (err, result) => {
         if (err) {
           reject(err);
         } else {
@@ -64,34 +57,83 @@ class UserModel {
     });
   }
 
-  static createUser(data) {
+  static create(data) {
     return new Promise((resolve, reject) => {
-      try {
-        const query =
-          'INSERT INTO usuario(usuTipoDoc, usuNoDoc, usuGen, usuNom, usuEmail, usuContra, usuIngreso, perfilId) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
-        db.query(
-          query,
-          [
-            data.usuTipoDoc,
-            data.usuNoDoc,
-            data.usuGen,
-            data.usuNom,
-            data.usuEmail,
-            data.usuContra,
-            data.usuIngreso,
-            data.perfilId,
-          ],
-          (err, result) => {
-            if (result && result.affectedRows === 1) {
-              resolve(result);
-            } else {
-              reject(err);
-            }
+      const query =
+        'INSERT INTO usuario(usuTipoDoc, usuNoDoc, usuGen, usuNom, usuEmail, usuContra, usuIngreso, perfilId) ' +
+        'VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+      const {
+        usuTipoDoc,
+        usuNoDoc,
+        usuGen,
+        usuNom,
+        usuEmail,
+        usuContra,
+        usuIngreso,
+        perfilId,
+      } = data;
+      db.query(
+        query,
+        [
+          usuTipoDoc,
+          usuNoDoc,
+          usuGen,
+          usuNom,
+          usuEmail,
+          usuContra,
+          usuIngreso,
+          perfilId,
+        ],
+        (err, result) => {
+          if (result && result.affectedRows === 1) {
+            resolve(result);
+          } else {
+            reject(err);
           }
-        );
-      } catch (error) {
-        throw new Error(error);
-      }
+        }
+      );
+    });
+  }
+
+  static update(data) {
+    return new Promise((resolve, reject) => {
+      const query =
+        'UPDATE usuario ' +
+        'SET usuTipoDoc = ?, usuNoDoc = ?, usuGen = ?, usuNom = ?, usuEmail = ?, usuContra = ?, usuIngreso = ?, perfilId = ? ' +
+        'WHERE usuId = ?';
+      const {
+        usuTipoDoc,
+        usuNoDoc,
+        usuGen,
+        usuNom,
+        usuEmail,
+        usuContra,
+        usuIngreso,
+
+        perfilId,
+        usuId,
+      } = data;
+      db.query(
+        query,
+        [
+          usuTipoDoc,
+          usuNoDoc,
+          usuGen,
+          usuNom,
+          usuEmail,
+          usuContra,
+          usuIngreso,
+          perfilId,
+          usuId,
+        ],
+        (err, result) => {
+          if (result && result.affectedRows === 1) {
+            resolve(result);
+          } else {
+            reject(err);
+          }
+        }
+      );
     });
   }
 }

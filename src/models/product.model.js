@@ -25,16 +25,11 @@ class ProductModel {
         const query =
           'INSERT INTO producto (catId, prodNom, prodDescr, prodImg, prodValCom, prodValVen) VALUES (?, ?, ?, ?, ?, ?)';
 
+        const { catId, prodNom, prodDescr, prodImg, prodValCom, prodValVen } =
+          data;
         db.query(
           query,
-          [
-            data.catId,
-            data.prodNom,
-            data.prodDescr,
-            data.prodImg,
-            data.prodValCom,
-            data.prodValVen,
-          ],
+          [catId, prodNom, prodDescr, prodImg, prodValCom, prodValVen],
           (err, result) => {
             if (result && result.affectedRows === 1) {
               resolve(result);
@@ -58,17 +53,18 @@ class ProductModel {
           'SET catId = ?, prodNom = ?, prodDescr = ?, prodImg = ?, prodValCom = ?, prodValVen = ?' +
           ' ' +
           'WHERE prodId = ?';
+        const {
+          catId,
+          prodNom,
+          prodDescr,
+          prodImg,
+          prodValCom,
+          prodValVen,
+          prodId,
+        } = data;
         db.query(
           query,
-          [
-            data.catId,
-            data.prodNom,
-            data.prodDescr,
-            data.prodImg,
-            data.prodValCom,
-            data.prodValVen,
-            data.prodId,
-          ],
+          [catId, prodNom, prodDescr, prodImg, prodValCom, prodValVen, prodId],
           (err, result) => {
             if (result.affectedRows == 1) {
               console.log(result);
@@ -88,8 +84,9 @@ class ProductModel {
     return new Promise((resolve, reject) => {
       try {
         const query = 'DELETE FROM producto WHERE prodId = ?';
+        const { prodId } = data;
 
-        db.query(query, [data.prodId], (err, result) => {
+        db.query(query, [prodId], (err, result) => {
           console.log(result);
           if (result.affectedRows == 1) {
             console.log(result);

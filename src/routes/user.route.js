@@ -1,38 +1,77 @@
-import express from 'express';
+import express, { response } from 'express';
 import UserModel from '../models/user.model.js';
 import verifyToken from '../middlewares/auth.js';
 
 const router = express.Router();
 
 router.get('/getAll', async (req, res) => {
-  try {
-    const users = await UserModel.getAllUsers();
-    res.json(users);
-  } catch (error) {
-    res.json({ error: 'Failed to obtain the users', mmesage: error });
-  }
+  UserModel.getAllUsers()
+    .then((users) => {
+      res.status(200).json(users);
+    })
+    .catch((error) => {
+      res.status(400).json({
+        error: 'Fallo en intentar obtener los usuarios',
+        mesage: error,
+      });
+    });
 });
 
 router.post('/getOne', async (req, res) => {
   const cont = req.body;
-  try {
-    const user = await UserModel.getOneXEmailXContra({
-      usuEmail: cont.usuEmail,
-      usuContra: cont.usuContra,
+  UserModel.getOneXEmailXContra({
+    usuEmail: cont.usuEmail,
+    usuContra: cont.usuContra,
+  })
+    .then((user) => {
+      user.length > 0
+        ? res.status(200).json(user)
+        : res.status(400).json({
+            error: 'No existe un usuario con las credenciales enviadas',
+          });
+    })
+    .catch((err) => {
+      res
+        .status(500)
+        .json({ error: 'Fallo en intentar buscar al usuario', message: err });
     });
-    res.json(user);
-  } catch (error) {
-    res.json({ error: 'Failed to obtain the user', message: error });
-  }
 });
 
 router.post('/crear', verifyToken(process.env.SECRET_KEY), async (req, res) => {
   const cont = req.body;
-  try {
-    UserModel.createUser(cont);
-  } catch (error) {
-    res.status().json({ error });
-  }
+  UserModel.create(cont)
+    .then((respuesta) => {
+      res.status(200).json({ message: respuesta });
+    })
+    .catch((err) => {
+      res
+        .status(400)
+        .json({ error: 'No se pudo crear al usuario', message: err });
+    });
 });
+
+router.put('/actualizar', async (req, res) => {
+  const cont = req.body;
+  UserModel.update(cont)
+    .then((respuesta) => {
+      res.status(200).json({
+        message: 'Usuario actualizado correctamente',
+        content: respuesta,
+      });
+    })
+    .catch((err) => {
+      res
+        .status(500)
+        .json({ error: 'No se pudo actualizar a el usuario', message: err });
+    });
+});
+
+router.delete(
+  '/borrar',
+  verifyToken(process.env.SECRET_KEY),
+  async (req, res) => {
+    const cont = req.body;
+  }
+);
 
 export default router;
