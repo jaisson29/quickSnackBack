@@ -39,7 +39,7 @@ class ProductModel {
           }
         );
       } catch (err) {
-        reject({ error: 'fallo en crear el producto', message: err });
+        reject(err);
       }
     });
   }

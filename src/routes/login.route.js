@@ -36,6 +36,7 @@ router.post('/loguear', async (req, res) => {
       } else {
         res.status(400).json({
           error: 'No existe un usuario con las credenciales enviadas',
+          message: usuario,
         });
       }
     })
@@ -46,7 +47,7 @@ router.post('/loguear', async (req, res) => {
 
 router.post('/crearUsu', async (req, res) => {
   const cont = req.body;
-  UserModel.createUser({
+  UserModel.create({
     ...cont,
     usuIngreso: new Date(),
     perfilId: 2,

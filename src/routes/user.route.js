@@ -5,7 +5,7 @@ import verifyToken from '../middlewares/auth.js';
 const router = express.Router();
 
 router.get('/getAll', async (req, res) => {
-  UserModel.getAllUsers()
+  UserModel.getAll()
     .then((users) => {
       res.status(200).json(users);
     })
@@ -50,27 +50,59 @@ router.post('/crear', verifyToken(process.env.SECRET_KEY), async (req, res) => {
     });
 });
 
-router.put('/actualizar', async (req, res) => {
-  const cont = req.body;
-  UserModel.update(cont)
-    .then((respuesta) => {
-      res.status(200).json({
-        message: 'Usuario actualizado correctamente',
-        content: respuesta,
-      });
-    })
-    .catch((err) => {
-      res
-        .status(500)
-        .json({ error: 'No se pudo actualizar a el usuario', message: err });
-    });
-});
+// http://localhost:5000/api/usuario/actualizar
 
-router.delete(
-  '/borrar',
+// {
+// 	"usuTipoDoc": #,
+//   "usuNoDoc":"...",
+// 	"usuGen": #,
+// 	"usuNom": "...",
+// 	"usuEmail": "...",
+// 	"usuContra": "...",
+// 	"usuIngreso": "...",
+// 	"perfilId" : #,
+// 	"usuId": #
+// }
+
+router.put(
+  '/actualizar',
   verifyToken(process.env.SECRET_KEY),
   async (req, res) => {
     const cont = req.body;
+    UserModel.update(cont)
+      .then((respuesta) => {
+        res.status(200).json({
+          message: 'Usuario actualizado correctamente',
+          content: respuesta,
+        });
+      })
+      .catch((err) => {
+        res
+          .status(500)
+          .json({ error: 'No se pudo actualizar a el usuario', message: err });
+      });
+  }
+);
+
+// http://localhost:5000/api/usuario/borrar/#
+router.delete(
+  '/borrar/:usuId',
+  verifyToken(process.env.SECRET_KEY),
+  async (req, res) => {
+    const cont = req.params;
+    UserModel.delete(cont)
+      .then((respuesta) => {
+        res.status(200).json({
+          message: 'Usuario eliminado',
+          content: respuesta,
+        });
+      })
+      .catch((err) => {
+        res.status(400).json({
+          error: 'Error al eliminar al usuario',
+          message: err,
+        });
+      });
   }
 );
 
