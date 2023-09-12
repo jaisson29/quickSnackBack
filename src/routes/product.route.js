@@ -48,10 +48,11 @@ router.put('/update', verifyToken(process.env.SECRET_KEY), async (req, res) => {
 });
 
 router.delete(
-  '/delete',
+  '/delete/:prodId',
   verifyToken(process.env.SECRET_KEY),
   async (req, res) => {
-    const cont = req.body;
+    const cont = req.params;
+    console.log(cont);
     try {
       const del = await ProductModel.deleteProduct({
         prodId: cont.prodId,
