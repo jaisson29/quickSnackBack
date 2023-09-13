@@ -8,6 +8,8 @@ import LoginRoutes from './routes/login.route.js';
 //instancias
 const app = express();
 
+app.use('/uploads', express.static('uploads'));
+
 app.use(cors('*'));
 app.use(express.json());
 

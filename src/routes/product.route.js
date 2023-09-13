@@ -1,8 +1,21 @@
 import express from 'express';
 import ProductModel from '../models/product.model.js';
 import verifyToken from '../middlewares/auth.js';
+import multer from 'multer';
 
 const router = express.Router();
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads');
+  },
+  filename: function (req, file, cb) {
+    const ext = file.originalname.split('.').pop();
+    cb(null, file.originalname);
+  },
+});
+
+const upload = multer({ storage: storage });
 
 router.get('/getAll', verifyToken(process.env.SECRET_KEY), async (req, res) => {
   try {
@@ -16,10 +29,16 @@ router.get('/getAll', verifyToken(process.env.SECRET_KEY), async (req, res) => {
 router.post(
   '/create',
   verifyToken(process.env.SECRET_KEY),
+  upload.single('prodImg'),
   async (req, res) => {
     const cont = req.body;
+    const imgPath = req.file.originalname;
+    const prodData = {
+      ...cont,
+      prodImg: imgPath,
+    };
     try {
-      const create = await ProductModel.createProduct(cont);
+      const create = await ProductModel.createProduct(prodData);
 
       res.json(create);
     } catch (error) {
