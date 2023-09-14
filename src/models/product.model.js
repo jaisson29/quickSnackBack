@@ -1,48 +1,48 @@
-import { db } from '../config/db.js'
+import { db } from '../config/db.js';
 
 class ProductModel {
   static getAllProducts() {
     return new Promise((resolve, reject) => {
       const query =
-        'SELECT p.prodId, c.catNom, p.prodNom, p.prodDescr, p.prodImg, p.prodValCom, p.prodValVen ' +
+        'SELECT p.prodId, c.catNom, c.catId, p.prodNom, p.prodDescr, p.prodImg, p.prodValCom, p.prodValVen ' +
         'FROM producto p ' +
         'INNER JOIN categoria c ' +
-        'ON p.catId = c.catId'
+        'ON p.catId = c.catId';
 
       db.query(query, (err, results) => {
         if (err) {
-          console.log(err)
-          reject(err)
+          console.log(err);
+          reject(err);
         } else {
-          resolve(results)
+          resolve(results);
         }
-      })
-    })
+      });
+    });
   }
 
   static createProduct(data) {
     return new Promise((resolve, reject) => {
       try {
         const query =
-          'INSERT INTO producto (catId, prodNom, prodDescr, prodImg, prodValCom, prodValVen) VALUES (?, ?, ?, ?, ?, ?)'
+          'INSERT INTO producto (catId, prodNom, prodDescr, prodImg, prodValCom, prodValVen) VALUES (?, ?, ?, ?, ?, ?)';
 
         const { catId, prodNom, prodDescr, prodImg, prodValCom, prodValVen } =
-          data
+          data;
         db.query(
           query,
           [catId, prodNom, prodDescr, prodImg, prodValCom, prodValVen],
           (err, result) => {
             if (result && result.affectedRows === 1) {
-              resolve(result)
+              resolve(result);
             } else {
-              reject(new Error(err))
+              reject(new Error(err));
             }
           }
-        )
+        );
       } catch (err) {
-        reject(err)
+        reject(err);
       }
-    })
+    });
   }
 
   static updateProduct(data) {
@@ -53,7 +53,7 @@ class ProductModel {
           ' ' +
           'SET catId = ?, prodNom = ?, prodDescr = ?, prodImg = ?, prodValCom = ?, prodValVen = ?' +
           ' ' +
-          'WHERE prodId = ?'
+          'WHERE prodId = ?';
         const {
           catId,
           prodNom,
@@ -62,45 +62,44 @@ class ProductModel {
           prodValCom,
           prodValVen,
           prodId,
-        } = data
+        } = data;
         db.query(
           query,
           [catId, prodNom, prodDescr, prodImg, prodValCom, prodValVen, prodId],
           (err, result) => {
             if (result.affectedRows == 1) {
-              console.log(result)
-              resolve(`Se actualizo ${result.affectedRows} registro`)
+              console.log(result);
+              resolve(`Se actualizo ${result.affectedRows} registro`);
             } else {
-              reject(new Error(err))
+              reject(new Error(err));
             }
           }
-        )
+        );
       } catch (error) {
-        reject(error)
+        reject(error);
       }
-    })
+    });
   }
 
   static deleteProduct(data) {
     return new Promise((resolve, reject) => {
       try {
-        const query = 'DELETE FROM producto WHERE prodId = ?'
-        const { prodId } = data
+        const query = 'DELETE FROM producto WHERE prodId = ?';
+        const { prodId } = data;
 
         db.query(query, [prodId], (err, result) => {
-          console.log(result)
           if (result.affectedRows == 1) {
-            console.log(result)
-            resolve(`Se elimino ${result.affectedRows} registro`)
+            console.log(result);
+            resolve(`Se elimino ${result.affectedRows} registro`);
           } else {
-            reject(new Error(err))
+            reject(new Error(err));
           }
-        })
+        });
       } catch (error) {
-        reject(new Error(error))
+        reject(new Error(error));
       }
-    })
+    });
   }
 }
 
-export default ProductModel
+export default ProductModel;
