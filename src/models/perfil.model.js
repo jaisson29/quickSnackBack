@@ -1,9 +1,9 @@
 import { db } from '../config/db.js'
 
-class Mcat {
-  static getAllcategoria() {
+class Mpef {
+  static getAllperfil() {
     return new Promise((resolve, reject) => {
-      const query = 'SELECT * FROM categoria'
+      const query = 'SELECT * FROM perfil'
 
       db.query(query, (err, results) => {
         if (err) {
@@ -16,16 +16,16 @@ class Mcat {
     })
   }
 
-  static createCategoria(data) {
+  static createperfil(data) {
     return new Promise((resolve, reject) => {
       try {
         const query =
-          'INSERT INTO categoria ( catNom) VALUES (?)'
+          'INSERT INTO perfil ( perfilNom ) VALUES (?)'
 
         db.query(
           query,
           [
-            data.catNom,
+            data.perfilNom,
           ],
           (err, result) => {
             if (result.affectedRows === 1) {
@@ -41,20 +41,20 @@ class Mcat {
     })
   }
 
-  static updateCategoria(data) {
+  static updatePerfil(data) {
     return new Promise((resolve, reject) => {
       try {
         const query =
-          'UPDATE Categoria' +
+          'UPDATE perfil' +
           ' ' +
-          'SET catNom = ?' +
+          'SET perfilNom = ?' +
           ' ' +
-          'WHERE catId = ?'
+          'WHERE perfilId = ?'
         db.query(
           query,
           [
-            data.catId,
-            data.prodNom
+            data.perfilId,
+            data.perfilNom
           ],
           (err, result) => {
             if (result.affectedRows == 1) {
@@ -74,9 +74,9 @@ class Mcat {
   static deleteCategoria(data) {
     return new Promise((resolve, reject) => {
       try {
-        const query = 'DELETE FROM categoria WHERE catId = ?'
+        const query = 'DELETE FROM perfil WHERE perfilId = ?'
 
-        db.query(query, [data.prodId], (err, result) => {
+        db.query(query, [data.perfilId], (err, result) => {
           console.log(result);
           if (result.affectedRows == 1) {
             console.log(result)
@@ -92,4 +92,4 @@ class Mcat {
   }
 }
 
-export default Mcat
+export default Mpef
