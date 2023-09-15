@@ -1,16 +1,132 @@
-import express from 'express'
-import UserModel from "../models/user.model.js";
-import verifyToken from '../middlewares/auth.js'
+import express, { response } from 'express';
+import UserModel from '../models/user.model.js';
+import verifyToken from '../middlewares/auth.js';
+import multer from 'multer';
 
-const router = express.Router()
+const router = express.Router();
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads');
+  },
+  filename: function (req, file, cb) {
+    const ext = file.originalname.split('.').pop();
+    cb(null, `prod_${req.body.prodId}.${ext}`);
+  },
+});
+
+const upload = multer({ storage: storage });
 
 router.get('/getAll', async (req, res) => {
-  try {
-    const users = await UserModel.getAllUsers()
-    res.json(users)
-  } catch (error) {
-    res.json({error: 'Failed to obtain the users', mmesage: error})
-  }
-})
+  UserModel.getAll()
+    .then((users) => {
+      res.status(200).json(users);
+    })
+    .catch((error) => {
+      res.status(400).json({
+        error: 'Fallo en intentar obtener los usuarios',
+        mesage: error,
+      });
+    });
+});
 
-export default router
+router.post('/getOne', async (req, res) => {
+  const cont = req.body;
+  UserModel.getOneXEmailXContra({
+    usuEmail: cont.usuEmail,
+    usuContra: cont.usuContra,
+  })
+    .then((user) => {
+      user.length > 0
+        ? res.status(200).json(user)
+        : res.status(400).json({
+            error: 'No existe un usuario con las credenciales enviadas',
+          });
+    })
+    .catch((err) => {
+      res
+        .status(500)
+        .json({ error: 'Fallo en intentar buscar al usuario', message: err });
+    });
+});
+
+router.post(
+  '/crear',
+  verifyToken(process.env.SECRET_KEY),
+  upload.single('prodImg'),
+  async (req, res) => {
+    const cont = req.body;
+    const imgPath = req.file.originalname;
+    const usuData = {
+      ...cont,
+      prodImg: imgPath,
+    };
+    UserModel.create(usuData)
+      .then((respuesta) => {
+        res.status(200).json({ message: respuesta });
+      })
+      .catch((err) => {
+        res
+          .status(400)
+          .json({ error: 'No se pudo crear al usuario', message: err });
+      });
+  }
+);
+
+// http://localhost:5000/api/usuario/actualizar
+
+// {
+// 	"usuTipoDoc": #,
+//   "usuNoDoc":"...",
+// 	"usuGen": #,
+// 	"usuNom": "...",
+// 	"usuEmail": "...",
+// 	"usuContra": "...",
+// 	"usuIngreso": "...",
+// 	"perfilId" : #,
+// 	"usuId": #
+// }
+
+router.put(
+  '/actualizar',
+  verifyToken(process.env.SECRET_KEY),
+  async (req, res) => {
+    const cont = req.body;
+    UserModel.update(cont)
+      .then((respuesta) => {
+        res.status(200).json({
+          message: 'Usuario actualizado correctamente',
+          content: respuesta,
+        });
+      })
+      .catch((err) => {
+        res
+          .status(500)
+          .json({ error: 'No se pudo actualizar a el usuario', message: err });
+      });
+  }
+);
+
+// http://localhost:5000/api/usuario/borrar/#
+router.delete(
+  '/borrar/:usuId',
+  verifyToken(process.env.SECRET_KEY),
+  async (req, res) => {
+    const cont = req.params;
+    UserModel.delete(cont)
+      .then((respuesta) => {
+        res.status(200).json({
+          message: 'Usuario eliminado',
+          content: respuesta,
+        });
+      })
+      .catch((err) => {
+        res.status(400).json({
+          error: 'Error al eliminar al usuario',
+          message: err,
+        });
+      });
+  }
+);
+
+export default router;

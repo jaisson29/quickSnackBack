@@ -2,7 +2,7 @@ import mysql from 'mysql'
 
 const dbConfig = {
   host: 'localhost',
-  database: 'quickSnack',
+  database: 'quicksnack',
   user: 'root',
   password: '',
 }
