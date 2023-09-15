@@ -4,6 +4,7 @@ import ProductRoutes from './routes/product.route.js';
 import UserRoutes from './routes/user.route.js';
 import PaginaRoutes from './routes/pagina.route.js';
 import LoginRoutes from './routes/login.route.js';
+import CompraRoutes from './routes/compra.route.js';
 
 //instancias
 const app = express();
@@ -20,6 +21,7 @@ app.get('/', (req, res) => {
   });
 });
 
+app.use('/api/compra/', CompraRoutes);
 app.use('/api/producto/', ProductRoutes);
 app.use('/api/usuario/', UserRoutes);
 app.use('/api/pagina/', PaginaRoutes);
