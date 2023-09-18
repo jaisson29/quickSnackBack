@@ -24,7 +24,9 @@ CREATE TABLE `categoria` (
 
 INSERT INTO `categoria` (`catId`, `catNom`) VALUES
 (0, 'OPERACIONES'),
-(2, 'Bebidas');
+(1, 'Bebidas Calientes'),
+(2, 'Bebidas Frias'),
+(3, 'Organico');
 
 -- --------------------------------------------------------
 
@@ -57,7 +59,7 @@ CREATE TABLE `detcompra` (
 --
 
 CREATE TABLE `detventa` (
-  `detVentalId` int(11) NOT NULL,
+  `transacId` int(11) NOT NULL,
   `prodId` int(11) NOT NULL,
   `venCantidad` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
@@ -101,7 +103,10 @@ CREATE TABLE `pagina` (
 INSERT INTO `pagina` (`paginaId`, `paginaNom`, `paginaIcon`, `paginaRuta`) VALUES
 (1, 'Inicio', 'fa-house', '/home'),
 (2, 'Menu', 'fa-check', '/menu'),
-(3, 'Productos', 'fa-solid fa-boxes-stacked', '/productos');
+(3, 'Productos', 'fa-boxes-stacked', '/productos'),
+(4, 'Historial', 'fa-list', '/historial'),
+(5, 'Paginas', 'fa-piggy-bank', '/paginas'),
+(6, 'Categorias', 'fa-filter', '/categorias');
 
 -- --------------------------------------------------------
 
@@ -211,9 +216,8 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`usuId`, `usuTipoDoc`, `usuNoDoc`, `usuGen`, `usuNom`, `usuEmail`, `usuContra`, `usuIngreso`, `usuImg`, `perfilId`, `usuFecha`, `usuPassCode`) VALUES
-(1, 4, '10700', 1, 'jaisss', 'jaissonvalbuena22222@out.com', '12349', '2023-07-23 12:29:34', 'imgPath', 1, NULL, NULL),
-(9, 3, '107000454', 1, 'Jaisson', 'jaiss@outllok.com', '12349', '2023-09-08 15:39:24', NULL, 2, NULL, NULL),
-(16, 4, '107', 1, 'jaisss', 'jais@outllok.com', '12349', '2023-07-23 12:29:34', NULL, 2, NULL, NULL);
+(1, 4, '10700', 1, 'jais', 'jais@outllok.com', '12349', '2023-07-23 12:29:34', 'imgPath', 1, NULL, NULL),
+(2, 3, '107000454', 1, 'Jaisson', 'jaiss@outllok.com', '12349', '2023-09-08 15:39:24', NULL, 2, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -267,7 +271,7 @@ ALTER TABLE `detcompra`
 -- Indices de la tabla `detventa`
 --
 ALTER TABLE `detventa`
-  ADD PRIMARY KEY (`detVentalId`,`prodId`),
+  ADD PRIMARY KEY (`transacId`,`prodId`),
   ADD KEY `saleDetXProduct_idx` (`prodId`);
 
 --
@@ -341,7 +345,7 @@ ALTER TABLE `valor`
 -- AUTO_INCREMENT de la tabla `categoria`
 --
 ALTER TABLE `categoria`
-  MODIFY `catId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `catId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `detcompra`
@@ -359,7 +363,7 @@ ALTER TABLE `dominio`
 -- AUTO_INCREMENT de la tabla `pagina`
 --
 ALTER TABLE `pagina`
-  MODIFY `paginaId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `paginaId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `perfil`
@@ -389,7 +393,7 @@ ALTER TABLE `transaccion`
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `usuId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `usuId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `valor`
@@ -419,7 +423,7 @@ ALTER TABLE `detcompra`
 --
 ALTER TABLE `detventa`
   ADD CONSTRAINT `saleDetXProduct` FOREIGN KEY (`prodId`) REFERENCES `producto` (`prodId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `saleDetXSaleBill` FOREIGN KEY (`detVentalId`) REFERENCES `transaccion` (`transacId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `saleDetXSaleBill` FOREIGN KEY (`transacId`) REFERENCES `transaccion` (`transacId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Filtros para la tabla `perfilxpagina`
@@ -455,6 +459,3 @@ ALTER TABLE `valor`
   ADD CONSTRAINT `valueXDomain` FOREIGN KEY (`domId`) REFERENCES `dominio` (`domId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 COMMIT;
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

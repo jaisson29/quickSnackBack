@@ -61,6 +61,7 @@ router.put(
     const imgPath = req.file ? req.file.originalname : cont.prodImg;
     const newProdData = {
       ...cont,
+
       prodImg: imgPath,
     };
     try {
