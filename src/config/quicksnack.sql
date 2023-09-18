@@ -106,7 +106,14 @@ INSERT INTO `pagina` (`paginaId`, `paginaNom`, `paginaIcon`, `paginaRuta`) VALUE
 (3, 'Productos', 'fa-boxes-stacked', '/productos'),
 (4, 'Historial', 'fa-list', '/historial'),
 (5, 'Paginas', 'fa-piggy-bank', '/paginas'),
-(6, 'Categorias', 'fa-filter', '/categorias');
+(6, 'Categorias', 'fa-filter', '/categorias'),
+(7, 'Dominio', 'fa-box', '/dominio'),
+(8, 'Valor', 'fa-box', '/valor'),
+(9, 'Compra', 'fa-cart-shopping', '/compra'),
+(10, 'Perfil', 'fa-user', '/perfil'),
+(11, 'Proveedor', 'fa-car', '/proveedor'),
+(12, 'Usuarios', 'fa-users', '/usuarios');
+
 
 -- --------------------------------------------------------
 
