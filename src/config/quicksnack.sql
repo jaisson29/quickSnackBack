@@ -23,10 +23,10 @@ CREATE TABLE `categoria` (
 --
 
 INSERT INTO `categoria` (`catId`, `catNom`) VALUES
-(0, 'OPERACIONES'),
-(1, 'Bebidas Calientes'),
-(2, 'Bebidas Frias'),
-(3, 'Organico');
+(1, 'OPERACIONES'),
+(2, 'Bebidas Calientes'),
+(3, 'Bebidas Frias'),
+(4, 'Organico');
 
 -- --------------------------------------------------------
 
@@ -352,7 +352,7 @@ ALTER TABLE `valor`
 -- AUTO_INCREMENT de la tabla `categoria`
 --
 ALTER TABLE `categoria`
-  MODIFY `catId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `catId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `detcompra`
