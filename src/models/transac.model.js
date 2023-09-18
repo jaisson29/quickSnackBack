@@ -1,4 +1,4 @@
-import { db, query } from '../config/db.js';
+import { db, query } from '../config/db.js'
 
 class TransacModel {
   static getAll() {
@@ -7,18 +7,18 @@ class TransacModel {
         'SELECT ts.transacId, ts.transacFecha, ts.transacCant, usu.usuId, usu.usuNom ' +
         'FROM transaccion ts ' +
         'INNER JOIN usuario usu ' +
-        'ON ts.usuId = usu.usuId';
+        'ON ts.usuId = usu.usuId'
 
       db.query(sql, function (err, res) {
         if (err) {
-          reject(new Error(err));
+          reject(new Error(err))
         } else if (res.length === 0) {
-          reject(new Error('No se encontraron resultados'));
+          reject(new Error('No se encontraron resultados'))
         } else {
-          resolve(res);
+          resolve(res)
         }
-      });
-    });
+      })
+    })
   }
 
   static getByUser(data) {
@@ -28,9 +28,9 @@ class TransacModel {
         'FROM transaccion ts ' +
         'INNER JOIN usuario usu ' +
         'ON ts.usuId = usu.usuId ' +
-        'WHERE usuId = ?';
+        'WHERE usuId = ?'
 
-      const { usuId } = data;
+      const { usuId } = data
 
       db.query(sql, [usuId], (err, respuesta) => {
         if (err) {
@@ -39,30 +39,30 @@ class TransacModel {
               error: err,
               mensaje: 'Fallo en obtener datos del usuario',
             })
-          );
+          )
         } else {
-          resolve(respuesta);
+          resolve(respuesta)
         }
-      });
-    });
+      })
+    })
   }
 
   static create(data) {
     return new Promise((resolve, reject) => {
       const sql =
         'INSERT INTO transaccion(transacFecha, transacCant, usuId) ' +
-        'VALUES(?, ?, ?)';
-      const { transacFecha, transacCant, usuId } = data;
+        'VALUES(?, ?, ?)'
+      const { transacFecha, transacCant, usuId } = data
 
       query(sql, [transacFecha, transacCant, usuId])
         .then((resultado) => {
-          resolve(resultado);
+          resolve(resultado)
         })
         .catch((err) => {
-          reject(err);
-        });
-    });
+          reject(err)
+        })
+    })
   }
 }
 
-export default TransacModel;
+export default TransacModel

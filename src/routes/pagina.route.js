@@ -6,7 +6,7 @@ const router = express.Router()
 
 router.get('/getAll', async (req, res) => {
   try {
-    const paginas = await PaginaModel.getPaginas()
+    const paginas = await PaginaModel.getAll()
     res.json(paginas)
   } catch (error) {
     res.json(error)
