@@ -68,7 +68,6 @@ class ProductModel {
           [catId, prodNom, prodDescr, prodImg, prodValCom, prodValVen, prodId],
           (err, result) => {
             if (result.affectedRows == 1) {
-              console.log(result);
               resolve(`Se actualizo ${result.affectedRows} registro`);
             } else {
               reject(new Error(err));

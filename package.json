@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon index.js",
-    "start": "node index.js"
+    "start": "node index.js --watch"
   },
   "repository": {
     "type": "git",
@@ -27,7 +27,7 @@
     "jsonwebtoken": "^9.0.1",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
-    "mysql": "^2.18.1"
+    "mysql2": "^3.6.1"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
