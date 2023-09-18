@@ -1,7 +1,7 @@
 import { db } from '../config/db.js'
 
 class Mcat {
-  static getAllcategoria() {
+  static getAll() {
     return new Promise((resolve, reject) => {
       const query = 'SELECT * FROM categoria'
 
@@ -16,7 +16,7 @@ class Mcat {
     })
   }
 
-  static createCategoria(data) {
+  static create(data) {
     return new Promise((resolve, reject) => {
       try {
         const query =
@@ -41,7 +41,7 @@ class Mcat {
     })
   }
 
-  static updateCategoria(data) {
+  static update(data) {
     return new Promise((resolve, reject) => {
       try {
         const query =
@@ -71,7 +71,7 @@ class Mcat {
     })
   }
 
-  static deleteCategoria(data) {
+  static delete(data) {
     return new Promise((resolve, reject) => {
       try {
         const query = 'DELETE FROM categoria WHERE catId = ?'

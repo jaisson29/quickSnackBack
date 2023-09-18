@@ -1,7 +1,7 @@
 import { db } from '../config/db.js'
 
 class Mpef {
-  static getAllperfil() {
+  static getAll() {
     return new Promise((resolve, reject) => {
       const query = 'SELECT * FROM perfil'
 
@@ -16,7 +16,7 @@ class Mpef {
     })
   }
 
-  static createperfil(data) {
+  static create(data) {
     return new Promise((resolve, reject) => {
       try {
         const query =
@@ -41,7 +41,7 @@ class Mpef {
     })
   }
 
-  static updatePerfil(data) {
+  static update(data) {
     return new Promise((resolve, reject) => {
       try {
         const query =
@@ -71,7 +71,7 @@ class Mpef {
     })
   }
 
-  static deleteCategoria(data) {
+  static delete(data) {
     return new Promise((resolve, reject) => {
       try {
         const query = 'DELETE FROM perfil WHERE perfilId = ?'

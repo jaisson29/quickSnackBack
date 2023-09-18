@@ -1,13 +1,13 @@
 import express from "express";
-import Mpef from "../models/perfil.model.js";
+import Mcat from "../models/mcat.js";
 import verifyToken from "../middlewares/auth.js";
 
 const router = express.Router();
 
 router.get('/getAll', async (req, res)  =>{
     try{
-        const perfiles = await Mpef.getAll();
-        res.json(perfiles);
+        const Categorias = await Mcat.getAll();
+        res.json(Categorias);
     }catch(error){
         res.json(error);
     }

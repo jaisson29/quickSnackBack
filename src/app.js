@@ -5,7 +5,8 @@ import UserRoutes from './routes/user.route.js';
 import PaginaRoutes from './routes/pagina.route.js';
 import LoginRoutes from './routes/login.route.js';
 import PerfilRoutes from './routes/perfil.route.js';
-import TransacRouter from './routes/transac.router.js'
+import TransacRouter from './routes/transac.router.js';
+import CategoRouter from './routes/categoria.route.js';
 
 //instancias
 const app = express()
@@ -28,4 +29,5 @@ app.use('/api/usuario/', UserRoutes);
 app.use('/api/pagina/', PaginaRoutes);
 app.use('/api/login/', LoginRoutes);
 app.use('/api/transac/', TransacRouter);
+app.use('/api/Catego/', CategoRouter);
 export default app
