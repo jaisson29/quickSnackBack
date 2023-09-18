@@ -4,7 +4,7 @@ const dbConfig = {
   host: 'localhost',
   database: 'quicksnack',
   user: 'root',
-  password: '029Jajaisson#5',
+  password: '',
 };
 
 const db = mysql.createConnection(dbConfig);

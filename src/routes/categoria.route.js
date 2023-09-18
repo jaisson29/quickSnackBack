@@ -14,6 +14,9 @@ router.get('/getAll', async (req, res)  =>{
 
 })
 
-router.post('/create', verifyToken(process.env.SECRECT_KEY), async () => {});
+
+router.post('/create', verifyToken(process.env.SECRECT_KEY), async (req, res) => {
+    
+});
 
 export default router;
