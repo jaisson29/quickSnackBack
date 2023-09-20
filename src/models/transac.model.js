@@ -1,4 +1,4 @@
-import { db, query } from '../config/db.js'
+import { db, query } from '../config/db.js';
 
 class TransacModel {
   static getAll() {
@@ -7,18 +7,24 @@ class TransacModel {
         'SELECT ts.transacId, ts.transacFecha, ts.transacCant, usu.usuId, usu.usuNom ' +
         'FROM transaccion ts ' +
         'INNER JOIN usuario usu ' +
-        'ON ts.usuId = usu.usuId'
+        'ON ts.usuId = usu.usuId';
 
       db.query(sql, function (err, res) {
         if (err) {
-          reject(new Error(err))
+          const error = new Error(err);
+          error.name = 'Fallo en la consulta';
+          error.cod = 1010;
+          reject(error);
         } else if (res.length === 0) {
-          reject(new Error('No se encontraron resultados'))
+          const error = new Error('No se encontraron transacciones realizadas');
+          error.name = 'Sin registros';
+          error.cod = 1001;
+          reject(error);
         } else {
-          resolve(res)
+          resolve(res);
         }
-      })
-    })
+      });
+    });
   }
 
   static getByUser(data) {
@@ -28,41 +34,41 @@ class TransacModel {
         'FROM transaccion ts ' +
         'INNER JOIN usuario usu ' +
         'ON ts.usuId = usu.usuId ' +
-        'WHERE usuId = ?'
+        'WHERE ts.usuId = ?';
 
-      const { usuId } = data
+      const { usuId } = data;
 
-      db.query(sql, [usuId], (err, respuesta) => {
+      db.query(sql, [usuId], (err, res) => {
         if (err) {
-          reject(
-            new Error({
-              error: err,
-              mensaje: 'Fallo en obtener datos del usuario',
-            })
-          )
+          const error = new Error(err);
+          error.name = 'Fallo en la consulta';
+          error.codigo = 1010;
+          reject(error);
         } else {
-          resolve(respuesta)
+          res.length > 0
+            ? resolve(res)
+            : reject(new Error('No se encontraron resultados'));
         }
-      })
-    })
+      });
+    });
   }
 
   static create(data) {
     return new Promise((resolve, reject) => {
       const sql =
         'INSERT INTO transaccion(transacFecha, transacCant, usuId) ' +
-        'VALUES(?, ?, ?)'
-      const { transacFecha, transacCant, usuId } = data
+        'VALUES(?, ?, ?)';
+      const { transacFecha, transacCant, usuId } = data;
 
       query(sql, [transacFecha, transacCant, usuId])
         .then((resultado) => {
-          resolve(resultado)
+          resolve(resultado);
         })
         .catch((err) => {
-          reject(err)
-        })
-    })
+          reject(err);
+        });
+    });
   }
 }
 
-export default TransacModel
+export default TransacModel;
