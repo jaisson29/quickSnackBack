@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon index.js",
-    "start": "node index.js --watch"
+    "start": "node --watch index.js"
   },
   "repository": {
     "type": "git",

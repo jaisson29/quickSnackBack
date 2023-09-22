@@ -1,11 +1,13 @@
+-- -----------------------------------------------------
+-- Schema quickSnack
+-- -----------------------------------------------------
+DROP SCHEMA IF EXISTS `quickSnack` ;
 
-
---
--- Base de datos: `quicksnack`
---
-DROP DATABASE IF EXISTS quicksnack;
-CREATE DATABASE IF NOT EXISTS quicksnack;
-USE quicksnack;
+-- -----------------------------------------------------
+-- Schema quickSnack
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `quickSnack` DEFAULT CHARACTER SET utf8 ;
+USE `quickSnack` ;
 
 -- --------------------------------------------------------
 
@@ -23,10 +25,10 @@ CREATE TABLE `categoria` (
 --
 
 INSERT INTO `categoria` (`catId`, `catNom`) VALUES
-(0, 'OPERACIONES'),
-(1, 'Bebidas Calientes'),
-(2, 'Bebidas Frias'),
-(3, 'Organico');
+(1, 'OPERACIONES'),
+(2, 'Bebidas Calientes'),
+(3, 'Bebidas Frias'),
+(4, 'Organico');
 
 -- --------------------------------------------------------
 
@@ -106,7 +108,14 @@ INSERT INTO `pagina` (`paginaId`, `paginaNom`, `paginaIcon`, `paginaRuta`) VALUE
 (3, 'Productos', 'fa-boxes-stacked', '/productos'),
 (4, 'Historial', 'fa-list', '/historial'),
 (5, 'Paginas', 'fa-piggy-bank', '/paginas'),
-(6, 'Categorias', 'fa-filter', '/categorias');
+(6, 'Categorias', 'fa-filter', '/categorias'),
+(7, 'Dominio', 'fa-box', '/dominio'),
+(8, 'Valor', 'fa-box', '/valor'),
+(9, 'Compra', 'fa-cart-shopping', '/compra'),
+(10, 'Perfil', 'fa-user', '/perfil'),
+(11, 'Proveedor', 'fa-car', '/proveedor'),
+(12, 'Usuarios', 'fa-users', '/usuarios');
+
 
 -- --------------------------------------------------------
 
@@ -345,7 +354,7 @@ ALTER TABLE `valor`
 -- AUTO_INCREMENT de la tabla `categoria`
 --
 ALTER TABLE `categoria`
-  MODIFY `catId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `catId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `detcompra`

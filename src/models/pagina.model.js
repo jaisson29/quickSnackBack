@@ -1,12 +1,16 @@
 import { db } from '../config/db.js';
 
 export default class PaginaModel {
-  static getPaginas() {
+  static getAll(data) {
     return new Promise((resolve, reject) => {
       const sql =
-        'SELECT paginaId, paginaNom, paginaIcon, paginaRuta ' + 'FROM pagina';
+        'SELECT pg.paginaId, pg.paginaNom, pg.paginaIcon, pg.paginaRuta, pxp.perfilId ' +
+        'FROM pagina pg ' +
+        'INNER JOIN perxpag pxp ' +
+        'ON pg.paginaId = pxp.paginaId ' +
+        'WHERE perfilId = ?';
 
-      db.query(sql, (error, results) => {
+      db.query(sql, [data.perfilId], (error, results) => {
         if (error) {
           reject(error);
         } else {

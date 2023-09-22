@@ -10,16 +10,28 @@ router.get('/getAll', async function (req, res) {
       res.json(resultado);
     })
     .catch(function (err) {
-      if (err.error) {
-        // Acceder al mensaje de error
-        console.error('Mensaje de error: ' + err.error);
-        res.status(500).json({ mensaje: err.error });
-      } else {
-        console.error('Error desconocido:', err);
-        res.status(500).json({ mensaje: 'Error desconocido' });
-      }
+      res
+        .status(500)
+        .json({ error: err.message, mensaje: err.name, codigo: err.cod });
     });
 });
+
+router.get(
+  '/getByUser/:usuId',
+  verifyToken(process.env.SECRET_KEY),
+  (req, res) => {
+    const cont = req.params;
+    TransacModel.getByUser(cont)
+      .then((respuesta) => {
+        res.status(200).json(respuesta);
+      })
+      .catch((err) => {
+        res
+          .status(err.codigo)
+          .json({ error: err.message, mensaje: err.name, codigo: err.cod });
+      });
+  }
+);
 
 router.post(
   '/create',
