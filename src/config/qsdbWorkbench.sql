@@ -322,7 +322,7 @@ START TRANSACTION;
 USE `quickSnack`;
 INSERT INTO `quickSnack`.`usuario` (`usuId`, `usuTipoDoc`, `usuNoDoc`, `usuGen`, `usuNom`, `usuEmail`, `usuContra`, `usuIngreso`, `usuImg`, `perfilId`, `usuFecha`, `usuPassCode`) VALUES (1, 4, '1070004545', 1, 'Jay Val', 'jais@outllok.com', '12349', '2023-07-23 12:29:34', NULL, 1, NULL, NULL);
 INSERT INTO `quickSnack`.`usuario` (`usuId`, `usuTipoDoc`, `usuNoDoc`, `usuGen`, `usuNom`, `usuEmail`, `usuContra`, `usuIngreso`, `usuImg`, `perfilId`, `usuFecha`, `usuPassCode`) VALUES (2, 4, '123456', 2, 'Fercho', 'fercho@outllok.com', '12349', '2023-07-23 12:29:34', NULL, 2, NULL, NULL);
-INSERT INTO `quickSnack`.`usuario` (`usuId`, `usuTipoDoc`, `usuNoDoc`, `usuGen`, `usuNom`, `usuEmail`, `usuContra`, `usuIngreso`, `usuImg`, `perfilId`, `usuFecha`, `usuPassCode`) VALUES (3, 4, '987654', 2, 'Miguel', 'miguel@outllok.com', '12349', '2023-07-23 12:29:34', NULL, 3, NULL, NULL);
+INSERT INTO `quickSnack`.`usuario` (`usuId`, `usuTipoDoc`, `usuNoDoc`, `usuGen`, `usuNom`, `usuEmail`, `usuContra`, `usuIngreso`, `usuImg`, `perfilId`, `usuFecha`, `usuPassCode`) VALUES (3, 4, '987654', 1, 'Daniel', 'dan@outllok.com', '12349', '2023-07-23 12:29:34', NULL, 3, NULL, NULL);
 INSERT INTO `quickSnack`.`usuario` (`usuId`, `usuTipoDoc`, `usuNoDoc`, `usuGen`, `usuNom`, `usuEmail`, `usuContra`, `usuIngreso`, `usuImg`, `perfilId`, `usuFecha`, `usuPassCode`) VALUES (4, 4, '145256', 1, 'Camilo', 'camilooutllok.com', '12349', '2023-07-23 12:29:34', NULL, 3, NULL, NULL);
 
 COMMIT;

@@ -4,7 +4,7 @@ import verifyToken from '../middlewares/auth.js'
 
 const router = express.Router()
 
-router.get('/getAll', async (req, res) => {
+router.get('/getAll',verifyToken(process.env.SECRET_KEY), async (req, res) => {
   try {
     const Categorias = await Mcat.getAll()
     res.json(Categorias)
@@ -14,7 +14,7 @@ router.get('/getAll', async (req, res) => {
 })
 
 
-router.post('/create', verifyToken(process.env.SECRECT_KEY), async (req, res) => {
+router.post('/create', verifyToken(process.env.SECRET_KEY), async (req, res) => {
     
 });
 
