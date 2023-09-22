@@ -6,8 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon index.js",
-    "start": "node --watch index.js"
-  },
+    "start": "node index.js"
+  }, 
   "repository": {
     "type": "git",
     "url": "git+https://github.com/"
