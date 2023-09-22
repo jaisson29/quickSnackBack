@@ -76,7 +76,7 @@ class Mcat {
       try {
         const query = 'DELETE FROM categoria WHERE catId = ?'
 
-        db.query(query, [data.prodId], (err, result) => {
+        db.query(query, [data.catId], (err, result) => {
           console.log(result);
           if (result.affectedRows == 1) {
             console.log(result)
