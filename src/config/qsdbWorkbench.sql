@@ -115,11 +115,11 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `quickSnack`.`perfilXPagina`
+-- Table `quickSnack`.`perxpag`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `quickSnack`.`perfilXPagina` ;
+DROP TABLE IF EXISTS `quickSnack`.`perxpag` ;
 
-CREATE TABLE IF NOT EXISTS `quickSnack`.`perfilXPagina` (
+CREATE TABLE IF NOT EXISTS `quickSnack`.`perxpag` (
   `paginaId` INT NOT NULL,
   `perfilId` INT NOT NULL,
   INDEX `profileXPage_idx` (`perfilId` ASC) ,
@@ -314,12 +314,16 @@ INSERT INTO `quickSnack`.`valor` (`valorId`, `param`, `domId`) VALUES (5, 'C.E',
 
 COMMIT;
 
+
 -- -----------------------------------------------------
 -- Data for table `quickSnack`.`usuario`
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `quickSnack`;
 INSERT INTO `quickSnack`.`usuario` (`usuId`, `usuTipoDoc`, `usuNoDoc`, `usuGen`, `usuNom`, `usuEmail`, `usuContra`, `usuIngreso`, `usuImg`, `perfilId`, `usuFecha`, `usuPassCode`) VALUES (1, 4, '1070004545', 1, 'Jay Val', 'jais@outllok.com', '12349', '2023-07-23 12:29:34', NULL, 1, NULL, NULL);
+INSERT INTO `quickSnack`.`usuario` (`usuId`, `usuTipoDoc`, `usuNoDoc`, `usuGen`, `usuNom`, `usuEmail`, `usuContra`, `usuIngreso`, `usuImg`, `perfilId`, `usuFecha`, `usuPassCode`) VALUES (2, 4, '123456', 2, 'Fercho', 'fercho@outllok.com', '12349', '2023-07-23 12:29:34', NULL, 2, NULL, NULL);
+INSERT INTO `quickSnack`.`usuario` (`usuId`, `usuTipoDoc`, `usuNoDoc`, `usuGen`, `usuNom`, `usuEmail`, `usuContra`, `usuIngreso`, `usuImg`, `perfilId`, `usuFecha`, `usuPassCode`) VALUES (3, 4, '987654', 2, 'Miguel', 'miguel@outllok.com', '12349', '2023-07-23 12:29:34', NULL, 3, NULL, NULL);
+INSERT INTO `quickSnack`.`usuario` (`usuId`, `usuTipoDoc`, `usuNoDoc`, `usuGen`, `usuNom`, `usuEmail`, `usuContra`, `usuIngreso`, `usuImg`, `perfilId`, `usuFecha`, `usuPassCode`) VALUES (4, 4, '145256', 1, 'Camilo', 'camilooutllok.com', '12349', '2023-07-23 12:29:34', NULL, 3, NULL, NULL);
 
 COMMIT;
 
@@ -331,9 +335,9 @@ START TRANSACTION;
 USE `quickSnack`;
 INSERT INTO `quickSnack`.`pagina` (`paginaId`, `paginaNom`, `paginaIcon`, `paginaRuta`) VALUES (1, 'Inicio', 'fa-house', '/home');
 INSERT INTO `quickSnack`.`pagina` (`paginaId`, `paginaNom`, `paginaIcon`, `paginaRuta`) VALUES (2, 'Menu', 'fa-list', '/menu');
-INSERT INTO `quickSnack`.`pagina` (`paginaId`, `paginaNom`, `paginaIcon`, `paginaRuta`) VALUES (3, 'Productos', 'fa-boxes-stacked', '/productos');
+INSERT INTO `quickSnack`.`pagina` (`paginaId`, `paginaNom`, `paginaIcon`, `paginaRuta`) VALUES (3, 'Productos', 'fa-boxes', '/productos');
 INSERT INTO `quickSnack`.`pagina` (`paginaId`, `paginaNom`, `paginaIcon`, `paginaRuta`) VALUES (4, 'Historial', 'fa-piggy-bank', '/historial');
-INSERT INTO `quickSnack`.`pagina` (`paginaId`, `paginaNom`, `paginaIcon`, `paginaRuta`) VALUES (5, 'Paginas', 'fa-box', '/paginas');
+INSERT INTO `quickSnack`.`pagina` (`paginaId`, `paginaNom`, `paginaIcon`, `paginaRuta`) VALUES (5, 'Paginas', 'fa-file', '/paginas');
 INSERT INTO `quickSnack`.`pagina` (`paginaId`, `paginaNom`, `paginaIcon`, `paginaRuta`) VALUES (6, 'Categorias', 'fa-filter', '/categorias');
 INSERT INTO `quickSnack`.`pagina` (`paginaId`, `paginaNom`, `paginaIcon`, `paginaRuta`) VALUES (7, 'Dominio', 'fa-box', '/dominio');
 INSERT INTO `quickSnack`.`pagina` (`paginaId`, `paginaNom`, `paginaIcon`, `paginaRuta`) VALUES (8, 'Valor', 'fa-box', '/valor');
@@ -341,6 +345,35 @@ INSERT INTO `quickSnack`.`pagina` (`paginaId`, `paginaNom`, `paginaIcon`, `pagin
 INSERT INTO `quickSnack`.`pagina` (`paginaId`, `paginaNom`, `paginaIcon`, `paginaRuta`) VALUES (10, 'Perfil', 'fa-box', '/perfil');
 INSERT INTO `quickSnack`.`pagina` (`paginaId`, `paginaNom`, `paginaIcon`, `paginaRuta`) VALUES (11, 'Proveedor', 'fa-car', '/proveedor');
 INSERT INTO `quickSnack`.`pagina` (`paginaId`, `paginaNom`, `paginaIcon`, `paginaRuta`) VALUES (12, 'Usuarios', 'fa-users', '/usuarios');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `quickSnack`.`perxpag`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `quickSnack`;
+INSERT INTO `quickSnack`.`perxpag` (`paginaId`, `perfilId`) VALUES (1, 1);
+INSERT INTO `quickSnack`.`perxpag` (`paginaId`, `perfilId`) VALUES (1, 2);
+INSERT INTO `quickSnack`.`perxpag` (`paginaId`, `perfilId`) VALUES (1, 3);
+INSERT INTO `quickSnack`.`perxpag` (`paginaId`, `perfilId`) VALUES (2, 1);
+INSERT INTO `quickSnack`.`perxpag` (`paginaId`, `perfilId`) VALUES (2, 2);
+INSERT INTO `quickSnack`.`perxpag` (`paginaId`, `perfilId`) VALUES (2, 3);
+INSERT INTO `quickSnack`.`perxpag` (`paginaId`, `perfilId`) VALUES (3, 1);
+INSERT INTO `quickSnack`.`perxpag` (`paginaId`, `perfilId`) VALUES (3, 3);
+INSERT INTO `quickSnack`.`perxpag` (`paginaId`, `perfilId`) VALUES (4, 1);
+INSERT INTO `quickSnack`.`perxpag` (`paginaId`, `perfilId`) VALUES (4, 2);
+INSERT INTO `quickSnack`.`perxpag` (`paginaId`, `perfilId`) VALUES (4, 3);
+INSERT INTO `quickSnack`.`perxpag` (`paginaId`, `perfilId`) VALUES (5, 1);
+INSERT INTO `quickSnack`.`perxpag` (`paginaId`, `perfilId`) VALUES (6, 1);
+INSERT INTO `quickSnack`.`perxpag` (`paginaId`, `perfilId`) VALUES (6, 3);
+INSERT INTO `quickSnack`.`perxpag` (`paginaId`, `perfilId`) VALUES (7, 1);
+INSERT INTO `quickSnack`.`perxpag` (`paginaId`, `perfilId`) VALUES (8, 1);
+INSERT INTO `quickSnack`.`perxpag` (`paginaId`, `perfilId`) VALUES (9, 1);
+INSERT INTO `quickSnack`.`perxpag` (`paginaId`, `perfilId`) VALUES (10, 1);
+INSERT INTO `quickSnack`.`perxpag` (`paginaId`, `perfilId`) VALUES (11, 1);
+INSERT INTO `quickSnack`.`perxpag` (`paginaId`, `perfilId`) VALUES (12, 1);
 
 COMMIT;
 

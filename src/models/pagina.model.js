@@ -1,19 +1,23 @@
-import { db } from '../config/db.js'
+import { db } from '../config/db.js';
 
 export default class PaginaModel {
-  static getAll() {
+  static getAll(data) {
     return new Promise((resolve, reject) => {
       const sql =
-        'SELECT paginaId, paginaNom, paginaIcon, paginaRuta ' + 'FROM pagina'
+        'SELECT pg.paginaId, pg.paginaNom, pg.paginaIcon, pg.paginaRuta, pxp.perfilId ' +
+        'FROM pagina pg ' +
+        'INNER JOIN perxpag pxp ' +
+        'ON pg.paginaId = pxp.paginaId ' +
+        'WHERE perfilId = ?';
 
-      db.query(sql, (error, results) => {
+      db.query(sql, [data.perfilId], (error, results) => {
         if (error) {
-          reject(error)
+          reject(error);
         } else {
-          resolve(results)
+          resolve(results);
         }
-      })
-    })
+      });
+    });
   }
 
   static getOne(data) {
@@ -21,7 +25,7 @@ export default class PaginaModel {
       const sql =
         'SELECT paginaId, paginaNom, paginaIcon, paginaRuta ' +
         'FROM pagina ' +
-        'WHERE paginaId = ?'
-    })
+        'WHERE paginaId = ?';
+    });
   }
 }
