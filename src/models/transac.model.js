@@ -30,7 +30,7 @@ class TransacModel {
   static getByUser(data) {
     return new Promise((resolve, reject) => {
       const sql =
-        'SELECT ts.transacId, ts.transacFecha, ts.usuId, usu.usuNom, SUM(dtv.detVenCant * prv.prodValVen) AS tot ' +
+        'SELECT ts.transacId, ts.transacFecha, ts.usuId, usu.usuNom, prv.catId, SUM(dtv.detVenCant * prv.prodValVen) AS tot ' +
         'FROM transaccion ts ' +
         'INNER JOIN usuario usu ' +
         'ON ts.usuId = usu.usuId ' +
@@ -51,7 +51,7 @@ class TransacModel {
         } else {
           const error = new Error();
           error.codigo = 204;
-          res.length > 0 ? resolve(res) : reject(error);
+          res.length !== 0 ? resolve(res) : reject(error);
         }
       });
     });
