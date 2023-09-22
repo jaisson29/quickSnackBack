@@ -27,7 +27,7 @@ router.get(
       })
       .catch((err) => {
         res
-          .status(500)
+          .status(err.codigo)
           .json({ error: err.message, mensaje: err.name, codigo: err.cod });
       });
   }

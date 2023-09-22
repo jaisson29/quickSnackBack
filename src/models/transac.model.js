@@ -30,10 +30,14 @@ class TransacModel {
   static getByUser(data) {
     return new Promise((resolve, reject) => {
       const sql =
-        'SELECT ts.transacId, ts.transacFecha, ts.transacCant, ts.usuId, usu.usuNom ' +
+        'SELECT ts.transacId, ts.transacFecha, ts.usuId, usu.usuNom, SUM(dtv.detVenCant * prv.prodValVen) AS tot ' +
         'FROM transaccion ts ' +
         'INNER JOIN usuario usu ' +
         'ON ts.usuId = usu.usuId ' +
+        'INNER JOIN detVenta dtv ' +
+        'ON ts.transacId = dtv.transacId ' +
+        'INNER JOIN producto prv ' +
+        'ON dtv.prodId = prv.prodId ' +
         'WHERE ts.usuId = ?';
 
       const { usuId } = data;
@@ -42,12 +46,12 @@ class TransacModel {
         if (err) {
           const error = new Error(err);
           error.name = 'Fallo en la consulta';
-          error.codigo = 1010;
+          error.codigo = 500;
           reject(error);
         } else {
-          res.length > 0
-            ? resolve(res)
-            : reject(new Error('No se encontraron resultados'));
+          const error = new Error();
+          error.codigo = 204;
+          res.length > 0 ? resolve(res) : reject(error);
         }
       });
     });

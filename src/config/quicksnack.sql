@@ -1,11 +1,13 @@
+-- -----------------------------------------------------
+-- Schema quickSnack
+-- -----------------------------------------------------
+DROP SCHEMA IF EXISTS `quickSnack` ;
 
-
---
--- Base de datos: `quicksnack`
---
-DROP DATABASE IF EXISTS quicksnack;
-CREATE DATABASE IF NOT EXISTS quicksnack;
-USE quicksnack;
+-- -----------------------------------------------------
+-- Schema quickSnack
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `quickSnack` DEFAULT CHARACTER SET utf8 ;
+USE `quickSnack` ;
 
 -- --------------------------------------------------------
 
