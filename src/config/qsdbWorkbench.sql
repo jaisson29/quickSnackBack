@@ -82,6 +82,7 @@ CREATE TABLE IF NOT EXISTS `quickSnack`.`usuario` (
   INDEX `docTypeXValue_idx` (`usuTipoDoc` ASC) ,
   UNIQUE INDEX `usuEmail_UNIQUE` (`usuEmail` ASC) ,
   UNIQUE INDEX `usuNoDoc_UNIQUE` (`usuNoDoc` ASC) ,
+  INDEX `usuIngreso` (`usuIngreso` ASC) ,
   CONSTRAINT `userXProfile`
     FOREIGN KEY (`perfilId`)
     REFERENCES `quickSnack`.`perfil` (`perfilId`)
@@ -164,6 +165,9 @@ CREATE TABLE IF NOT EXISTS `quickSnack`.`producto` (
   `prodValVen` BIGINT(10) NOT NULL,
   PRIMARY KEY (`prodId`),
   INDEX `productXCategory_idx` (`catId` ASC) ,
+  INDEX `prodNom` (`prodNom` ASC) ,
+  INDEX `prodValCom` (`prodValCom` ASC) ,
+  INDEX `prodValVen` (`prodValVen` ASC) ,
   CONSTRAINT `productXCategory`
     FOREIGN KEY (`catId`)
     REFERENCES `quickSnack`.`categoria` (`catId`)
@@ -181,11 +185,18 @@ CREATE TABLE IF NOT EXISTS `quickSnack`.`transaccion` (
   `transacId` INT NOT NULL AUTO_INCREMENT,
   `transacFecha` DATETIME NOT NULL,
   `usuId` INT NOT NULL,
+  `transacTipo` INT NOT NULL,
   PRIMARY KEY (`transacId`),
   INDEX `saleBillXUser_idx` (`usuId` ASC) ,
+  INDEX `transacXValor_idx` (`transacTipo` ASC) ,
   CONSTRAINT `saleBillXUser`
     FOREIGN KEY (`usuId`)
     REFERENCES `quickSnack`.`usuario` (`usuId`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `transacXValor`
+    FOREIGN KEY (`transacTipo`)
+    REFERENCES `quickSnack`.`valor` (`valorId`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -297,6 +308,7 @@ START TRANSACTION;
 USE `quickSnack`;
 INSERT INTO `quickSnack`.`dominio` (`domId`, `domNom`) VALUES (1, 'GENERO');
 INSERT INTO `quickSnack`.`dominio` (`domId`, `domNom`) VALUES (2, 'TIPO-DOC');
+INSERT INTO `quickSnack`.`dominio` (`domId`, `domNom`) VALUES (3, 'TIPO-TRANSAC');
 
 COMMIT;
 
@@ -311,6 +323,8 @@ INSERT INTO `quickSnack`.`valor` (`valorId`, `param`, `domId`) VALUES (2, 'femen
 INSERT INTO `quickSnack`.`valor` (`valorId`, `param`, `domId`) VALUES (3, 'T.I', 2);
 INSERT INTO `quickSnack`.`valor` (`valorId`, `param`, `domId`) VALUES (4, 'C.C', 2);
 INSERT INTO `quickSnack`.`valor` (`valorId`, `param`, `domId`) VALUES (5, 'C.E', 2);
+INSERT INTO `quickSnack`.`valor` (`valorId`, `param`, `domId`) VALUES (6, 'Recarga', 3);
+INSERT INTO `quickSnack`.`valor` (`valorId`, `param`, `domId`) VALUES (7, 'Pago', 3);
 
 COMMIT;
 
@@ -320,10 +334,10 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `quickSnack`;
-INSERT INTO `quickSnack`.`usuario` (`usuId`, `usuTipoDoc`, `usuNoDoc`, `usuGen`, `usuNom`, `usuEmail`, `usuContra`, `usuIngreso`, `usuImg`, `perfilId`, `usuFecha`, `usuPassCode`) VALUES (1, 4, '1070004545', 1, 'Jay Val', 'jais@outllok.com', '12349', '2023-07-23 12:29:34', NULL, 1, NULL, NULL);
-INSERT INTO `quickSnack`.`usuario` (`usuId`, `usuTipoDoc`, `usuNoDoc`, `usuGen`, `usuNom`, `usuEmail`, `usuContra`, `usuIngreso`, `usuImg`, `perfilId`, `usuFecha`, `usuPassCode`) VALUES (2, 4, '123456', 2, 'Fercho', 'fercho@outllok.com', '12349', '2023-07-23 12:29:34', NULL, 2, NULL, NULL);
-INSERT INTO `quickSnack`.`usuario` (`usuId`, `usuTipoDoc`, `usuNoDoc`, `usuGen`, `usuNom`, `usuEmail`, `usuContra`, `usuIngreso`, `usuImg`, `perfilId`, `usuFecha`, `usuPassCode`) VALUES (3, 4, '987654', 1, 'Daniel', 'dan@outllok.com', '12349', '2023-07-23 12:29:34', NULL, 3, NULL, NULL);
-INSERT INTO `quickSnack`.`usuario` (`usuId`, `usuTipoDoc`, `usuNoDoc`, `usuGen`, `usuNom`, `usuEmail`, `usuContra`, `usuIngreso`, `usuImg`, `perfilId`, `usuFecha`, `usuPassCode`) VALUES (4, 4, '145256', 1, 'Camilo', 'camilooutllok.com', '12349', '2023-07-23 12:29:34', NULL, 3, NULL, NULL);
+INSERT INTO `quickSnack`.`usuario` (`usuId`, `usuTipoDoc`, `usuNoDoc`, `usuGen`, `usuNom`, `usuEmail`, `usuContra`, `usuIngreso`, `usuImg`, `perfilId`, `usuFecha`, `usuPassCode`) VALUES (1, 4, '1070004545', 1, 'Jay Val', 'jais@outllok.com', '12349', '2023-07-23 12:29:34', 'default-img.webp', 1, NULL, NULL);
+INSERT INTO `quickSnack`.`usuario` (`usuId`, `usuTipoDoc`, `usuNoDoc`, `usuGen`, `usuNom`, `usuEmail`, `usuContra`, `usuIngreso`, `usuImg`, `perfilId`, `usuFecha`, `usuPassCode`) VALUES (2, 4, '12345', 2, 'Fercho', 'fercho@outllok.com', '12349', '2023-07-23 12:29:34', 'default-img.webp', 2, NULL, NULL);
+INSERT INTO `quickSnack`.`usuario` (`usuId`, `usuTipoDoc`, `usuNoDoc`, `usuGen`, `usuNom`, `usuEmail`, `usuContra`, `usuIngreso`, `usuImg`, `perfilId`, `usuFecha`, `usuPassCode`) VALUES (3, 4, '32154', 1, 'Miguel', 'miguel@outllok.com', '12349', '2023-07-23 12:29:34', 'default-img.webp', 3, NULL, NULL);
+INSERT INTO `quickSnack`.`usuario` (`usuId`, `usuTipoDoc`, `usuNoDoc`, `usuGen`, `usuNom`, `usuEmail`, `usuContra`, `usuIngreso`, `usuImg`, `perfilId`, `usuFecha`, `usuPassCode`) VALUES (4, 4, '987654', 1, 'Camilo', 'camilo@outllok.com', '12349', '2023-07-23 12:29:34', 'default-img.webp', 3, NULL, NULL);
 
 COMMIT;
 
@@ -383,10 +397,41 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `quickSnack`;
-INSERT INTO `quickSnack`.`categoria` (`catId`, `catNom`) VALUES (1, 'OPERACIONES');
 INSERT INTO `quickSnack`.`categoria` (`catId`, `catNom`) VALUES (2, 'BEBIDAS CALIENTES');
 INSERT INTO `quickSnack`.`categoria` (`catId`, `catNom`) VALUES (3, 'BEBIDAS FRIAS');
 INSERT INTO `quickSnack`.`categoria` (`catId`, `catNom`) VALUES (4, 'ORGANICOS');
+INSERT INTO `quickSnack`.`categoria` (`catId`, `catNom`) VALUES (1, 'OPERACIONES');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `quickSnack`.`producto`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `quickSnack`;
+INSERT INTO `quickSnack`.`producto` (`prodId`, `catId`, `prodNom`, `prodDescr`, `prodImg`, `prodValCom`, `prodValVen`) VALUES (1, 1, '100.000', 'Producto de recarga', 'default-img.webp', 100000, 100000);
+INSERT INTO `quickSnack`.`producto` (`prodId`, `catId`, `prodNom`, `prodDescr`, `prodImg`, `prodValCom`, `prodValVen`) VALUES (2, 1, '50.000', 'Producto de recarga', 'default-img.webp', 50000, 50000);
+INSERT INTO `quickSnack`.`producto` (`prodId`, `catId`, `prodNom`, `prodDescr`, `prodImg`, `prodValCom`, `prodValVen`) VALUES (3, 1, '20.000', 'Producto de recarga', 'default-img.webp', 20000, 20000);
+INSERT INTO `quickSnack`.`producto` (`prodId`, `catId`, `prodNom`, `prodDescr`, `prodImg`, `prodValCom`, `prodValVen`) VALUES (4, 1, '10.000', 'Producto de recarga', 'default-img.webp', 10000, 10000);
+INSERT INTO `quickSnack`.`producto` (`prodId`, `catId`, `prodNom`, `prodDescr`, `prodImg`, `prodValCom`, `prodValVen`) VALUES (5, 1, '5.000', 'Producto de recarga', 'default-img.webp', 5000, 5000);
+INSERT INTO `quickSnack`.`producto` (`prodId`, `catId`, `prodNom`, `prodDescr`, `prodImg`, `prodValCom`, `prodValVen`) VALUES (6, 1, '2.000', 'Producto de recarga', 'default-img.webp', 2000, 2000);
+INSERT INTO `quickSnack`.`producto` (`prodId`, `catId`, `prodNom`, `prodDescr`, `prodImg`, `prodValCom`, `prodValVen`) VALUES (7, 1, '1.000', 'Producto de recarga', 'default-img.webp', 1000, 1000);
+INSERT INTO `quickSnack`.`producto` (`prodId`, `catId`, `prodNom`, `prodDescr`, `prodImg`, `prodValCom`, `prodValVen`) VALUES (8, 1, '500', 'Producto de recarga', 'default-img.webp', 500, 500);
+INSERT INTO `quickSnack`.`producto` (`prodId`, `catId`, `prodNom`, `prodDescr`, `prodImg`, `prodValCom`, `prodValVen`) VALUES (9, 1, '200', 'Producto de recarga', 'default-img.webp', 200, 200);
+INSERT INTO `quickSnack`.`producto` (`prodId`, `catId`, `prodNom`, `prodDescr`, `prodImg`, `prodValCom`, `prodValVen`) VALUES (10, 1, '100', 'Producto de recarga', 'default-img.webp', 100, 100);
+INSERT INTO `quickSnack`.`producto` (`prodId`, `catId`, `prodNom`, `prodDescr`, `prodImg`, `prodValCom`, `prodValVen`) VALUES (11, 1, '50', 'Producto de recarga', 'default-img.webp', 50, 50);
+INSERT INTO `quickSnack`.`producto` (`prodId`, `catId`, `prodNom`, `prodDescr`, `prodImg`, `prodValCom`, `prodValVen`) VALUES (12, 2, 'Dummy', 'Product', 'default-img.webp', 15000, 30000);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `quickSnack`.`proveedor`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `quickSnack`;
+INSERT INTO `quickSnack`.`proveedor` (`provId`, `provNom`, `provNit`) VALUES (1, 'QS', 12349-12349);
 
 COMMIT;
 
