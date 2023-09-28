@@ -39,7 +39,7 @@ class TransacModel {
         'INNER JOIN producto prv ' +
         'ON dtv.prodId = prv.prodId ' +
         'WHERE ts.usuId = ?' +
-        'GROUP BY ts.usuId, ts.transacId';
+        'GROUP BY ts.transacId, ts.transacFecha, ts.transacTipo, ts.usuId, usu.usuNom, prv.catId';
 
       const { usuId } = data;
 
