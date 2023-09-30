@@ -1,13 +1,14 @@
 import { db } from '../config/db.js';
 
 class ProductModel {
-  static getAllProducts() {
+  static getAll() {
     return new Promise((resolve, reject) => {
       const query =
         'SELECT p.prodId, c.catNom, c.catId, p.prodNom, p.prodDescr, p.prodImg, p.prodValCom, p.prodValVen ' +
         'FROM producto p ' +
         'INNER JOIN categoria c ' +
-        'ON p.catId = c.catId';
+        'ON p.catId = c.catId ' +
+        'WHERE c.catId != 1';
 
       db.query(query, (err, results) => {
         if (err) {
@@ -20,7 +21,7 @@ class ProductModel {
     });
   }
 
-  static createProduct(data) {
+  static create(data) {
     return new Promise((resolve, reject) => {
       try {
         const query =
@@ -45,7 +46,7 @@ class ProductModel {
     });
   }
 
-  static updateProduct(data) {
+  static update(data) {
     return new Promise((resolve, reject) => {
       try {
         const query =
@@ -68,7 +69,6 @@ class ProductModel {
           [catId, prodNom, prodDescr, prodImg, prodValCom, prodValVen, prodId],
           (err, result) => {
             if (result.affectedRows == 1) {
-              console.log(result);
               resolve(`Se actualizo ${result.affectedRows} registro`);
             } else {
               reject(new Error(err));
@@ -81,7 +81,7 @@ class ProductModel {
     });
   }
 
-  static deleteProduct(data) {
+  static delete(data) {
     return new Promise((resolve, reject) => {
       try {
         const query = 'DELETE FROM producto WHERE prodId = ?';

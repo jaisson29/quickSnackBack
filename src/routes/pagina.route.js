@@ -1,18 +1,19 @@
-import express from 'express'
-import PaginaModel from '../models/pagina.model.js'
-import verifyToken from '../middlewares/auth.js'
+import express from 'express';
+import PaginaModel from '../models/pagina.model.js';
+import verifyToken from '../middlewares/auth.js';
 
-const router = express.Router()
+const router = express.Router();
 
-router.get('/getAll', async (req, res) => {
+router.get('/getAll/:perfilId', async (req, res) => {
   try {
-    const paginas = await PaginaModel.getPaginas()
-    res.json(paginas)
+    const cont = req.params;
+    const paginas = await PaginaModel.getAll(cont);
+    res.json(paginas);
   } catch (error) {
-    res.json(error)
+    res.json(error);
   }
-})
+});
 
-router.post('/create', verifyToken(process.env.SECRET_KEY), async () => {})
+router.post('/create', verifyToken(process.env.SECRET_KEY), async () => {});
 
-export default router
+export default router;
