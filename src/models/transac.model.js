@@ -4,7 +4,7 @@ class TransacModel {
   static getAll() {
     return new Promise((resolve, reject) => {
       const sql =
-        'SELECT ts.transacId, ts.transacFecha, ts.transacCant, usu.usuId, usu.usuNom ' +
+        'SELECT ts.transacId, ts.transacFecha, ts.transacTipo, ts.transacCant, usu.usuId, usu.usuNom ' +
         'FROM transaccion ts ' +
         'INNER JOIN usuario usu ' +
         'ON ts.usuId = usu.usuId';
@@ -30,7 +30,7 @@ class TransacModel {
   static getByUser(data) {
     return new Promise((resolve, reject) => {
       const sql =
-        'SELECT ts.transacId, ts.transacFecha, ts.usuId, usu.usuNom, SUM(dtv.detVenCant * prv.prodValVen) AS tot ' +
+        'SELECT ts.transacId, ts.transacFecha, ts.transacTipo, ts.usuId, usu.usuNom, prv.catId, SUM(dtv.detVenCant * prv.prodValVen) AS tot ' +
         'FROM transaccion ts ' +
         'INNER JOIN usuario usu ' +
         'ON ts.usuId = usu.usuId ' +
@@ -38,7 +38,8 @@ class TransacModel {
         'ON ts.transacId = dtv.transacId ' +
         'INNER JOIN producto prv ' +
         'ON dtv.prodId = prv.prodId ' +
-        'WHERE ts.usuId = ?';
+        'WHERE ts.usuId = ?' +
+        'GROUP BY ts.usuId, ts.transacId';
 
       const { usuId } = data;
 
@@ -51,7 +52,7 @@ class TransacModel {
         } else {
           const error = new Error();
           error.codigo = 204;
-          res.length > 0 ? resolve(res) : reject(error);
+          res.length !== 0 ? resolve(res) : reject(error);
         }
       });
     });

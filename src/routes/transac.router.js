@@ -4,17 +4,21 @@ import TransacModel from '../models/transac.model.js';
 
 const router = express.Router();
 
-router.get('/getAll', async function (req, res) {
-  TransacModel.getAll()
-    .then(function (resultado) {
-      res.json(resultado);
-    })
-    .catch(function (err) {
-      res
-        .status(500)
-        .json({ error: err.message, mensaje: err.name, codigo: err.cod });
-    });
-});
+router.get(
+  '/getAll',
+  verifyToken(process.env.SECRET_KEY),
+  async function (req, res) {
+    TransacModel.getAll()
+      .then(function (resultado) {
+        res.json(resultado);
+      })
+      .catch(function (err) {
+        res
+          .status(500)
+          .json({ error: err.message, mensaje: err.name, codigo: err.cod });
+      });
+  }
+);
 
 router.get(
   '/getByUser/:usuId',
