@@ -7,8 +7,8 @@ const router = express.Router()
 
 router.get('/getAll',verifyToken(process.env.SECRET_KEY), async (req, res) => {
   try {
-    const Categorias = await Mcat.getAll()
-    res.json(Categorias)
+    const categorias = await Mcat.getAll()
+    res.json(categorias)
   } catch (error) {
     res.json(error)
   }
@@ -17,7 +17,7 @@ router.get('/getAll',verifyToken(process.env.SECRET_KEY), async (req, res) => {
 
 router.post('/create', verifyToken(process.env.SECRET_KEY), async (req, res) => {
     const cont = req.body
-    Mcat.create()
+    Mcat.create(cont)
     .then((create) =>{
         res.json(create)
     })
@@ -33,9 +33,9 @@ router.post('/create', verifyToken(process.env.SECRET_KEY), async (req, res) => 
     '/update',
     verifyToken(process.env.SECRET_KEY),
     async (req, res) => {
-        const cont = req.body
-        try{
-            const update = await Mcat.update()
+            const cont = req.body
+        try{ 
+            const update = await Mcat.update(cont)
             res.json(update)
         }catch (error){
             res.json('Fallo la actualizacion de la categoria')
@@ -59,4 +59,16 @@ router.post('/create', verifyToken(process.env.SECRET_KEY), async (req, res) => 
     }
  )
 
+ router.get(
+    '/getmxp',
+     async (req, res) => {
+        try {
+          Mcat.getMxP().then((result) =>{
+            res.status(200).json(result)
+          })
+        } catch (error) {
+            console.log(error)
+          res.json(error)
+        }
+    })
 export default router
