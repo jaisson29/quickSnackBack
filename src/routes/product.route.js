@@ -26,6 +26,24 @@ router.get('/getAll', verifyToken(process.env.SECRET_KEY), async (req, res) => {
   }
 })
 
+router.get(
+  '/getVenXProd',
+  verifyToken(process.env.SECRET_KEY),
+  async (req, res) => {
+    try {
+      ProductModel.getVenXProd()
+        .then((result) => {
+          res.status(200).json(result)
+        })
+        .catch((err) => {
+          res.json({ error: err.message, mensaje: err.name, codigo: err.cod })
+        })
+    } catch (error) {
+      res.json({ code: 500, error: 'Fallo en encontrar las relaciones' })
+    }
+  }
+)
+
 router.post(
   '/create',
   verifyToken(process.env.SECRET_KEY),
