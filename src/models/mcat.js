@@ -53,8 +53,8 @@ class Mcat {
         db.query(
           query,
           [
-            data.catId,
-            data.prodNom
+            data.catNom,
+            data.catId
           ],
           (err, result) => {
             if (result.affectedRows == 1) {
