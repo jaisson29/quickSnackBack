@@ -48,7 +48,6 @@ router.post('/create', verifyToken(process.env.SECRET_KEY), async (req, res) => 
     verifyToken(process.env.SECRET_KEY),
     async (req, res) => {
         const cont = req.params
-        console.log(cont)
         try{
             const del = await Mcat.delete({
                 catId: cont.catId,

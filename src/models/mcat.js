@@ -9,7 +9,6 @@ class Mcat {
         if (err) {
           reject(err)
         } else {
-          console.log(results)
           resolve(results)
         }
       })
@@ -58,7 +57,6 @@ class Mcat {
           ],
           (err, result) => {
             if (result.affectedRows == 1) {
-              console.log(result)
               resolve(`Se actualizo ${result.affectedRows} registro`)
             } else {
               reject(new Error(err))
@@ -77,9 +75,7 @@ class Mcat {
         const query = 'DELETE FROM categoria WHERE catId = ?'
 
         db.query(query, [data.catId], (err, result) => {
-          console.log(result);
           if (result.affectedRows == 1) {
-            console.log(result)
             resolve(`Se elimino ${result.affectedRows} registro`)
           } else {
             reject(new Error(err))
