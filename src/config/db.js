@@ -5,7 +5,7 @@ const dbConfig = {
   database: 'quicksnack',
   user: 'root',
   password: '',
-}
+};
 
 const db = mysql.createConnection(dbConfig)
 db.connect((err) => {
