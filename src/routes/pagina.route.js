@@ -14,6 +14,33 @@ router.get('/getAll/:perfilId', async (req, res) => {
   }
 });
 
-router.post('/create', verifyToken(process.env.SECRET_KEY), async () => {});
+router.post('/create', verifyToken(process.env.SECRET_KEY), async () => {
+  const cont = req.body
+  PaginaModel.create(cont)
+  .then((create) =>{
+    res.json(create)
+  })
+  .catch((error) =>{
+    res.json({
+      code:500,
+      error:'Fallo la creacion de la pagina',
+      message: error,
+    })
+  })
+});
+
+router.put(
+  '/update',
+  verifyToken(process.env.SECRET_KEY),
+  async(req, res) =>{
+    const cont = req.body
+    try{
+      const update = await PaginaModel.update(cont)
+      res.json(update)
+    }catch(error){
+      res.json('Fallo la actualizacion de la pagina')
+    }
+  }
+)
 
 export default router;
