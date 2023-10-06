@@ -5,6 +5,10 @@ import multer from 'multer';
 
 const router = express.Router();
 
+router.get('/obt', verifyToken(process.env.SECRET_KEY), () => {
+
+})
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'uploads');
@@ -17,7 +21,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-router.get('/getAll', verifyToken(process.env.SECRET_KEY), async (req, res) => {
+router.get('/getAll',  async (req, res) => {
   try {
     const products = await ProductModel.getAllProducts();
     res.json(products);
