@@ -44,7 +44,7 @@ class Mcat {
     return new Promise((resolve, reject) => {
       try {
         const query =
-          'UPDATE Categoria' +
+          'UPDATE categoria' +
           ' ' +
           'SET catNom = ?' +
           ' ' +
@@ -52,8 +52,8 @@ class Mcat {
         db.query(
           query,
           [
-            data.catId,
-            data.prodNom
+            data.catNom,
+            data.catId
           ],
           (err, result) => {
             if (result.affectedRows == 1) {
@@ -84,6 +84,20 @@ class Mcat {
       } catch (error) {
         reject(new Error(error))
       }
+    })
+  }
+
+  static getMxP(){
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT catId, COUNT(catId) as can FROM producto group by catId'
+        db.query(query, (err, results) => {
+          console.log(err,query)
+          if (err) {
+            reject(err)
+          } else {
+            resolve(results)
+          }
+        })
     })
   }
 }

@@ -29,6 +29,6 @@ app.use('/api/usuario/', UserRoutes);
 app.use('/api/pagina/', PaginaRoutes);
 app.use('/api/login/', LoginRoutes);
 app.use('/api/transac/', TransacRouter);
-app.use('/api/Catego/', CategoRouter);
+app.use('/api/catego/', CategoRouter);
 
 export default app
