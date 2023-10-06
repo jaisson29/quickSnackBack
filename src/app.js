@@ -7,6 +7,7 @@ import LoginRoutes from './routes/login.route.js';
 import PerfilRoutes from './routes/perfil.route.js';
 import TransacRouter from './routes/transac.router.js';
 import CategoRouter from './routes/categoria.route.js';
+import CompraRoutes from './routes/compra.route.js';
 
 //instancias
 const app = express()
@@ -24,6 +25,7 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api/perfil/', PerfilRoutes);
+app.use('/api/compra/', CompraRoutes);
 app.use('/api/producto/', ProductRoutes);
 app.use('/api/usuario/', UserRoutes);
 app.use('/api/pagina/', PaginaRoutes);
@@ -31,4 +33,4 @@ app.use('/api/login/', LoginRoutes);
 app.use('/api/transac/', TransacRouter);
 app.use('/api/catego/', CategoRouter);
 
-export default app
+export default app;
