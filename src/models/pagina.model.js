@@ -4,13 +4,9 @@ class PaginaModel {
   static getAll(data) {
     return new Promise((resolve, reject) => {
       const sql =
-        'SELECT pg.paginaId, pg.paginaNom, pg.paginaIcon, pg.paginaRuta, pxp.perfilId ' +
-        'FROM pagina pg ' +
-        'INNER JOIN perxpag pxp ' +
-        'ON pg.paginaId = pxp.paginaId ' +
-        'WHERE perfilId = ?';
+        'SELECT * FROM pagina';
 
-      db.query(sql, [data.perfilId], (error, results) => {
+      db.query(sql, (error, results) => {
         if (error) {
           reject(error);
         } else {
@@ -104,6 +100,39 @@ class PaginaModel {
       }
     })
   }
+
+  static getPagxpef(){
+    return new Promise((resolve, reject) =>{
+      const query = 'SELECT paginaId, COUNT(paginaId) as can FROM perxpag group by paginaId'
+      db.query(query, (err, results) =>{
+        if(err){
+          reject(err)
+        } else{
+          resolve(results)
+        }
+      })
+    })
+  }
+
+  static getPefPag(data) {
+    return new Promise((resolve, reject) => {
+      const sql =
+        'SELECT pg.paginaId, pg.paginaNom, pg.paginaIcon, pg.paginaRuta, pxp.perfilId ' +
+        'FROM pagina pg ' +
+        'INNER JOIN perxpag pxp ' +
+        'ON pg.paginaId = pxp.paginaId ' +
+        'WHERE perfilId = ?';
+
+      db.query(sql, [data.perfilId], (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results);
+        }
+      });
+    });
+  }
 }
+
 
 export default PaginaModel

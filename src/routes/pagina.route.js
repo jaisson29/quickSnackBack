@@ -4,7 +4,7 @@ import verifyToken from '../middlewares/auth.js';
 
 const router = express.Router();
 
-router.get('/getAll/:perfilId', async (req, res) => {
+router.get('/getAll', async (req, res) => {
   try {
     const cont = req.params;
     const paginas = await PaginaModel.getAll(cont);
@@ -14,7 +14,7 @@ router.get('/getAll/:perfilId', async (req, res) => {
   }
 });
 
-router.post('/create', verifyToken(process.env.SECRET_KEY), async () => {
+router.post('/create', verifyToken(process.env.SECRET_KEY), async (req, res) => {
   const cont = req.body
   PaginaModel.create(cont)
   .then((create) =>{
@@ -42,5 +42,45 @@ router.put(
     }
   }
 )
+
+router.delete(
+  '/delete/:paginaId',
+  verifyToken(process.env.SECRET_KEY),
+  async (req, res) =>{
+    const cont = req.params
+    try{
+      const del = await PaginaModel.delete({
+        paginaId: cont.paginaId,
+      })
+      res.json(del)
+    } catch(error){
+      res.json('Fallo al eliminar la pagina')
+    }
+  }
+)
+
+router.get(
+  '/getpagxpef',
+  async (req, res) =>{
+    try{
+      PaginaModel.getPagxpef().then((result) =>{
+        res.status(200).json(result)
+      })
+    }catch(error){
+      console.log(error)
+      res.json(error)
+    }
+  }
+)
+
+router.get('/getAll/:perfilId', async (req, res) => {
+  try {
+    const cont = req.params;
+    const paginas = await PaginaModel.getPefPag(cont);
+    res.json(paginas);
+  } catch (error) {
+    res.json(error);
+  }
+});
 
 export default router;
