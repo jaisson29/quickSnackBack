@@ -19,7 +19,7 @@ class ProductModel {
         }
       });
     });
-  }
+  } 
 
   static create(data) {
     return new Promise((resolve, reject) => {
