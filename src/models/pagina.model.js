@@ -29,9 +29,9 @@ class PaginaModel {
     return new Promise((resolve, reject)=>{
       try{
         const sql = 
-        'INSERT INTO pagina (paginaNom, paginaIcon, paginaRuta) VALUES(?)'
+        'INSERT INTO pagina (paginaNom, paginaIcon, paginaRuta) VALUES(?,?,?)'
 
-        db.sql(
+        db.query(
           sql,
           [
             data.paginaNom,
@@ -47,6 +47,7 @@ class PaginaModel {
           }
         )
       } catch(err){
+        console.log(err)
         reject(err)
       }
     })
@@ -61,8 +62,8 @@ class PaginaModel {
         'SET paginaNom = ?, paginaIcon = ?, paginaRuta = ?' +
         ' ' +
         'WHERE paginaId = ?'
-        db.sql(
-          query,
+        db.query(
+          sql,
           [
             data.paginaNom,
             data.paginaIcon,
@@ -88,7 +89,7 @@ class PaginaModel {
       try{
         const sql = 'DELETE FROM pagina WHERE paginaId = ?'
 
-        db.sql(sql, [data.paginaId], (err, result)  =>{
+        db.query(sql, [data.paginaId], (err, result)  =>{
           if(result.affectedRows == 1 ){
             resolve(`Se elimino ${result.affectedRows} registro`)
           }else {

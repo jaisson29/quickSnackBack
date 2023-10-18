@@ -20,12 +20,13 @@ class Mpef {
     return new Promise((resolve, reject) => {
       try {
         const query =
-          'INSERT INTO perfil ( perfilNom ) VALUES (?)'
+          'INSERT INTO perfil ( perfilNom ) VALUES (?,?)'
 
         db.query(
           query,
           [
             data.perfilNom,
+            data.paginaRuta,
           ],
           (err, result) => {
             if (result.affectedRows === 1) {
@@ -47,14 +48,16 @@ class Mpef {
         const query =
           'UPDATE perfil' +
           ' ' +
-          'SET perfilNom = ?' +
+          'SET perfilNom = ?, paginaRuta = ?' +
           ' ' +
           'WHERE perfilId = ?'
         db.query(
           query,
           [
-            data.perfilId,
-            data.perfilNom
+            data.perfilNom,
+            data.paginaRuta,
+            data.perfilId
+            
           ],
           (err, result) => {
             if (result.affectedRows == 1) {
