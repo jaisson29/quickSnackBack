@@ -32,5 +32,4 @@ app.use('/api/pagina/', PaginaRoutes);
 app.use('/api/login/', LoginRoutes);  
 app.use('/api/transac/', TransacRouter);
 app.use('/api/Catego/', CategoRouter);
-app.use('/api/usuarios/', UserRoutes)
 export default app;

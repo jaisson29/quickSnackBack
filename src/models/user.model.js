@@ -130,7 +130,6 @@ class UserModel {
           usuEmail,
           usuContra,
           usuIngreso,
-
           perfilId,
           usuId,
         } = data;

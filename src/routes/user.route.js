@@ -53,13 +53,14 @@ router.post('/getOne', async (req, res) => {
 router.post(
   '/crear',
   verifyToken(process.env.SECRET_KEY),
-  upload.single('prodImg'),
+  upload.single('usuImg'),
   async (req, res) => {
     const cont = req.body;
-    const imgPath = req.file.originalname;
+    const imgPath = req.file ? req.file.originalname : null; 
     const usuData = {
       ...cont,
-      prodImg: imgPath,
+      usuIngreso: new Date(),
+      usuImg: imgPath,
     };
     UserModel.create(usuData)
       .then((respuesta) => {
@@ -90,9 +91,15 @@ router.post(
 router.put(
   '/actualizar',
   verifyToken(process.env.SECRET_KEY),
+  upload.single('usuImg'),
   async (req, res) => {
     const cont = req.body;
-    UserModel.update(cont)
+    const imgPath = req.file ? req.file.originalname : cont.usuImg;
+    const newUsuData = {
+       ...cont, 
+       usuImg: imgPath,
+    }
+    UserModel.update(newUsuData)
       .then((respuesta) => {
         res.status(200).json({
           message: 'Usuario actualizado correctamente',
