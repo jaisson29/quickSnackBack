@@ -13,7 +13,6 @@ class ProductModel {
 				'WHERE c.catId != 1'
 			db.query(query, (err, results) => {
 				if (err) {
-					console.log(err)
 					reject(err)
 				} else {
 					resolve(results)
@@ -86,7 +85,6 @@ class ProductModel {
 
 				db.query(query, [prodId], (err, result) => {
 					if (result.affectedRows == 1) {
-						console.log(result)
 						resolve(`Se elimino ${result.affectedRows} registro`)
 					} else {
 						reject(new Error(err))

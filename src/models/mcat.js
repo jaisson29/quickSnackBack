@@ -91,7 +91,6 @@ class Mcat {
     return new Promise((resolve, reject) => {
         const query = 'SELECT catId, COUNT(catId) as can FROM producto group by catId'
         db.query(query, (err, results) => {
-          console.log(err,query)
           if (err) {
             reject(err)
           } else {

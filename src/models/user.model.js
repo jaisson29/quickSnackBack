@@ -19,7 +19,6 @@ class UserModel {
 					}
 				})
 			} catch (err) {
-				console.log(err)
 				reject(err)
 			}
 		})
@@ -44,7 +43,6 @@ class UserModel {
 					}
 				})
 			} catch (err) {
-				console.log(err)
 				reject(err)
 			}
 		})
@@ -68,7 +66,6 @@ class UserModel {
 					}
 				})
 			} catch (err) {
-				console.log(err)
 				reject(err)
 			}
 		})
@@ -89,7 +86,6 @@ class UserModel {
 					}
 				})
 			} catch (err) {
-				console.log('error', err)
 				reject(err)
 			}
 		})
@@ -126,7 +122,6 @@ class UserModel {
 					},
 				)
 			} catch (err) {
-				console.log('Error en la consulta', err)
 				reject(err)
 			}
 		})
@@ -146,7 +141,6 @@ class UserModel {
 					}
 				})
 			} catch (err) {
-				console.log('error', err)
 				reject(err)
 			}
 		})

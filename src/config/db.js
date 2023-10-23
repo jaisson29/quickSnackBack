@@ -6,7 +6,7 @@ const dbConfig = {
 	host: 'localhost',
 	database: 'quicksnack',
 	user: 'root',
-	password: '',
+	password: '' || process.env.DB_PASS,
 }
 
 const db = mysql.createConnection(dbConfig)
