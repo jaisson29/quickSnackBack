@@ -3,6 +3,7 @@
 import express from 'express'
 import UserModel from '../models/user.model.js'
 import { generateToken, verifyToken } from '../utils/jwt.js'
+import bcrypt from 'bcrypt'
 
 const router = express.Router()
 
@@ -23,8 +24,8 @@ router.post('/loguear', async (req, res) => {
 		usuEmail: cont.usuEmail,
 		usuContra: cont.usuContra,
 	})
-		.then((usuario) => {
-			if (usuario.length !== 0) {
+		.then(async (usuario) => {
+			if (usuario.length !== 0 && (await bcrypt.compare(cont.usuContra, usuario[0].usuContra))) {
 				generateToken(usuario)
 					.then((usuToken) => {
 						res.status(200).json(usuToken)
@@ -48,6 +49,14 @@ router.post('/crearUsu', async (req, res) => {
 	const cont = req.body
 	UserModel.create({
 		...cont,
+		usuContra: bcrypt
+			.hash(cont.usuContra, 10)
+			.then((hash) => {
+				return hash
+			})
+			.catch((err) => {
+				throw new Error(err)
+			}),
 		usuIngreso: new Date(),
 		perfilId: 2,
 	})

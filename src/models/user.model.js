@@ -56,7 +56,7 @@ class UserModel {
 					'FROM usuario AS usu ' +
 					'INNER JOIN perfil AS per ' +
 					'ON usu.perfilId = per.perfilId ' +
-					'WHERE usuEmail = ? AND usuContra = ?'
+					'WHERE usuEmail = ?'
 				const { usuEmail, usuContra } = data
 				db.query(sql, [usuEmail, usuContra], (err, result) => {
 					if (err) {
