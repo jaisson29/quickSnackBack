@@ -14,7 +14,7 @@ router.get('/getAll', async (req, res)  =>{
 
 })
 
-router.post('/create', verifyToken(process.env.SECRECT_KEY), async () => {
+router.post('/create', verifyToken(process.env.SECRET_KEY), async (req, res) => {
     const cont = req.body
     Mpef.create(cont)
     .then((create) =>{
@@ -31,7 +31,7 @@ router.post('/create', verifyToken(process.env.SECRECT_KEY), async () => {
 
 router.put(
     '/update',
-    verifyToken(process.env.SECRECT_KEY),
+    verifyToken(process.env.SECRET_KEY),
     async(req, res) =>{
         const cont = req.body
         try{
@@ -42,5 +42,7 @@ router.put(
         }
     }
 );
+
+
 
 export default router;

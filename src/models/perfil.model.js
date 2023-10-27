@@ -19,11 +19,11 @@ class Mpef {
   static create(data) {
     return new Promise((resolve, reject) => {
       try {
-        const query =
-          'INSERT INTO perfil ( perfilNom ) VALUES (?,?)'
+        const sql =
+          'INSERT INTO perfil ( perfilNom, paginaRuta) VALUES (?,?)'
 
         db.query(
-          query,
+          sql,
           [
             data.perfilNom,
             data.paginaRuta,
@@ -93,6 +93,80 @@ class Mpef {
       }
     })
   }
+
+  static getPag(){
+    return new Promise((resolve, reject) => {
+      const sql =
+      'SELECT paginaId, paginaNom, paginaIcon FROM pagina';
+
+      db.query(sql, (error, result) => {
+        if(error){
+          reject(error);
+        }else{
+          resolve(results);
+        }
+      })
+    })
+  }
+
+  static createPxP(data){
+    return new Promise((resolve, reject) =>{
+      try{
+        const sql =
+        'INSERT INTO perxpag(paginaId,perfilId) VALUES (?,?)'
+        db.query(
+          sql,
+          [
+            data.paginaId,
+            data.PerfilId,
+          ],
+          (err, result) =>{
+            if(result.affectedRows === 1){
+              resolve(result)
+            }else{
+              reject(new Error(err))
+            }
+          }
+        )
+      }catch (error){
+        reject(new Error(err))
+      }
+    })
+  }
+
+  static delPxP(data){
+    return new Promise((resolve, reject) =>{
+      try{
+        const sql = 'DELETE FROM perxpag WHERE perfilId = ?';
+
+        db.query(sql, [data.PerfilId], (err, result) =>{
+          if(result.affectedRows == 1){
+            resolve(`Se elimino ${result.affectedRows} registro`)
+          }else{
+            reject(new Error(err))
+          }
+        })
+      }catch(error){
+        reject(new Error(error))
+      }
+    })
+  }
+
+  static selPxp(){
+    return new Promise((resolve, reject) => {
+      const sql =
+      'SELECT paginaId FROM perxpag WHERE perfilId = ?';
+
+      db.query(sql, (error, result) => {
+        if(error){
+          reject(error);
+        }else{
+          resolve(results);
+        }
+      })
+    })
+  }
+
 }
 
 export default Mpef
