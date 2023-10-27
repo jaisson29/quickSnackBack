@@ -57,10 +57,10 @@ class UserModel {
 					'INNER JOIN perfil AS per ' +
 					'ON usu.perfilId = per.perfilId ' +
 					'WHERE usuEmail = ?'
-				const { usuEmail, usuContra } = data
-				db.query(sql, [usuEmail, usuContra], (err, result) => {
+				const { usuEmail } = data
+				db.query(sql, [usuEmail], (err, result) => {
 					if (err) {
-						reject(err)
+						reject(new Error(err))
 					} else {
 						resolve(result)
 					}
@@ -82,11 +82,11 @@ class UserModel {
 					if (result && result.affectedRows === 1) {
 						resolve(result)
 					} else {
-						reject(err)
+						reject(new Error(err))
 					}
 				})
 			} catch (err) {
-				reject(err)
+				reject(new Error(err))
 			}
 		})
 	}

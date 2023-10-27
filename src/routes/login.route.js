@@ -22,7 +22,6 @@ router.post('/loguear', async (req, res) => {
 	const cont = req.body
 	UserModel.getOneXEmailXContra({
 		usuEmail: cont.usuEmail,
-		usuContra: cont.usuContra,
 	})
 		.then(async (usuario) => {
 			if (usuario.length !== 0 && (await bcrypt.compare(cont.usuContra, usuario[0].usuContra))) {
@@ -49,7 +48,7 @@ router.post('/crearUsu', async (req, res) => {
 	const cont = req.body
 	UserModel.create({
 		...cont,
-		usuContra: bcrypt
+		usuContra: await bcrypt
 			.hash(cont.usuContra, 10)
 			.then((hash) => {
 				return hash
