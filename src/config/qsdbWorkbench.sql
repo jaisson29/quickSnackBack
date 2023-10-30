@@ -1,4 +1,4 @@
--- Active: 1697657530897@@127.0.0.1@3306@quicksnack
+-- Active: 1697339210603@@127.0.0.1@3306@quicksnack
 
 -- MySQL Workbench Forward Engineering
 
@@ -102,6 +102,8 @@ CREATE TABLE
         CONSTRAINT `genderXValue` FOREIGN KEY (`usuGen`) REFERENCES `quickSnack`.`valor` (`valorId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
         CONSTRAINT `docTypeXValue` FOREIGN KEY (`usuTipoDoc`) REFERENCES `quickSnack`.`valor` (`valorId`) ON DELETE NO ACTION ON UPDATE NO ACTION
     ) ENGINE = InnoDB;
+
+ALTER TABLE quickSnack.usuario AUTO_INCREMENT = 101;
 
 -- -----------------------------------------------------
 
@@ -372,6 +374,10 @@ INSERT INTO
     `quickSnack`.`valor` (`valorId`, `param`, `domId`)
 VALUES (7, 'Pago', 3);
 
+INSERT INTO
+    `quickSnack`.`valor` (`valorId`, `param`, `domId`)
+VALUES (8, 'no definido', 1);
+
 COMMIT;
 
 -- -----------------------------------------------------
@@ -500,6 +506,36 @@ VALUES (
         '2023-07-23 12:29:34',
         'default-img.webp',
         3,
+        NULL,
+        NULL
+    );
+
+INSERT INTO
+    `quickSnack`.`usuario` (
+        `usuId`,
+        `usuTipoDoc`,
+        `usuNoDoc`,
+        `usuGen`,
+        `usuNom`,
+        `usuEmail`,
+        `usuContra`,
+        `usuIngreso`,
+        `usuImg`,
+        `perfilId`,
+        `usuFecha`,
+        `usuPassCode`
+    )
+VALUES (
+        100,
+        4,
+        '0000000000',
+        8,
+        'Persona',
+        'persona@qs.com',
+        '$2b$08$h/pm./sYdIdw.nEIsjDOKOl5suIzGQNvkDSESMrCkxZVstZ4o80m',
+        '2023-07-23 12:29:34',
+        'default-img.webp',
+        2,
         NULL,
         NULL
     );

@@ -6,7 +6,7 @@ class TransacModel {
 	static getAll() {
 		return new Promise((resolve, reject) => {
 			const sql =
-				'SELECT ts.transacId, ts.transacFecha, ts.transacTipo, ts.transacCant, usu.usuId, usu.usuNom ' +
+				'SELECT ts.transacId, ts.transacFecha, ts.transacTipo, ts.usuId, usu.usuNom ' +
 				'FROM transaccion ts ' +
 				'INNER JOIN usuario usu ' +
 				'ON ts.usuId = usu.usuId'
@@ -62,10 +62,10 @@ class TransacModel {
 
 	static create(data) {
 		return new Promise((resolve, reject) => {
-			const sql = 'INSERT INTO transaccion(transacFecha, transacCant, usuId) ' + 'VALUES(?, ?, ?)'
-			const { transacFecha, transacCant, usuId } = data
+			const sql = 'INSERT INTO transaccion(transacFecha, transacTipo, usuId) ' + 'VALUES(?, ?, ?)'
+			const { transacFecha, transacTipo, usuId } = data
 
-			query(sql, [transacFecha, transacCant, usuId])
+			query(sql, [transacFecha, transacTipo, usuId])
 				.then((resultado) => {
 					resolve(resultado)
 				})

@@ -27,7 +27,7 @@ router.post('/loguear', async (req, res) => {
 			if (usuario.length !== 0 && (await bcrypt.compare(cont.usuContra, usuario[0].usuContra))) {
 				generateToken(usuario)
 					.then((usuToken) => {
-						res.status(200).json(usuToken)
+						res.status(200).json({ token: usuToken, pg: usuario.paginaRuta })
 					})
 					.catch((err) => {
 						res.status(500).json({ error: 'No se pudo generar el token', message: err })
