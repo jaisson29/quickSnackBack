@@ -94,21 +94,6 @@ class Mpef {
     })
   }
 
-  static getPag(){
-    return new Promise((resolve, reject) => {
-      const sql =
-      'SELECT paginaId, paginaNom, paginaIcon FROM pagina';
-
-      db.query(sql, (error, result) => {
-        if(error){
-          reject(error);
-        }else{
-          resolve(results);
-        }
-      })
-    })
-  }
-
   static createPxP(data){
     return new Promise((resolve, reject) =>{
       try{
@@ -118,7 +103,7 @@ class Mpef {
           sql,
           [
             data.paginaId,
-            data.PerfilId,
+            data.perfilId,
           ],
           (err, result) =>{
             if(result.affectedRows === 1){
@@ -139,7 +124,7 @@ class Mpef {
       try{
         const sql = 'DELETE FROM perxpag WHERE perfilId = ?';
 
-        db.query(sql, [data.PerfilId], (err, result) =>{
+        db.query(sql, [data.perfilId], (err, result) =>{
           if(result.affectedRows == 1){
             resolve(`Se elimino ${result.affectedRows} registro`)
           }else{
@@ -152,16 +137,17 @@ class Mpef {
     })
   }
 
-  static selPxp(){
+  static selPxp(data){
     return new Promise((resolve, reject) => {
       const sql =
       'SELECT paginaId FROM perxpag WHERE perfilId = ?';
 
-      db.query(sql, (error, result) => {
+      db.query(sql, [data.perfilId], (error, result) => {
         if(error){
           reject(error);
         }else{
-          resolve(results);
+          resolve(result);
+          
         }
       })
     })

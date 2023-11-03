@@ -43,6 +43,46 @@ router.put(
     }
 );
 
+router.post('/createPxP', verifyToken(process.env.SECRET_KEY), async (req, res) => {
+    const cont = req.body
+    Mpef.createPxP(cont)
+    .then((create) =>{
+        res.json(create)
+    })
+    .catch((error) =>{
+        res.json({
+            code:500,
+            error:'Fallos la creacion de la relacion',
+            message: error,
+        })
+    })
+});
 
+router.delete(
+    '/delete/:perfilId',
+    verifyToken(process.env.SECRET_KEY),
+    async (req, res) =>{
+      const cont = req.params
+      try{
+        const del = await Mpef.delPxP({
+          perfilId: cont.perfilId,
+        })
+        res.json(del)
+      } catch(error){
+        res.json('Fallo al eliminar la relacion')
+      }
+    }
+  )
+
+  router.get('/selPxp/:perfilId', async (req, res)  =>{
+    const cont = req.params
+    try{
+        const pagxper = await Mpef.selPxp(cont);
+        res.json(pagxper);
+    }catch(error){
+        res.json(error);
+    }
+
+})
 
 export default router;
