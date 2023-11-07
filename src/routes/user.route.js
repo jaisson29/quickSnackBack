@@ -44,12 +44,12 @@ router.post('/getOne', verifyToken(process.env.SECRET_KEY), async (req, res) => 
 		})
 })
 
-router.post('/crear', verifyToken(process.env.SECRET_KEY), upload.single('prodImg'), async (req, res) => {
+router.post('/crear', verifyToken(process.env.SECRET_KEY), upload.single('usuImg'), async (req, res) => {
 	const cont = req.body
-	const imgPath = req.file.originalname
+	const imgPath = req.file ? req.file.originalname : 'default-img.webp'
 	const usuData = {
 		...cont,
-		prodImg: imgPath,
+		usuImg: imgPath,
 	}
 	UserModel.create(usuData)
 		.then((respuesta) => {
@@ -74,26 +74,19 @@ router.post('/crear', verifyToken(process.env.SECRET_KEY), upload.single('prodIm
 // 	"usuId": #
 // }
 
-router.put(
-  '/actualizar',
-  verifyToken(process.env.SECRET_KEY),
-  async (req, res) => {
-    const cont = req.body;
-    UserModel.update(cont)
-      .then((respuesta) => {
-        res.status(200).json({
-          message: 'Usuario actualizado correctamente',
-          content: respuesta,
-        });
-      })
-      .catch((err) => {
-        res
-          .status(500)
-          .json({ error: 'No se pudo actualizar a el usuario', message: err });
-      });
-  }
-);
-
+router.put('/actualizar', verifyToken(process.env.SECRET_KEY), async (req, res) => {
+	const cont = req.body
+	UserModel.update(cont)
+		.then((respuesta) => {
+			res.status(200).json({
+				message: 'Usuario actualizado correctamente',
+				content: respuesta,
+			})
+		})
+		.catch((err) => {
+			res.status(500).json({ error: 'No se pudo actualizar a el usuario', message: err })
+		})
+})
 // http://localhost:5000/api/usuario/borrar/#
 router.delete('/borrar/:usuId', verifyToken(process.env.SECRET_KEY), async (req, res) => {
 	const cont = req.params
