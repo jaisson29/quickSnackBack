@@ -89,8 +89,7 @@ CREATE TABLE
         `usuIngreso` DATETIME NOT NULL,
         `usuImg` VARCHAR(255) NULL,
         `perfilId` INT NOT NULL,
-        `usuFecha` DATETIME NULL,
-        `usuPassCode` VARCHAR(255) NULL,
+        `usuKey` LONGTEXT NULL,
         PRIMARY KEY (`usuId`),
         INDEX `userXProfile_idx` (`perfilId` ASC),
         INDEX `genderXValue_idx` (`usuGen` ASC),
@@ -245,11 +244,11 @@ DROP TABLE IF EXISTS `quickSnack`.`detVenta` ;
 
 CREATE TABLE
     IF NOT EXISTS `quickSnack`.`detVenta` (
-        `detVentalId` INT NOT NULL AUTO_INCREMENT,
+        `detVentaId` INT NOT NULL AUTO_INCREMENT,
         `prodId` INT NOT NULL,
         `transacId` INT NOT NULL,
         `detVenCant` INT NOT NULL,
-        PRIMARY KEY (`detVentalId`),
+        PRIMARY KEY (`detVentaId`),
         INDEX `saleDetXProduct_idx` (`prodId` ASC),
         INDEX `saleDetXSaleBill_idx` (`transacId` ASC),
         CONSTRAINT `saleDetXProduct` FOREIGN KEY (`prodId`) REFERENCES `quickSnack`.`producto` (`prodId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -402,131 +401,10 @@ INSERT INTO
         `usuIngreso`,
         `usuImg`,
         `perfilId`,
-        `usuFecha`,
-        `usuPassCode`
+        `usuKey`
     )
 VALUES (
         1,
-        4,
-        '1070004545',
-        1,
-        'Jay Val',
-        'jais@outllok.com',
-        '$2b$10$YKbM/aw/pv5RG2hatLqnSeoTUThl4RlC1bw4.LliK0y/h/6is1tUu',
-        '2023-07-23 12:29:34',
-        'default-img.webp',
-        1,
-        NULL,
-        NULL
-    );
-
-INSERT INTO
-    `quickSnack`.`usuario` (
-        `usuId`,
-        `usuTipoDoc`,
-        `usuNoDoc`,
-        `usuGen`,
-        `usuNom`,
-        `usuEmail`,
-        `usuContra`,
-        `usuIngreso`,
-        `usuImg`,
-        `perfilId`,
-        `usuFecha`,
-        `usuPassCode`
-    )
-VALUES (
-        2,
-        4,
-        '12345',
-        2,
-        'Fercho',
-        'fercho@outllok.com',
-        '$2b$08$a4g8L.J./gc0SY6FC3G3Ye.MQSREtLVjoU0mEsOZONVagFDsuC1ZS',
-        '2023-07-23 12:29:34',
-        'default-img.webp',
-        2,
-        NULL,
-        NULL
-    );
-
-INSERT INTO
-    `quickSnack`.`usuario` (
-        `usuId`,
-        `usuTipoDoc`,
-        `usuNoDoc`,
-        `usuGen`,
-        `usuNom`,
-        `usuEmail`,
-        `usuContra`,
-        `usuIngreso`,
-        `usuImg`,
-        `perfilId`,
-        `usuFecha`,
-        `usuPassCode`
-    )
-VALUES (
-        3,
-        4,
-        '32154',
-        1,
-        'Miguel',
-        'miguel@outllok.com',
-        '$2b$08$HcUjxg/KiyMVCDT8H5zL1eXUVZ42ivGb5Jk9KHh7xNMrr56/HwL6m',
-        '2023-07-23 12:29:34',
-        'default-img.webp',
-        3,
-        NULL,
-        NULL
-    );
-
-INSERT INTO
-    `quickSnack`.`usuario` (
-        `usuId`,
-        `usuTipoDoc`,
-        `usuNoDoc`,
-        `usuGen`,
-        `usuNom`,
-        `usuEmail`,
-        `usuContra`,
-        `usuIngreso`,
-        `usuImg`,
-        `perfilId`,
-        `usuFecha`,
-        `usuPassCode`
-    )
-VALUES (
-        4,
-        4,
-        '987654',
-        1,
-        'Camilo',
-        'camilo@outllok.com',
-        '$2b$08$h/pm./sYdIdw.nEIsjDOKOl5suIzGQNvkDSESMrCkxZVstZ4o80m.',
-        '2023-07-23 12:29:34',
-        'default-img.webp',
-        3,
-        NULL,
-        NULL
-    );
-
-INSERT INTO
-    `quickSnack`.`usuario` (
-        `usuId`,
-        `usuTipoDoc`,
-        `usuNoDoc`,
-        `usuGen`,
-        `usuNom`,
-        `usuEmail`,
-        `usuContra`,
-        `usuIngreso`,
-        `usuImg`,
-        `perfilId`,
-        `usuFecha`,
-        `usuPassCode`
-    )
-VALUES (
-        100,
         4,
         '0000000000',
         8,
@@ -536,7 +414,120 @@ VALUES (
         '2023-07-23 12:29:34',
         'default-img.webp',
         2,
-        NULL,
+        NULL
+    );
+
+COMMIT;
+
+INSERT INTO
+    `quickSnack`.`usuario` (
+        `usuId`,
+        `usuTipoDoc`,
+        `usuNoDoc`,
+        `usuGen`,
+        `usuNom`,
+        `usuEmail`,
+        `usuContra`,
+        `usuIngreso`,
+        `usuImg`,
+        `perfilId`,
+        `usuKey`
+    )
+VALUES (
+        2,
+        4,
+        '1070004545',
+        1,
+        'Jay Val',
+        'jais@outllok.com',
+        '$2b$10$YKbM/aw/pv5RG2hatLqnSeoTUThl4RlC1bw4.LliK0y/h/6is1tUu',
+        '2023-07-23 12:29:34',
+        'default-img.webp',
+        1,
+        NULL
+    );
+
+INSERT INTO
+    `quickSnack`.`usuario` (
+        `usuId`,
+        `usuTipoDoc`,
+        `usuNoDoc`,
+        `usuGen`,
+        `usuNom`,
+        `usuEmail`,
+        `usuContra`,
+        `usuIngreso`,
+        `usuImg`,
+        `perfilId`,
+        `usuKey`
+    )
+VALUES (
+        3,
+        4,
+        '12345',
+        2,
+        'Fercho',
+        'fercho@outllok.com',
+        '$2b$08$a4g8L.J./gc0SY6FC3G3Ye.MQSREtLVjoU0mEsOZONVagFDsuC1ZS',
+        '2023-07-23 12:29:34',
+        'default-img.webp',
+        2,
+        NULL
+    );
+
+INSERT INTO
+    `quickSnack`.`usuario` (
+        `usuId`,
+        `usuTipoDoc`,
+        `usuNoDoc`,
+        `usuGen`,
+        `usuNom`,
+        `usuEmail`,
+        `usuContra`,
+        `usuIngreso`,
+        `usuImg`,
+        `perfilId`,
+        `usuKey`
+    )
+VALUES (
+        4,
+        4,
+        '32154',
+        1,
+        'Miguel',
+        'miguel@outllok.com',
+        '$2b$08$HcUjxg/KiyMVCDT8H5zL1eXUVZ42ivGb5Jk9KHh7xNMrr56/HwL6m',
+        '2023-07-23 12:29:34',
+        'default-img.webp',
+        3,
+        NULL
+    );
+
+INSERT INTO
+    `quickSnack`.`usuario` (
+        `usuId`,
+        `usuTipoDoc`,
+        `usuNoDoc`,
+        `usuGen`,
+        `usuNom`,
+        `usuEmail`,
+        `usuContra`,
+        `usuIngreso`,
+        `usuImg`,
+        `perfilId`,
+        `usuKey`
+    )
+VALUES (
+        5,
+        4,
+        '987654',
+        1,
+        'Camilo',
+        'camilo@outllok.com',
+        '$2b$08$h/pm./sYdIdw.nEIsjDOKOl5suIzGQNvkDSESMrCkxZVstZ4o80m.',
+        '2023-07-23 12:29:34',
+        'default-img.webp',
+        3,
         NULL
     );
 
@@ -721,7 +712,7 @@ VALUES (
         13,
         'Transacción',
         'fa-cash-register',
-        '/transaccion'
+        '/transaccion?tprs=7'
     );
 
 COMMIT;
@@ -871,7 +862,7 @@ INSERT INTO
 VALUES (
         1,
         1,
-        '100.000',
+        '100000',
         'Producto de recarga',
         'default-img.webp',
         100000,
@@ -891,7 +882,7 @@ INSERT INTO
 VALUES (
         2,
         1,
-        '50.000',
+        '50000',
         'Producto de recarga',
         'default-img.webp',
         50000,
@@ -911,7 +902,7 @@ INSERT INTO
 VALUES (
         3,
         1,
-        '20.000',
+        '20000',
         'Producto de recarga',
         'default-img.webp',
         20000,
@@ -931,7 +922,7 @@ INSERT INTO
 VALUES (
         4,
         1,
-        '10.000',
+        '10000',
         'Producto de recarga',
         'default-img.webp',
         10000,
@@ -951,7 +942,7 @@ INSERT INTO
 VALUES (
         5,
         1,
-        '5.000',
+        '5000',
         'Producto de recarga',
         'default-img.webp',
         5000,
@@ -971,7 +962,7 @@ INSERT INTO
 VALUES (
         6,
         1,
-        '2.000',
+        '2000',
         'Producto de recarga',
         'default-img.webp',
         2000,
@@ -991,7 +982,7 @@ INSERT INTO
 VALUES (
         7,
         1,
-        '1.000',
+        '1000',
         'Producto de recarga',
         'default-img.webp',
         1000,

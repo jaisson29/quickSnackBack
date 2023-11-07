@@ -46,6 +46,7 @@ router.post('/loguear', async (req, res) => {
 
 router.post('/crearUsu', async (req, res) => {
 	const cont = req.body
+	
 	UserModel.create({
 		...cont,
 		usuContra: await bcrypt

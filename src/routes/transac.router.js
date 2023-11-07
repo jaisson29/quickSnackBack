@@ -1,61 +1,47 @@
-import express from 'express';
-import verifyToken from '../middlewares/auth.js';
-import TransacModel from '../models/transac.model.js';
+/** @format */
 
-const router = express.Router();
+import express from 'express'
+import verifyToken from '../middlewares/auth.js'
+import TransacModel from '../models/transac.model.js'
+import DetVenTaModel from '../models/detVenta.model.js'
 
-router.get(
-  '/getAll',
-  verifyToken(process.env.SECRET_KEY),
-  async function (req, res) {
-    TransacModel.getAll()
-      .then(function (resultado) {
-        res.json(resultado);
-      })
-      .catch(function (err) {
-        res
-          .status(500)
-          .json({ error: err.message, mensaje: err.name, codigo: err.cod });
-      });
-  }
-);
+const router = express.Router()
 
-router.get(
-  '/getByUser/:usuId',
-  verifyToken(process.env.SECRET_KEY),
-  (req, res) => {
-    const cont = req.params;
-    TransacModel.getByUser(cont)
-      .then((respuesta) => {
-        res.status(200).json(respuesta);
-      })
-      .catch((err) => {
-        res
-          .status(err.codigo)
-          .json({ error: err.message, mensaje: err.name, codigo: err.cod });
-      });
-  }
-);
+router.get('/getAll', verifyToken(process.env.SECRET_KEY), async function (req, res) {
+	TransacModel.getAll()
+		.then(function (resultado) {
+			res.json(resultado)
+		})
+		.catch(function (err) {
+			res.status(500).json({ error: err.message, mensaje: err.name, codigo: err.cod })
+		})
+})
 
-router.post(
-  '/create',
-  verifyToken(process.env.SECRET_KEY),
-  function (req, res) {
-    const cont = req.body;
+router.get('/getByUser/:usuId', verifyToken(process.env.SECRET_KEY), (req, res) => {
+	const cont = req.params
+	TransacModel.getByUser(cont)
+		.then((respuesta) => {
+			res.status(200).json(respuesta)
+		})
+		.catch((err) => {
+			res.status(err.codigo).json({ error: err.message, mensaje: err.name, codigo: err.cod })
+		})
+})
 
-    let transacData = {
-      ...cont,
-      transacFecha: new Date(),
-    };
+router.post('/', verifyToken(process.env.SECRET_KEY), function (req, res) {
+	const { usuId, transacTipo, det } = req.body
+	TransacModel.create({ usuId, transacTipo, transacFecha: new Date() })
+		.then((result) => {
+			const { insertId } = result
+			DetVenTaModel.create({ transacId: insertId, det }).then(result => {
+				res.status(200).json(result)
+			}).catch( err => {
+				res.status(err.status).json(err)
+			})
+		})
+		.catch((err) => {
+			res.json(err)
+		})
+})
 
-    TransacModel.create(transacData)
-      .then((res) => {
-        res.json(res);
-      })
-      .catch((err) => {
-        res.send(err);
-      });
-  }
-);
-
-export default router;
+export default router

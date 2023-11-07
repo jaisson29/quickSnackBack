@@ -21,6 +21,24 @@ class ProductModel {
 		})
 	}
 
+	static getAllXCat(data) {
+		return new Promise((resolve, reject) => {
+			const query =
+				'SELECT p.prodId, c.catNom, c.catId, p.prodNom, p.prodDescr, p.prodImg, p.prodValCom, p.prodValVen ' +
+				'FROM producto p ' +
+				'INNER JOIN categoria c ' +
+				'ON p.catId = c.catId ' +
+				'WHERE p.catId = ?'
+			db.query(query, [data.catId], (err, results) => {
+				if (err) {
+					reject(err)
+				} else {
+					resolve(results)
+				}
+			})
+		})
+	}
+
 	static getVenXProd() {
 		return new Promise((resolve, reject) => {
 			const query = 'SELECT prodId, COUNT(prodId) cant ' + 'FROM `detventa` ' + 'GROUP BY prodId;'

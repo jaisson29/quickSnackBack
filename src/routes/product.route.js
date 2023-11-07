@@ -28,6 +28,21 @@ router.get('/getAll', verifyToken(process.env.SECRET_KEY), async (req, res) => {
 	}
 })
 
+router.get('/getAll/:catId', verifyToken(process.env.SECRET_KEY), async (req, res) => {
+	const cont = req.params
+	try {
+		ProductModel.getAllXCat(cont)
+			.then((result) => {
+				res.status(200).json(result)
+			})
+			.catch((err) => {
+				res.status(500).json({ error: err.message, mensaje: err.name})
+			})
+	} catch (error) {
+		res.json({ code: 500, error: 'Algo fallo en obtener los productos por esta categoria' })
+	}
+})
+
 router.get('/getVenXProd', verifyToken(process.env.SECRET_KEY), async (req, res) => {
 	try {
 		ProductModel.getVenXProd()
