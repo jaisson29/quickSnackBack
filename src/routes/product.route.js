@@ -2,7 +2,7 @@
 
 import express from 'express'
 import ProductModel from '../models/product.model.js'
-import verifyToken from '../middlewares/auth.js'
+import { verifyToken } from '../middlewares/auth.js'
 import multer from 'multer'
 
 const router = express.Router()
@@ -36,7 +36,7 @@ router.get('/getAll/:catId', verifyToken(process.env.SECRET_KEY), async (req, re
 				res.status(200).json(result)
 			})
 			.catch((err) => {
-				res.status(500).json({ error: err.message, mensaje: err.name})
+				res.status(500).json({ error: err.message, mensaje: err.name })
 			})
 	} catch (error) {
 		res.json({ code: 500, error: 'Algo fallo en obtener los productos por esta categoria' })

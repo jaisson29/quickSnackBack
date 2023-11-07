@@ -1,39 +1,36 @@
-import 'dotenv/config'
+/** @format */
+
 import jwt from 'jsonwebtoken'
 
-const alg = 'HS256'
-
-export const generateToken = async (payload) => {
-  return new Promise((resolve, reject) => {
-    try {
-      jwt.sign(
-        { payload },
-        process.env.SECRET_KEY,
-        { expiresIn: '2h', algorithm: alg },
-        (err, token) => {
-          if (err) {
-            reject(err)
-          } else {
-            resolve(token)
-          }
-        }
-      )
-    } catch (error) {
-      reject(error)
-    }
-  })
+function generateToken(payload, secretKey) {
+	return new Promise((resolve, reject) => {
+		try {
+			jwt.sign({ payload }, secretKey, { expiresIn: '2h', algorithm: process.env.ALGORITHM }, (err, token) => {
+				if (err) {
+					reject(err)
+				} else {
+					resolve(token)
+				}
+			})
+		} catch (error) {
+			reject(error)
+		}
+	})
 }
 
-export const verifyToken = (token) => {
-  token = token.split(' ')[1]
-  return new Promise((resolve, reject) => {
-    try {
-      jwt.verify(token, process.env.SECRET_KEY, (err, data) => {
-        if (err) reject(new Error({ isAuth: false, error }))
-        else resolve(data)
-      })
-    } catch (error) {
-      reject(error)
-    }
-  })
+const authToken = async (token) => {
+	return new Promise((resolve, reject) => {
+		try {
+			token = token.split(' ')[1]
+			jwt.verify(token, process.env.SECRET_KEY, (err, data) => {
+				if (err) reject(new Error(err))
+				else resolve(data)
+			})
+		} catch (error) {
+			console.log(error)
+			reject(error)
+		}
+	})
 }
+
+export { generateToken, authToken }

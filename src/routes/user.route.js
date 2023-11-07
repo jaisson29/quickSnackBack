@@ -1,8 +1,8 @@
 /** @format */
 
-import express, { response } from 'express'
+import express from 'express'
 import UserModel from '../models/user.model.js'
-import verifyToken from '../middlewares/auth.js'
+import { verifyToken } from '../middlewares/auth.js'
 import multer from 'multer'
 
 const router = express.Router()
@@ -46,7 +46,7 @@ router.post('/getOne', verifyToken(process.env.SECRET_KEY), async (req, res) => 
 
 router.post('/crear', verifyToken(process.env.SECRET_KEY), upload.single('prodImg'), async (req, res) => {
 	const cont = req.body
-	const imgPath = req.file.originalname
+	const imgPath = req.file.originalname | (cont.usuGen === 1 ? 'icon-male-100-png' : 'icon-female-100.png')
 	const usuData = {
 		...cont,
 		prodImg: imgPath,

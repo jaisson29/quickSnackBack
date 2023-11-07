@@ -2,11 +2,11 @@
 
 import express from 'express'
 import UserModel from '../models/user.model.js'
-import { generateToken, verifyToken } from '../utils/jwt.js'
 import bcrypt from 'bcrypt'
-
+import { generateToken, authToken } from '../utils/jwt.js'
+import { verifyToken } from '../middlewares/auth.js'
+import transporter from '../config/mailer.js'
 const router = express.Router()
-
 router.get('/verify', async (req, res) => {
 	const head = req.headers.authorization
 	verifyToken(head)
@@ -25,7 +25,7 @@ router.post('/loguear', async (req, res) => {
 	})
 		.then(async (usuario) => {
 			if (usuario.length !== 0 && (await bcrypt.compare(cont.usuContra, usuario[0].usuContra))) {
-				generateToken(usuario)
+				generateToken(usuario, process.env.SECRET_KEY)
 					.then((usuToken) => {
 						res.status(200).json({ token: usuToken, pg: usuario.paginaRuta })
 					})
@@ -46,7 +46,7 @@ router.post('/loguear', async (req, res) => {
 
 router.post('/crearUsu', async (req, res) => {
 	const cont = req.body
-	
+
 	UserModel.create({
 		...cont,
 		usuContra: await bcrypt
@@ -69,6 +69,27 @@ router.post('/crearUsu', async (req, res) => {
 				message: error,
 			})
 		})
+})
+
+router.post('/forgotPass', (req, res) => {
+	const cont = req.body
+	if (cont.usuEmail) {
+		generateToken(cont.usuEmail, process.env.SECRET_KEY_EMAIL)
+			.then((token) => {
+				transporter.sendMail({
+					from: '"Recuperar su contraseña" <jayVal029@gmail.com>',
+					to: `${cont.usuEmail}`,
+					subject: 'Haz solicitado una nueva contraseña',
+					text: 'Pulsa el boton para recuperar tu contraseña',
+					html: `<a href="http://localhost:3000?token=${token}">Click</a>`,
+				})
+				res.status(200).json({ message: `Correo enviado a ${cont.usuEmail}` })
+			})
+			.catch((err) => {
+				console.log(err)
+				res.status(200).json({ message: `Correo enviado a ${cont.usuEmail}` })
+			})
+	}
 })
 
 export default router

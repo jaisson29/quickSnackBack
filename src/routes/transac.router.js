@@ -1,7 +1,7 @@
 /** @format */
 
 import express from 'express'
-import verifyToken from '../middlewares/auth.js'
+import {verifyToken} from '../middlewares/auth.js'
 import TransacModel from '../models/transac.model.js'
 import DetVenTaModel from '../models/detVenta.model.js'
 

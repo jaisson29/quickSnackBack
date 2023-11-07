@@ -1,5 +1,4 @@
 /** @format */
-
 import express from 'express'
 import cors from 'cors'
 import ProductRoutes from './routes/product.route.js'
