@@ -9,7 +9,6 @@ class Mcat {
         if (err) {
           reject(err)
         } else {
-          console.log(results)
           resolve(results)
         }
       })
@@ -45,7 +44,7 @@ class Mcat {
     return new Promise((resolve, reject) => {
       try {
         const query =
-          'UPDATE Categoria' +
+          'UPDATE categoria' +
           ' ' +
           'SET catNom = ?' +
           ' ' +
@@ -58,7 +57,6 @@ class Mcat {
           ],
           (err, result) => {
             if (result.affectedRows == 1) {
-              console.log(result)
               resolve(`Se actualizo ${result.affectedRows} registro`)
             } else {
               reject(new Error(err))
@@ -76,10 +74,8 @@ class Mcat {
       try {
         const query = 'DELETE FROM categoria WHERE catId = ?'
 
-        db.query(query, [data.prodId], (err, result) => {
-          console.log(result);
+        db.query(query, [data.catId], (err, result) => {
           if (result.affectedRows == 1) {
-            console.log(result)
             resolve(`Se elimino ${result.affectedRows} registro`)
           } else {
             reject(new Error(err))
@@ -88,6 +84,19 @@ class Mcat {
       } catch (error) {
         reject(new Error(error))
       }
+    })
+  }
+
+  static getMxP(){
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT catId, COUNT(catId) as can FROM producto group by catId'
+        db.query(query, (err, results) => {
+          if (err) {
+            reject(err)
+          } else {
+            resolve(results)
+          }
+        })
     })
   }
 }

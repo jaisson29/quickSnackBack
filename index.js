@@ -1,5 +1,7 @@
 import 'dotenv/config'
 import app from './src/app.js'
+console.log(process.env.DB_PASS)
+
 
 app.set('port', process.env.PORT)
 
