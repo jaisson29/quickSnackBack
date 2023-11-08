@@ -37,7 +37,8 @@ app.use('/api/catego/', CategoRouter)
 app.use('/api/detventa/', DetVentaRouter)
 
 app.use((err, req, res, next) => {
-	console.error(err.stack) // Imprime el stack trace del error en la consola
-	res.status(500).send({ message: 'Algo salió mal' })
+	console.error(err.stack)
+	res.status(500).send({ message: 'Algo salió mal', codigo: 1005, error: err })
 })
+
 export default app
