@@ -18,11 +18,11 @@ function generateToken(payload, secretKey) {
 	})
 }
 
-const authToken = async (token) => {
+const authToken = async (token, secretKey) => {
 	return new Promise((resolve, reject) => {
 		try {
 			token = token.split(' ')[1]
-			jwt.verify(token, process.env.SECRET_KEY, (err, data) => {
+			jwt.verify(token, secretKey, (err, data) => {
 				if (err) reject(new Error(err))
 				else resolve(data)
 			})

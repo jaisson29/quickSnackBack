@@ -9,7 +9,7 @@ import { verifyToken } from '../middlewares/auth.js';
 const router = express.Router();
 router.get('/verify', async (req, res) => {
 	const head = req.headers.authorization;
-	authToken(head)
+	authToken(head, process.env.SECRET_KEY)
 		.then((verificado) => {
 			res.status(200).json(verificado);
 		})
@@ -74,21 +74,28 @@ router.post('/crearUsu', async (req, res) => {
 router.post('/forgotPass', (req, res) => {
 	const cont = req.body;
 	if (cont.usuEmail) {
-		generateToken(cont.usuEmail, process.env.SECRET_KEY_EMAIL)
-			.then((token) => {
-				transporter.sendMail({
-					from: '"Recuperar su contraseña" <jayVal029@gmail.com>',
-					to: `${cont.usuEmail}`,
-					subject: 'Haz solicitado una nueva contraseña',
-					text: 'Pulsa el boton para recuperar tu contraseña',
-					html: `<a href="http://localhost:3000/reset/${token}">Click</a>`,
-				});
-				
-				res.status(200).json({ message: `Correo enviado a ${cont.usuEmail}` });
+		UserModel.getOne({ usuEmail })
+			.then((usuario) => {
+				console.log(usuario)
+				generateToken(usuario, process.env.SECRET_KEY_EMAIL)
+					.then((token) => {
+						transporter.sendMail({
+							from: '"Recuperar su contraseña" <jayVal029@gmail.com>',
+							to: `${cont.usuEmail}`,
+							subject: 'Haz solicitado una nueva contraseña',
+							text: 'Pulsa el boton para recuperar tu contraseña',
+							html: `<a href="https://s89vncr4-3000.use2.devtunnels.ms?token=${token}">Click</a>`,
+						});
+
+						res.status(200).json({ message: `Correo enviado a ${cont.usuEmail}` });
+					})
+					.catch((err) => {
+						console.log(err);
+						res.status(200).json({ message: `Correo enviado a ${cont.usuEmail}` });
+					});
 			})
 			.catch((err) => {
-				console.log(err);
-				res.status(200).json({ message: `Correo enviado a ${cont.usuEmail}` });
+				res.status(404).json({ message: 'No se encontro este email', error: err });
 			});
 	}
 });
@@ -96,10 +103,8 @@ router.post('/forgotPass', (req, res) => {
 router.post('/nuevaPass', verifyToken(process.env.SECRET_KEY_EMAIL), async (req, res) => {
 	const cont = req.body;
 	const token = req.headers.authorization;
-	authToken(token)
-		.then((res) => {
-
-		})
+	authToken(token, process.env.SECRET_KEY_EMAIL)
+		.then((res) => {})
 		.catch((err) => {
 			res.status(401).json({ err, message: 'Hubo un problema de autenticación' });
 		});
