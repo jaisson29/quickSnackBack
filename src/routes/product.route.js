@@ -77,13 +77,13 @@ router.post('/create', verifyToken(process.env.SECRET_KEY), upload.single('prodI
 		})
 })
 
-router.put('/update', verifyToken(process.env.SECRET_KEY), upload.single('prodImg'), async (req, res) => {
+router.put('/update', verifyToken(process.env.SECRET_KEY), upload.single('usuImg'), async (req, res) => {
 	const cont = req.body
-	const imgPath = req.file ? req.file.originalname : cont.prodImg
+	const imgPath = req.file ? req.file.originalname : cont.usuImg
 	const newProdData = {
 		...cont,
 
-		prodImg: imgPath,
+		usuImg: imgPath,
 	}
 	try {
 		const update = await ProductModel.update(newProdData)

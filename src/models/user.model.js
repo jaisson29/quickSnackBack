@@ -117,30 +117,51 @@ class UserModel {
 		})
 	}
 
-	static update(data) {
-		return new Promise((resolve, reject) => {
-			try {
-				const query =
-					'UPDATE usuario ' +
-					'SET usuTipoDoc = ?, usuNoDoc = ?, usuGen = ?, usuNom = ?, usuEmail = ?, usuContra = ?, usuIngreso = ?, perfilId = ? ' +
-					'WHERE usuId = ?'
-				const { usuTipoDoc, usuNoDoc, usuGen, usuNom, usuEmail, usuContra, usuIngreso, perfilId, usuId } = data
-				db.query(
-					query,
-					[usuTipoDoc, usuNoDoc, usuGen, usuNom, usuEmail, usuContra, usuIngreso, perfilId, usuId],
-					(err, result) => {
-						if (result && result.affectedRows === 1) {
-							resolve(result)
-						} else {
-							reject(err)
-						}
-					},
-				)
-			} catch (err) {
-				reject(err)
-			}
-		})
-	}
+  static update(data) {
+    return new Promise((resolve, reject) => {
+      try {
+        const query =
+          'UPDATE usuario ' +
+          'SET usuTipoDoc = ?, usuNoDoc = ?, usuGen = ?, usuNom = ?, usuEmail = ?, usuContra = ?, usuIngreso = ?, perfilId = ? ' +
+          'WHERE usuId = ?';
+        const {
+          usuTipoDoc,
+          usuNoDoc,
+          usuGen,
+          usuNom,
+          usuEmail,
+          usuContra,
+          usuIngreso,
+          perfilId,
+          usuId,
+        } = data;
+        db.query(
+          query,
+          [
+            usuTipoDoc,
+            usuNoDoc,
+            usuGen,
+            usuNom,
+            usuEmail,
+            usuContra,
+            usuIngreso,
+            perfilId,
+            usuId,
+          ],
+          (err, result) => {
+            if (result && result.affectedRows === 1) {
+              resolve(result);
+            } else {
+              reject(err);
+            }
+          }
+        );
+      } catch (err) {
+        console.log('Error en la consulta', err);
+        reject(err);
+      }
+    });
+  }
 
 	static delete(data) {
 		return new Promise((resolve, reject) => {

@@ -44,12 +44,12 @@ router.post('/getOne', verifyToken(process.env.SECRET_KEY), async (req, res) => 
 		})
 })
 
-router.post('/crear', verifyToken(process.env.SECRET_KEY), upload.single('prodImg'), async (req, res) => {
+router.post('/crear', verifyToken(process.env.SECRET_KEY), upload.single('usuImg'), async (req, res) => {
 	const cont = req.body
 	const imgPath = req.file.originalname | (cont.usuGen === 1 ? 'icon-male-100-png' : 'icon-female-100.png')
 	const usuData = {
 		...cont,
-		prodImg: imgPath,
+		usuImg: imgPath,
 	}
 	UserModel.create(usuData)
 		.then((respuesta) => {
@@ -87,7 +87,6 @@ router.put('/actualizar', verifyToken(process.env.SECRET_KEY), async (req, res) 
 			res.status(500).json({ error: 'No se pudo actualizar a el usuario', message: err })
 		})
 })
-
 // http://localhost:5000/api/usuario/borrar/#
 router.delete('/borrar/:usuId', verifyToken(process.env.SECRET_KEY), async (req, res) => {
 	const cont = req.params

@@ -3,54 +3,25 @@
 import { db } from '../config/db.js'
 
 class ProductModel {
-	static getAll() {
-		return new Promise((resolve, reject) => {
-			const query =
-				'SELECT p.prodId, c.catNom, c.catId, p.prodNom, p.prodDescr, p.prodImg, p.prodValCom, p.prodValVen ' +
-				'FROM producto p ' +
-				'INNER JOIN categoria c ' +
-				'ON p.catId = c.catId ' +
-				'WHERE c.catId != 1'
-			db.query(query, (err, results) => {
-				if (err) {
-					reject(err)
-				} else {
-					resolve(results)
-				}
-			})
-		})
-	}
+  static getAll() {
+    return new Promise((resolve, reject) => {
+      const query =
+        'SELECT p.prodId, c.catNom, c.catId, p.prodNom, p.prodDescr, p.prodImg, p.prodValCom, p.prodValVen ' +
+        'FROM producto p ' +
+        'INNER JOIN categoria c ' +
+        'ON p.catId = c.catId ' +
+        'WHERE c.catId != 1';
 
-	static getAllXCat(data) {
-		return new Promise((resolve, reject) => {
-			const query =
-				'SELECT p.prodId, c.catNom, c.catId, p.prodNom, p.prodDescr, p.prodImg, p.prodValCom, p.prodValVen ' +
-				'FROM producto p ' +
-				'INNER JOIN categoria c ' +
-				'ON p.catId = c.catId ' +
-				'WHERE p.catId = ?'
-			db.query(query, [data.catId], (err, results) => {
-				if (err) {
-					reject(err)
-				} else {
-					resolve(results)
-				}
-			})
-		})
-	}
-
-	static getVenXProd() {
-		return new Promise((resolve, reject) => {
-			const query = 'SELECT prodId, COUNT(prodId) cant ' + 'FROM `detventa` ' + 'GROUP BY prodId;'
-			db.query(query, (err, res) => {
-				if (err) {
-					reject(err)
-				} else {
-					resolve(res)
-				}
-			})
-		})
-	}
+      db.query(query, (err, results) => {
+        if (err) {
+          console.log(err);
+          reject(err);
+        } else {
+          resolve(results);
+        }
+      });
+    });
+  }
 
 	static create(data) {
 		return new Promise((resolve, reject) => {
