@@ -44,12 +44,12 @@ router.post('/getOne', verifyToken(process.env.SECRET_KEY), async (req, res) => 
 		})
 })
 
-router.post('/crear', verifyToken(process.env.SECRET_KEY), upload.single('usuImg'), async (req, res) => {
+router.post('/crear', verifyToken(process.env.SECRET_KEY), upload.single('prodImg'), async (req, res) => {
 	const cont = req.body
 	const imgPath = req.file ? req.file.originalname : 'default-img.webp'
 	const usuData = {
 		...cont,
-		usuImg: imgPath,
+		prodImg: imgPath,
 	}
 	UserModel.create(usuData)
 		.then((respuesta) => {
