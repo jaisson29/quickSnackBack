@@ -1,6 +1,6 @@
 /** @format */
 
-import nodemailer from 'nodemailer'
+import nodemailer from 'nodemailer';
 
 const transporter = nodemailer.createTransport({
 	host: 'smtp.gmail.com',
@@ -8,13 +8,13 @@ const transporter = nodemailer.createTransport({
 	secure: true,
 	auth: {
 		// TODO: replace `user` and `pass` values from <https://forwardemail.net>
-		user: 'jayVal029@gmail.com',
-		pass: process.env.EMAIL_API,
+		user: process.env.EMAILAPI_USER,
+		pass: process.env.EMAILAPI_PASS,
 	},
-})
+});
 
-await transporter.verify(async () =>{
-  console.log("Ready")
-})
+await transporter.verify(async () => {
+	console.log('Ready');
+});
 
-export default transporter
+export default transporter;
