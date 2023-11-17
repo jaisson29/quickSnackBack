@@ -46,7 +46,7 @@ router.post('/getOne', verifyToken(process.env.SECRET_KEY), async (req, res) => 
 
 router.post('/crear', verifyToken(process.env.SECRET_KEY), upload.single('usuImg'), async (req, res) => {
 	const cont = req.body;
-	const imgPath = req.file?.originalname | (cont.usuGen === 1 ? 'icon-male-100-png' : 'icon-female-100.png');
+	const imgPath = req.file?.originalname ?? (cont.usuGen === 1 ? 'icon-male-100-png' : 'icon-female-100.png');
 	const usuData = {
 		...cont,
 		usuImg: imgPath,
