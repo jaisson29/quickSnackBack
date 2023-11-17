@@ -90,6 +90,7 @@ CREATE TABLE
         `usuImg` VARCHAR(255) NULL,
         `perfilId` INT NOT NULL,
         `usuKey` LONGTEXT NULL,
+        `usuOlvid` DATETIME NULL,
         PRIMARY KEY (`usuId`),
         INDEX `userXProfile_idx` (`perfilId` ASC),
         INDEX `genderXValue_idx` (`usuGen` ASC),
@@ -97,6 +98,7 @@ CREATE TABLE
         UNIQUE INDEX `usuEmail_UNIQUE` (`usuEmail` ASC),
         UNIQUE INDEX `usuNoDoc_UNIQUE` (`usuNoDoc` ASC),
         INDEX `usuIngreso` (`usuIngreso` ASC),
+        INDEX `usuOlvid` (`usuOlvid` ASC),
         CONSTRAINT `userXProfile` FOREIGN KEY (`perfilId`) REFERENCES `quickSnack`.`perfil` (`perfilId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
         CONSTRAINT `genderXValue` FOREIGN KEY (`usuGen`) REFERENCES `quickSnack`.`valor` (`valorId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
         CONSTRAINT `docTypeXValue` FOREIGN KEY (`usuTipoDoc`) REFERENCES `quickSnack`.`valor` (`valorId`) ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -401,7 +403,8 @@ INSERT INTO
         `usuIngreso`,
         `usuImg`,
         `perfilId`,
-        `usuKey`
+        `usuKey`,
+        `usuOlvid`
     )
 VALUES (
         1,
@@ -414,6 +417,7 @@ VALUES (
         '2023-07-23 12:29:34',
         'default-img.webp',
         2,
+        NULL,
         NULL
     );
 
@@ -431,7 +435,8 @@ INSERT INTO
         `usuIngreso`,
         `usuImg`,
         `perfilId`,
-        `usuKey`
+        `usuKey`,
+        `usuOlvid`
     )
 VALUES (
         2,
@@ -444,6 +449,7 @@ VALUES (
         '2023-07-23 12:29:34',
         'default-img.webp',
         1,
+        NULL,
         NULL
     );
 
@@ -459,7 +465,8 @@ INSERT INTO
         `usuIngreso`,
         `usuImg`,
         `perfilId`,
-        `usuKey`
+        `usuKey`,
+        `usuOlvid`
     )
 VALUES (
         3,
@@ -472,6 +479,7 @@ VALUES (
         '2023-07-23 12:29:34',
         'default-img.webp',
         2,
+        NULL,
         NULL
     );
 
@@ -487,7 +495,8 @@ INSERT INTO
         `usuIngreso`,
         `usuImg`,
         `perfilId`,
-        `usuKey`
+        `usuKey`,
+        `usuOlvid`
     )
 VALUES (
         4,
@@ -500,6 +509,7 @@ VALUES (
         '2023-07-23 12:29:34',
         'default-img.webp',
         3,
+        NULL,
         NULL
     );
 
@@ -515,7 +525,8 @@ INSERT INTO
         `usuIngreso`,
         `usuImg`,
         `perfilId`,
-        `usuKey`
+        `usuKey`,
+        `usuOlvid`
     )
 VALUES (
         5,
@@ -528,6 +539,7 @@ VALUES (
         '2023-07-23 12:29:34',
         'default-img.webp',
         3,
+        NULL,
         NULL
     );
 
@@ -712,7 +724,7 @@ VALUES (
         13,
         'Transacción',
         'fa-cash-register',
-        '/transaccion?tprs=7'
+        '/transaccion'
     );
 
 COMMIT;

@@ -1,6 +1,6 @@
 import express from 'express';
 import CompraModel from '../models/compra.model.js';
-import verifyToken from '../middlewares/auth.js'
+import {verifyToken} from '../middlewares/auth.js'
 
 const router = express.Router();
 
