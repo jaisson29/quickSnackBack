@@ -139,7 +139,6 @@ class UserModel {
 						});
 					})
 					.catch((err) => {
-						console.log(first);
 						throw new Error(err);
 					});
 			} catch (err) {
