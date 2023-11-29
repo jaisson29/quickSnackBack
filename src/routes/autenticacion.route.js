@@ -51,7 +51,7 @@ router.post('/loguear', async (req, res) => {
 			}
 		})
 		.catch((err) => {
-			res.status(500).json({ error: "Acesso invalido Intentelo de Nuevo", message: err.message });
+			res.status(500).json({ error: 'Acesso invalido Intentelo de Nuevo', message: err.message });
 		});
 });
 
@@ -81,7 +81,6 @@ router.post('/forgotPass', async (req, res) => {
 			return res.status(400).json({ error: 'No se enviaron los datos requeridos' });
 		}
 
-		console.log(cont.usuEmail);
 		const usuario = await UserModel.getOne({ usuEmail: cont.usuEmail });
 		const { usuId, usuEmail, usuNoDoc } = usuario;
 		const token = await generateToken({ usuId, usuNoDoc, usuEmail }, process.env.SECRET_KEY_EMAIL);
@@ -102,13 +101,16 @@ router.post('/forgotPass', async (req, res) => {
 	}
 });
 
-router.post('/nuevaPass', verifyToken(process.env.SECRET_KEY_EMAIL), async (req, res) => {
+router.post('/resetPass', verifyToken(process.env.SECRET_KEY_EMAIL), async (req, res) => {
 	const cont = req.body;
 	const token = req.headers.authorization;
 	const newContra = await bcrypt.hash(cont.usuContra, 10);
 	const usuInfo = await authToken(token, process.env.SECRET_KEY_EMAIL);
 	if (usuInfo) {
-		UserModel.update({ usuId: usuInfo.usuId, usuContra: newContra });
+		const updated = await UserModel.update({ usuId: usuInfo.payload.usuId, usuContra: newContra });
+		updated
+			? res.status(200).json({ message: 'contraseña actualizada correctamente' })
+			: res.status(500).json({ message: 'Ocurrio un problema', error: err.message });
 	}
 });
 
