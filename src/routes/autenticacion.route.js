@@ -18,6 +18,17 @@ router.get('/verify', async (req, res) => {
 		});
 });
 
+router.get('/verifyRefresh', async (req, res) => {
+	const head = req.headers.authorization;
+	authToken(head, process.env.SECRET_KEY_EMAIL)
+		.then((verificado) => {
+			res.status(200).json(verificado);
+		})
+		.catch((err) => {
+			res.json({ error: err });
+		});
+});
+
 router.post('/loguear', async (req, res) => {
 	const cont = req.body;
 	UserModel.getOneXEmailXContra({
@@ -40,7 +51,7 @@ router.post('/loguear', async (req, res) => {
 			}
 		})
 		.catch((err) => {
-			res.status(500).json({ error: err });
+			res.status(500).json({ error: "Acesso invalido Intentelo de Nuevo", message: err.message });
 		});
 });
 
@@ -91,15 +102,15 @@ router.post('/forgotPass', async (req, res) => {
 });
 
 router.post('/nuevaPass', verifyToken(process.env.SECRET_KEY_EMAIL), async (req, res) => {
-	const cont = req.body;
-	const token = req.headers.authorization;
-	const usuInfo = await authToken(token, process.env.SECRET_KEY_EMAIL);
-	if (usuInfo) {
-		authToken(token, process.env.SECRET_KEY_EMAIL)
-			.then((res) => {})
-			.catch((err) => {
-				res.status(401).json({ error: err, message: 'Hubo un problema de autenticación' });
-			});
+	try {
+		const cont = req.body;
+		const token = req.headers.authorization;
+		const usuInfo = await authToken(token, process.env.SECRET_KEY_EMAIL);
+		if (usuInfo) {
+		}
+	} catch (error) {
+		console.log(error);
+		res.status(500).json({ error: 'Fallo del servidor', message: error.message });
 	}
 });
 
