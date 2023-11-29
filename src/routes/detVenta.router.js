@@ -7,6 +7,7 @@ import {verifyToken} from '../middlewares/auth.js'
 const router = express.Router()
 
 router.get('/', verifyToken(process.env.SECRET_KEY), async (req, res) => {
+	
 	try {
 		DetVentaModel.getAll()
 			.then((rs) => {

@@ -75,12 +75,13 @@ router.post('/crearUsu', async (req, res) => {
 });
 
 router.post('/forgotPass', async (req, res) => {
-	const cont = req.body;
-	if (!cont?.usuEmail) {
-		return res.status(400).json({ error: 'No se enviaron los datos requeridos' });
-	}
-
 	try {
+		const cont = req.body;
+		if (!cont?.usuEmail) {
+			return res.status(400).json({ error: 'No se enviaron los datos requeridos' });
+		}
+
+		console.log(cont.usuEmail);
 		const usuario = await UserModel.getOne({ usuEmail: cont.usuEmail });
 		const { usuId, usuEmail, usuNoDoc } = usuario;
 		const token = await generateToken({ usuId, usuNoDoc, usuEmail }, process.env.SECRET_KEY_EMAIL);
@@ -91,26 +92,23 @@ router.post('/forgotPass', async (req, res) => {
 			to: `${cont.usuEmail}`,
 			subject: 'Haz solicitado una nueva contraseña',
 			text: 'Pulsa el boton para recuperar tu contraseña',
-			html: `<a href="${process.env.FRONT_URL}/${token}">Click</a>`,
+			html: `<a href="${process.env.FRONT_URL}/reset/${token}">Click</a>`,
 		});
 
 		res.status(200).json({ message: `Correo enviado a ${cont.usuEmail}` });
 	} catch (err) {
-		console.error(err);
-		res.status(500).json({ message: 'Error en el servidor' });
+		console.error('Mailer', err);
+		res.status(500).json({ error: 'No se pudo enviar el email', message: err.message });
 	}
 });
 
 router.post('/nuevaPass', verifyToken(process.env.SECRET_KEY_EMAIL), async (req, res) => {
-	try {
-		const cont = req.body;
-		const token = req.headers.authorization;
-		const usuInfo = await authToken(token, process.env.SECRET_KEY_EMAIL);
-		if (usuInfo) {
-		}
-	} catch (error) {
-		console.log(error);
-		res.status(500).json({ error: 'Fallo del servidor', message: error.message });
+	const cont = req.body;
+	const token = req.headers.authorization;
+	const newContra = await bcrypt.hash(cont.usuContra, 10);
+	const usuInfo = await authToken(token, process.env.SECRET_KEY_EMAIL);
+	if (usuInfo) {
+		UserModel.update({ usuId: usuInfo.usuId, usuContra: newContra });
 	}
 });
 
