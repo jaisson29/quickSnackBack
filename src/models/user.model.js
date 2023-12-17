@@ -110,7 +110,7 @@ class UserModel {
 				const { usuEmail } = data;
 				db.query(sql, [usuEmail], (err, result) => {
 					if (err) {
-						reject(new Error(err));
+						reject(err);
 					} else {
 						resolve(result);
 					}
@@ -133,8 +133,7 @@ class UserModel {
 							if (result && result.affectedRows === 1) {
 								resolve(result);
 							} else {
-								console.log(err);
-								reject(new Error(err));
+								reject(err);
 							}
 						});
 					})
@@ -142,8 +141,7 @@ class UserModel {
 						throw new Error(err);
 					});
 			} catch (err) {
-				console.log(err);
-				reject(new Error(err));
+				reject(err);
 			}
 		});
 	}

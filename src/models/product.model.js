@@ -14,7 +14,6 @@ class ProductModel {
 
 			db.query(query, (err, results) => {
 				if (err) {
-					console.log(err);
 					reject(err);
 				} else {
 					resolve(results);

@@ -10,21 +10,17 @@ import TransacRouter from './routes/transac.router.js'
 import CategoRouter from './routes/categoria.route.js'
 import CompraRoutes from './routes/compra.route.js'
 import DetVentaRouter from './routes/detVenta.router.js'
+import morgan from 'morgan'
 
 //instancias
 const app = express()
 
 app.use('/uploads', express.static('uploads'))
 
+app.use(morgan('dev'));
+
 app.use(cors('*'))
 app.use(express.json())
-
-app.get('/', (req, res) => {
-	res.json({
-		value: 'Hello',
-		value2: 'World!',
-	})
-})
 
 app.use('/api/perfil/', PerfilRoutes)
 app.use('/api/compra/', CompraRoutes)
@@ -37,7 +33,6 @@ app.use('/api/catego/', CategoRouter)
 app.use('/api/detventa/', DetVentaRouter)
 
 app.use((err, req, res, next) => {
-	console.error(err.stack)
 	res.status(500).send({ message: 'Algo salió mal', codigo: 1005, error: err })
 })
 

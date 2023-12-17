@@ -67,10 +67,17 @@ router.post('/crearUsu', async (req, res) => {
 			res.status(200).json({ response: usuario, message: 'Usuario creado exitosamente' });
 		})
 		.catch((error) => {
-			res.status(401).json({
-				error: 'Faltan credenciales para crear al usuario',
-				message: error,
-			});
+			if (error.code === 'ER_DUP_ENTRY') {
+				res.status(400).json({
+					error: 'Ya existe un usuario registrado con este numero de documento o correo electronico',
+					message: error,
+				});
+			} else {
+				res.status(401).json({
+					error: 'Faltan credenciales para crear al usuario',
+					message: error,
+				});
+			}
 		});
 });
 
@@ -107,7 +114,7 @@ router.post('/resetPass', verifyToken(process.env.SECRET_KEY_EMAIL), async (req,
 	const newContra = await bcrypt.hash(cont.usuContra, 10);
 	const usuInfo = await authToken(token, process.env.SECRET_KEY_EMAIL);
 	if (usuInfo) {
-		const updated = await UserModel.update({ usuId: usuInfo.payload.usuId, usuContra: newContra });
+		const updated = await UserModel.update({ usuId: usuInfo.payload.usuId, usuContra: newContra, usuKey: null });
 		updated
 			? res.status(200).json({ message: 'contraseña actualizada correctamente' })
 			: res.status(500).json({ message: 'Ocurrio un problema', error: err.message });
