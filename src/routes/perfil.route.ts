@@ -1,17 +1,17 @@
 /** @format */
 
 import express from 'express'
-import Mpef from '../models/perfil.model.js'
-import { verifyToken } from '../middlewares/auth.js'
+import Mpef from '../models/perfil.model.ts'
+import { verifyToken } from '../middlewares/auth.ts'
 
 const router = express.Router()
 
 router.get('/getAll', async (req, res) => {
 	try {
 		const perfiles = await Mpef.getAll()
-		res.json(perfiles)
+		res.tson(perfiles)
 	} catch (error) {
-		res.json(error)
+		res.tson(error)
 	}
 })
 

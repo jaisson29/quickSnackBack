@@ -1,6 +1,6 @@
 /** @format */
 
-import { db } from '../config/db.js';
+import { db } from '../config/db.ts';
 import bcrypt from 'bcrypt';
 
 class UserModel {

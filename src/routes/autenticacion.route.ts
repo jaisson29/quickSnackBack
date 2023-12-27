@@ -1,20 +1,20 @@
 /** @format */
 
 import express from 'express';
-import UserModel from '../models/user.model.js';
+import UserModel from '../models/user.model.ts';
 import bcrypt from 'bcrypt';
-import { generateToken, authToken } from '../utils/jwt.js';
-import transporter from '../config/mailer.js';
-import { verifyToken } from '../middlewares/auth.js';
+import { generateToken, authToken } from '../utils/jwt.ts';
+import transporter from '../config/mailer.ts';
+import { verifyToken } from '../middlewares/auth.ts';
 const router = express.Router();
 router.get('/verify', async (req, res) => {
 	const head = req.headers.authorization;
 	authToken(head, process.env.SECRET_KEY)
 		.then((verificado) => {
-			res.status(200).json(verificado);
+			res.status(200).tson(verificado);
 		})
 		.catch((err) => {
-			res.json({ error: err });
+			res.tson({ error: err });
 		});
 });
 
@@ -22,10 +22,10 @@ router.get('/verifyRefresh', async (req, res) => {
 	const head = req.headers.authorization;
 	authToken(head, process.env.SECRET_KEY_EMAIL)
 		.then((verificado) => {
-			res.status(200).json(verificado);
+			res.status(200).tson(verificado);
 		})
 		.catch((err) => {
-			res.json({ error: err });
+			res.tson({ error: err });
 		});
 });
 
@@ -38,20 +38,20 @@ router.post('/loguear', async (req, res) => {
 			if (usuario.length !== 0 && (await bcrypt.compare(cont.usuContra, usuario[0].usuContra))) {
 				generateToken(usuario, process.env.SECRET_KEY)
 					.then((usuToken) => {
-						res.status(200).json({ token: usuToken, pg: usuario.paginaRuta });
+						res.status(200).tson({ token: usuToken, pg: usuario.paginaRuta });
 					})
 					.catch((err) => {
-						res.status(500).json({ error: 'No se pudo generar el token', message: err });
+						res.status(500).tson({ error: 'No se pudo generar el token', message: err });
 					});
 			} else {
-				res.status(400).json({
+				res.status(400).tson({
 					error: 'No existe un usuario con las credenciales enviadas',
 					message: usuario,
 				});
 			}
 		})
 		.catch((err) => {
-			res.status(500).json({ error: 'Acesso invalido Intentelo de Nuevo', message: err.message });
+			res.status(500).tson({ error: 'Acesso invalido Intentelo de Nuevo', message: err.message });
 		});
 });
 
@@ -64,16 +64,16 @@ router.post('/crearUsu', async (req, res) => {
 		perfilId: 2,
 	})
 		.then((usuario) => {
-			res.status(200).json({ response: usuario, message: 'Usuario creado exitosamente' });
+			res.status(200).tson({ response: usuario, message: 'Usuario creado exitosamente' });
 		})
 		.catch((error) => {
 			if (error.code === 'ER_DUP_ENTRY') {
-				res.status(400).json({
+				res.status(400).tson({
 					error: 'Ya existe un usuario registrado con este numero de documento o correo electronico',
 					message: error,
 				});
 			} else {
-				res.status(401).json({
+				res.status(401).tson({
 					error: 'Faltan credenciales para crear al usuario',
 					message: error,
 				});
@@ -85,7 +85,7 @@ router.post('/forgotPass', async (req, res) => {
 	try {
 		const cont = req.body;
 		if (!cont?.usuEmail) {
-			return res.status(400).json({ error: 'No se enviaron los datos requeridos' });
+			return res.status(400).tson({ error: 'No se enviaron los datos requeridos' });
 		}
 
 		const usuario = await UserModel.getOne({ usuEmail: cont.usuEmail });
@@ -101,10 +101,10 @@ router.post('/forgotPass', async (req, res) => {
 			html: `<a href="${process.env.FRONT_URL}/reset/${token}">Click</a>`,
 		});
 
-		res.status(200).json({ message: `Correo enviado a ${cont.usuEmail}` });
+		res.status(200).tson({ message: `Correo enviado a ${cont.usuEmail}` });
 	} catch (err) {
 		console.error('Mailer', err);
-		res.status(500).json({ error: 'No se pudo enviar el email', message: err.message });
+		res.status(500).tson({ error: 'No se pudo enviar el email', message: err.message });
 	}
 });
 
@@ -116,8 +116,8 @@ router.post('/resetPass', verifyToken(process.env.SECRET_KEY_EMAIL), async (req,
 	if (usuInfo) {
 		const updated = await UserModel.update({ usuId: usuInfo.payload.usuId, usuContra: newContra, usuKey: null });
 		updated
-			? res.status(200).json({ message: 'contraseña actualizada correctamente' })
-			: res.status(500).json({ message: 'Ocurrio un problema', error: err.message });
+			? res.status(200).tson({ message: 'contraseña actualizada correctamente' })
+			: res.status(500).tson({ message: 'Ocurrio un problema', error: err.message });
 	}
 });
 

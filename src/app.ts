@@ -1,15 +1,15 @@
 /** @format */
 import express from 'express'
 import cors from 'cors'
-import ProductRoutes from './routes/product.route.js'
-import UserRoutes from './routes/user.route.js'
-import PaginaRoutes from './routes/pagina.route.js'
-import Autenticacion from './routes/autenticacion.route.js'
-import PerfilRoutes from './routes/perfil.route.js'
-import TransacRouter from './routes/transac.router.js'
-import CategoRouter from './routes/categoria.route.js'
-import CompraRoutes from './routes/compra.route.js'
-import DetVentaRouter from './routes/detVenta.router.js'
+import ProductRoutes from './routes/product.route.ts'
+import UserRoutes from './routes/user.route.ts'
+import PaginaRoutes from './routes/pagina.route.ts'
+import Autenticacion from './routes/autenticacion.route.ts'
+import PerfilRoutes from './routes/perfil.route.ts'
+import TransacRouter from './routes/transac.router.ts'
+import CategoRouter from './routes/categoria.route.ts'
+import CompraRoutes from './routes/compra.route.ts'
+import DetVentaRouter from './routes/detVenta.router.ts'
 import morgan from 'morgan'
 
 //instancias
@@ -19,7 +19,7 @@ app.use('/uploads', express.static('uploads'))
 
 app.use(morgan('dev'));
 
-app.use(cors('*'))
+app.use(cors())
 app.use(express.json())
 
 app.use('/api/perfil/', PerfilRoutes)
