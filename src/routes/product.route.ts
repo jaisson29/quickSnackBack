@@ -1,17 +1,17 @@
 /** @format */
 
-import express from 'express';
-import ProductModel from '../models/product.model.ts';
-import { verifyToken } from '../middlewares/auth.ts';
+import express, { Request, Response } from 'express';
+import ProductModel from '../models/product.model';
+import { verifyToken } from '../middlewares/auth';
 import multer from 'multer';
 
 const router = express.Router();
 
 const storage = multer.diskStorage({
-	destination: function (req, file, cb) {
+	destination: function (req: Request, file: any, cb) {
 		cb(null, 'uploads');
 	},
-	filename: function (req, file, cb) {
+	filename: function (req: Request, file: any, cb) {
 		const ext = file.originalname.split('.').pop();
 		cb(null, file.originalname);
 	},
@@ -19,45 +19,45 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-router.get('/getAll', verifyToken(process.env.SECRET_KEY), async (req, res) => {
+router.get('/getAll', verifyToken(process.env.SECRET_KEY), async (req: Request, res: Response) => {
 	try {
 		const products = await ProductModel.getAll();
-		res.tson(products);
+		res.json(products);
 	} catch (error) {
-		res.tson({ code: 500, error: 'Failed to load the products' });
+		res.json({ code: 500, error: 'Failed to load the products' });
 	}
 });
 
-router.get('/getAll/:catId', verifyToken(process.env.SECRET_KEY), async (req, res) => {
+router.get('/getAll/:catId', verifyToken(process.env.SECRET_KEY), async (req: Request, res: Response) => {
 	const cont = req.params;
 	try {
 		ProductModel.getAllXCat(cont)
 			.then((result) => {
-				res.status(200).tson(result);
+				res.status(200).json(result);
 			})
 			.catch((err) => {
-				res.status(500).tson({ error: err.message, mensaje: err.name });
+				res.status(500).json({ error: err.message, mensaje: err.name });
 			});
 	} catch (error) {
-		res.tson({ code: 500, error: 'Algo fallo en obtener los productos por esta categoria' });
+		res.json({ code: 500, error: 'Algo fallo en obtener los productos por esta categoria' });
 	}
 });
 
-router.get('/getVenXProd', verifyToken(process.env.SECRET_KEY), async (req, res) => {
+router.get('/getVenXProd', verifyToken(process.env.SECRET_KEY), async (req: Request, res: Response) => {
 	try {
 		ProductModel.getVenXProd()
 			.then((result) => {
-				res.status(200).tson(result);
+				res.status(200).json(result);
 			})
 			.catch((err) => {
-				res.tson({ error: err.message, mensaje: err.name, codigo: err.cod });
+				res.json({ error: err.message, mensaje: err.name, codigo: err.cod });
 			});
 	} catch (error) {
-		res.tson({ code: 500, error: 'Fallo en encontrar las relaciones' });
+		res.json({ code: 500, error: 'Fallo en encontrar las relaciones' });
 	}
 });
 
-router.post('/create', verifyToken(process.env.SECRET_KEY), upload.single('prodImg'), async (req, res) => {
+router.post('/create', verifyToken(process.env.SECRET_KEY), upload.single('prodImg'), async (req: Request, res: Response) => {
 	const cont = req.body;
 	const imgPath = req.file ? req.file.originalname : 'default-img.webp';
 	const prodData = {
@@ -66,10 +66,10 @@ router.post('/create', verifyToken(process.env.SECRET_KEY), upload.single('prodI
 	};
 	ProductModel.create(prodData)
 		.then((create) => {
-			res.tson(create);
+			res.json(create);
 		})
 		.catch((err) => {
-			res.tson({
+			res.json({
 				code: 500,
 				error: 'Failed to create a new product',
 				message: err,
@@ -77,7 +77,7 @@ router.post('/create', verifyToken(process.env.SECRET_KEY), upload.single('prodI
 		});
 });
 
-router.put('/update', verifyToken(process.env.SECRET_KEY), upload.single('usuImg'), async (req, res) => {
+router.put('/update', verifyToken(process.env.SECRET_KEY), upload.single('usuImg'), async (req: Request, res: Response) => {
 	const cont = req.body;
 	const imgPath = req.file ? req.file.originalname : cont.usuImg;
 	const newProdData = {
@@ -88,22 +88,23 @@ router.put('/update', verifyToken(process.env.SECRET_KEY), upload.single('usuImg
 	try {
 		const update = await ProductModel.update(newProdData);
 
-		res.tson(update);
+		res.json(update);
 	} catch (error) {
-		res.tson('Failed to update the product');
+		res.json('Failed to update the product');
 	}
 });
 
-router.delete('/delete/:prodId', verifyToken(process.env.SECRET_KEY), async (req, res) => {
+router.delete('/delete/:prodId', verifyToken(process.env.SECRET_KEY), async (req: Request, res: Response) => {
 	const cont = req.params;
 	try {
 		const del = await ProductModel.delete({
 			prodId: cont.prodId,
 		});
-		res.tson(del);
+		res.json(del);
 	} catch (error) {
-		res.tson('Failed to delete the product');
+		res.json('Failed to delete the product');
 	}
 });
 
 export default router;
+

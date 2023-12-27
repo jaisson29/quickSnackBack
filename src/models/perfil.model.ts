@@ -1,74 +1,75 @@
 /** @format */
 
-import { db } from '../config/db.ts'
+import { db } from '../config/db';
 
 class Mpef {
 	static getAll() {
 		return new Promise((resolve, reject) => {
-			const query = 'SELECT * FROM perfil'
+			const query = 'SELECT * FROM perfil';
 
 			db.query(query, (err, results) => {
 				if (err) {
-					reject(err)
+					reject(err);
 				} else {
-					resolve(results)
+					resolve(results);
 				}
-			})
-		})
+			});
+		});
 	}
 
-	static create(data) {
+	static create(data: any) {
 		return new Promise((resolve, reject) => {
 			try {
-				const query = 'INSERT INTO perfil ( perfilNom ) VALUES (?)'
+				const query = 'INSERT INTO perfil ( perfilNom ) VALUES (?)';
 
-				db.query(query, [data.perfilNom], (err, result) => {
+				db.query(query, [data.perfilNom], (err, result: any) => {
 					if (result.affectedRows === 1) {
-						resolve(result)
+						resolve(result);
 					} else {
-						reject(new Error(err))
+						reject(err);
 					}
-				})
+				});
 			} catch (err) {
-				reject(err)
+				reject(err);
 			}
-		})
+		});
 	}
 
-	static update(data) {
+	static update(data: any) {
 		return new Promise((resolve, reject) => {
 			try {
-				const query = 'UPDATE perfil' + ' ' + 'SET perfilNom = ?' + ' ' + 'WHERE perfilId = ?'
-				db.query(query, [data.perfilId, data.perfilNom], (err, result) => {
+				const query = 'UPDATE perfil' + ' ' + 'SET perfilNom = ?' + ' ' + 'WHERE perfilId = ?';
+				db.query(query, [data.perfilId, data.perfilNom], (err, result: any) => {
 					if (result.affectedRows == 1) {
-						resolve(`Se actualizo ${result.affectedRows} registro`)
+						resolve(`Se actualizo ${result.affectedRows} registro`);
 					} else {
-						reject(new Error(err))
+						reject(err);
 					}
-				})
+				});
 			} catch (error) {
-				reject(error)
+				reject(error);
 			}
-		})
+		});
 	}
 
-	static delete(data) {
+	static delete(data: any) {
 		return new Promise((resolve, reject) => {
 			try {
-				const query = 'DELETE FROM perfil WHERE perfilId = ?'
+				const query = 'DELETE FROM perfil WHERE perfilId = ?';
 
-				db.query(query, [data.perfilId], (err, result) => {
+				db.query(query, [data.perfilId], (err, result: any) => {
 					if (result.affectedRows == 1) {
-						resolve(`Se elimino ${result.affectedRows} registro`)
+						resolve(`Se elimino ${result.affectedRows} registro`);
 					} else {
-						reject(new Error(err))
+						reject(err);
 					}
-				})
+				});
 			} catch (error) {
-				reject(new Error(error))
+				reject(error);
 			}
-		})
+		});
 	}
 }
 
-export default Mpef
+export default Mpef;
+

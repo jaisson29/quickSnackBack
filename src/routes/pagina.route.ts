@@ -1,18 +1,18 @@
 /** @format */
 
-import express from 'express'
-import PaginaModel from '../models/pagina.model.ts'
-import { verifyToken } from '../middlewares/auth.ts'
+import express, { Request, Response } from 'express'
+import PaginaModel from '../models/pagina.model'
+import { verifyToken } from '../middlewares/auth'
 
 const router = express.Router()
 
-router.get('/getAll/:perfilId', async (req, res) => {
+router.get('/getAll/:perfilId', async (req:Request, res:Response) => {
 	try {
 		const cont = req.params
 		const paginas = await PaginaModel.getAll(cont)
-		res.tson(paginas)
+		res.json(paginas)
 	} catch (error) {
-		res.tson(error)
+		res.json(error)
 	}
 })
 

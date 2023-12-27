@@ -1,5 +1,5 @@
 import 'dotenv/config'
-import app from './src/app.js'
+import app from './src/app'
 
 
 app.set('port', process.env.PORT)

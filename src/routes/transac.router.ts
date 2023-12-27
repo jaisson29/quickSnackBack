@@ -1,47 +1,50 @@
 /** @format */
 
-import express from 'express'
-import {verifyToken} from '../middlewares/auth.ts'
-import TransacModel from '../models/transac.model.ts'
-import DetVenTaModel from '../models/detVenta.model.ts'
+import express, { Request, Response } from 'express';
+import { verifyToken } from '../middlewares/auth';
+import TransacModel from '../models/transac.model';
+import DetVenTaModel from '../models/detVenta.model';
 
-const router = express.Router()
+const router = express.Router();
 
-router.get('/getAll', verifyToken(process.env.SECRET_KEY), async function (req, res) {
+router.get('/getAll', verifyToken(process.env.SECRET_KEY), function (req: Request, res: Response) {
 	TransacModel.getAll()
 		.then(function (resultado) {
-			res.tson(resultado)
+			res.json(resultado);
 		})
 		.catch(function (err) {
-			res.status(500).tson({ error: err.message, mensaje: err.name, codigo: err.cod })
-		})
-})
+			res.status(500).json({ error: err.message, mensaje: err.name, codigo: err.cod });
+		});
+});
 
-router.get('/getByUser/:usuId', verifyToken(process.env.SECRET_KEY), (req, res) => {
-	const cont = req.params
+router.get('/getByUser/:usuId', verifyToken(process.env.SECRET_KEY), (req: Request, res: Response) => {
+	const cont = req.params;
 	TransacModel.getByUser(cont)
-		.then((respuesta) => {
-			res.status(200).tson(respuesta)
+		.then((respuesta: any) => {
+			res.status(200).json(respuesta);
 		})
 		.catch((err) => {
-			res.status(err.codigo).tson({ error: err.message, mensaje: err.name, codigo: err.cod })
-		})
-})
+			res.status(err.codigo).json({ error: err.message, mensaje: err.name, codigo: err.cod });
+		});
+});
 
-router.post('/', verifyToken(process.env.SECRET_KEY), function (req, res) {
-	const { usuId, transacTipo, det } = req.body
+router.post('/', verifyToken(process.env.SECRET_KEY), function (req: Request, res: Response) {
+	const { usuId, transacTipo, det } = req.body;
 	TransacModel.create({ usuId, transacTipo, transacFecha: new Date() })
-		.then((result) => {
-			const { insertId } = result
-			DetVenTaModel.create({ transacId: insertId, det }).then(result => {
-				res.status(200).tson(result)
-			}).catch( err => {
-				res.status(err.status).tson(err)
-			})
+		.then((result: any) => {
+			const { insertId } = result;
+			DetVenTaModel.create({ transacId: insertId, det })
+				.then((result) => {
+					res.status(200).json(result);
+				})
+				.catch((err) => {
+					res.status(err.status).json(err);
+				});
 		})
 		.catch((err) => {
-			res.tson(err)
-		})
-})
+			res.json(err);
+		});
+});
 
-export default router
+export default router;
+

@@ -1,6 +1,6 @@
 /** @format */
 
-import { db } from '../config/db.ts';
+import { db } from '../config/db';
 import bcrypt from 'bcrypt';
 
 class UserModel {
@@ -39,7 +39,7 @@ class UserModel {
 		});
 	}
 
-	static getOneXId(data) {
+	static getOneXId(data: any) {
 		return new Promise((resolve, reject) => {
 			try {
 				const sql =
@@ -63,7 +63,7 @@ class UserModel {
 		});
 	}
 
-	static getOne(data) {
+	static getOne(data: any) {
 		return new Promise((resolve, reject) => {
 			if (typeof data !== 'object' || data === null || Array.isArray(data)) {
 				reject(new Error('Los datos proporcionados no son válidos'));
@@ -81,15 +81,12 @@ class UserModel {
 			let conditions = keys.map((key) => `${key} = ?`).join(' AND ');
 			const sql = `SELECT usuId, usuTipoDoc, usuNoDoc, usuGen, usuNom, usuEmail, usuKey, usuOlvid FROM usuario WHERE ${conditions}`;
 
-			db.query(sql, values, (err, result) => {
+			db.query(sql, values, (err, result: any) => {
 				if (err) {
 					const error = new Error('Fallo en obtener los datos');
-					error.codigo = 1001;
-					error.error = err;
 					reject(error);
 				} else if (result.length === 0) {
 					const error = new Error('Fallo en obtener los datos');
-					error.codigo = 1004;
 					reject(error);
 				} else {
 					resolve(result[0]);
@@ -98,7 +95,7 @@ class UserModel {
 		});
 	}
 
-	static getOneXEmailXContra(data) {
+	static getOneXEmailXContra(data: any) {
 		return new Promise((resolve, reject) => {
 			try {
 				const sql =
@@ -121,7 +118,7 @@ class UserModel {
 		});
 	}
 
-	static create(data) {
+	static create(data: any) {
 		return new Promise((resolve, reject) => {
 			try {
 				const query = `INSERT INTO usuario(usuTipoDoc, usuNoDoc, usuGen, usuNom, usuEmail, usuContra, usuIngreso, perfilId) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
@@ -129,7 +126,7 @@ class UserModel {
 				bcrypt
 					.hash(usuContra, 10)
 					.then((hash) => {
-						db.query(query, [usuTipoDoc, usuNoDoc, usuGen, usuNom, usuEmail, hash, usuIngreso, perfilId], (err, result) => {
+						db.query(query, [usuTipoDoc, usuNoDoc, usuGen, usuNom, usuEmail, hash, usuIngreso, perfilId], (err, result: any) => {
 							if (result && result.affectedRows === 1) {
 								resolve(result);
 							} else {
@@ -146,7 +143,7 @@ class UserModel {
 		});
 	}
 
-	static update(data) {
+	static update(data: any) {
 		return new Promise((resolve, reject) => {
 			if (!data.usuId) {
 				reject(new Error('No se proporcionaron los datos necesarios'));
@@ -166,7 +163,7 @@ class UserModel {
 			const seteos = keys.map((key) => `${key} = ?`).join(', ');
 			const query = `UPDATE usuario SET ${seteos} WHERE usuId = ?`;
 
-			db.query(query, [...values, usuId], (err, result) => {
+			db.query(query, [...values, usuId], (err, result: any) => {
 				if (err) {
 					reject(err);
 				} else if (result && result.affectedRows === 1) {
@@ -178,13 +175,13 @@ class UserModel {
 		});
 	}
 
-	static delete(data) {
+	static delete(data: any) {
 		return new Promise((resolve, reject) => {
 			try {
 				const sql = 'DELETE FROM usuario WHERE usuId = ?';
 				const { usuId } = data;
 
-				db.query(sql, [usuId], (err, result) => {
+				db.query(sql, [usuId], (err, result: any) => {
 					if (result && result.affectedRows === 1) {
 						resolve(result);
 					} else {
@@ -199,3 +196,4 @@ class UserModel {
 }
 
 export default UserModel;
+

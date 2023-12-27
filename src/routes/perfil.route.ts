@@ -1,20 +1,21 @@
 /** @format */
 
-import express from 'express'
-import Mpef from '../models/perfil.model.ts'
-import { verifyToken } from '../middlewares/auth.ts'
+import express, { Request, Response } from 'express';
+import Mpef from '../models/perfil.model';
+import { verifyToken } from '../middlewares/auth';
 
-const router = express.Router()
+const router = express.Router();
 
-router.get('/getAll', async (req, res) => {
+router.get('/getAll', async (req: Request, res: Response) => {
 	try {
-		const perfiles = await Mpef.getAll()
-		res.tson(perfiles)
+		const perfiles = await Mpef.getAll();
+		res.json(perfiles);
 	} catch (error) {
-		res.tson(error)
+		res.json(error);
 	}
-})
+});
 
-router.post('/create', verifyToken(process.env.SECRECT_KEY), async () => {})
+router.post('/create', verifyToken(process.env.SECRECT_KEY), async () => {});
 
-export default router
+export default router;
+

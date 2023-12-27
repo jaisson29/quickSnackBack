@@ -1,104 +1,86 @@
-import { db } from '../config/db.ts'
+import { db } from '../config/db';
 
 class Mcat {
-  static getAll() {
-    return new Promise((resolve, reject) => {
-      const query = 'SELECT * FROM categoria'
+	static getAll() {
+		return new Promise((resolve, reject) => {
+			const query = 'SELECT * FROM categoria';
 
-      db.query(query, (err, results) => {
-        if (err) {
-          reject(err)
-        } else {
-          resolve(results)
-        }
-      })
-    })
-  }
+			db.query(query, (err, results) => {
+				if (err) {
+					reject(err);
+				} else {
+					resolve(results);
+				}
+			});
+		});
+	}
 
-  static create(data) {
-    return new Promise((resolve, reject) => {
-      try {
-        const query =
-          'INSERT INTO categoria ( catNom) VALUES (?)'
+	static create(data: any) {
+		return new Promise((resolve, reject) => {
+			try {
+				const query = 'INSERT INTO categoria ( catNom) VALUES (?)';
 
-        db.query(
-          query,
-          [
-            data.catNom,
-          ],
-          (err, result) => {
-            if (result.affectedRows === 1) {
-              resolve(result)
-            } else {
-              reject(new Error(err))
-            }
-          }
-        )
-      } catch (err) {
-        reject(err)
-      }
-    })
-  }
+				db.query(query, [data.catNom], (err, result: any) => {
+					if (result.affectedRows === 1) {
+						resolve(result);
+					} else {
+						reject(err);
+					}
+				});
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
 
-  static update(data) {
-    return new Promise((resolve, reject) => {
-      try {
-        const query =
-          'UPDATE categoria' +
-          ' ' +
-          'SET catNom = ?' +
-          ' ' +
-          'WHERE catId = ?'
-        db.query(
-          query,
-          [
-            data.catNom,
-            data.catId
-          ],
-          (err, result) => {
-            if (result.affectedRows == 1) {
-              resolve(`Se actualizo ${result.affectedRows} registro`)
-            } else {
-              reject(new Error(err))
-            }
-          }
-        )
-      } catch (error) {
-        reject(error)
-      }
-    })
-  }
+	static update(data: any) {
+		return new Promise((resolve, reject) => {
+			try {
+				const query = 'UPDATE categoria' + ' ' + 'SET catNom = ?' + ' ' + 'WHERE catId = ?';
+				db.query(query, [data.catNom, data.catId], (err, result: any) => {
+					if (result.affectedRows == 1) {
+						resolve(`Se actualizo ${result.affectedRows} registro`);
+					} else {
+						reject(err);
+					}
+				});
+			} catch (error) {
+				reject(error);
+			}
+		});
+	}
 
-  static delete(data) {
-    return new Promise((resolve, reject) => {
-      try {
-        const query = 'DELETE FROM categoria WHERE catId = ?'
+	static delete(data: any) {
+		return new Promise((resolve, reject) => {
+			try {
+				const query = 'DELETE FROM categoria WHERE catId = ?';
 
-        db.query(query, [data.catId], (err, result) => {
-          if (result.affectedRows == 1) {
-            resolve(`Se elimino ${result.affectedRows} registro`)
-          } else {
-            reject(new Error(err))
-          }
-        })
-      } catch (error) {
-        reject(new Error(error))
-      }
-    })
-  }
+				db.query(query, [data.catId], (err, result: any) => {
+					if (result.affectedRows == 1) {
+						resolve(`Se elimino ${result.affectedRows} registro`);
+					} else {
+						reject(err);
+					}
+				});
+			} catch (error) {
+				reject(error);
+			}
+		});
+	}
 
-  static getMxP(){
-    return new Promise((resolve, reject) => {
-        const query = 'SELECT catId, COUNT(catId) as can FROM producto group by catId'
-        db.query(query, (err, results) => {
-          if (err) {
-            reject(err)
-          } else {
-            resolve(results)
-          }
-        })
-    })
-  }
+	static getMxP() {
+		return new Promise((resolve, reject) => {
+			const query = 'SELECT catId, COUNT(catId) as can FROM producto group by catId';
+			db.query(query, (err, results: any) => {
+				if (err) {
+					reject(err);
+				} else {
+					resolve(results);
+				}
+			});
+		});
+	}
 }
 
-export default Mcat
+export default Mcat;
+

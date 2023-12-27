@@ -1,6 +1,6 @@
 /** @format */
 
-import { db } from '../config/db.ts';
+import { db } from '../config/db';
 
 class ProductModel {
 	static getAll() {
@@ -22,7 +22,7 @@ class ProductModel {
 		});
 	}
 
-	static getAllXCat(data) {
+	static getAllXCat(data: any) {
 		return new Promise((resolve, reject) => {
 			const query =
 				'SELECT p.prodId, c.catNom, c.catId, p.prodNom, p.prodDescr, p.prodImg, p.prodValCom, p.prodValVen ' +
@@ -53,18 +53,17 @@ class ProductModel {
 		});
 	}
 
-	static create(data) {
+	static create(data: any) {
 		return new Promise((resolve, reject) => {
 			try {
-				const query =
-					'INSERT INTO producto (catId, prodNom, prodDescr, prodImg, prodValCom, prodValVen) VALUES (?, ?, ?, ?, ?, ?)';
+				const query = 'INSERT INTO producto (catId, prodNom, prodDescr, prodImg, prodValCom, prodValVen) VALUES (?, ?, ?, ?, ?, ?)';
 
 				const { catId, prodNom, prodDescr, prodImg, prodValCom, prodValVen } = data;
-				db.query(query, [catId, prodNom, prodDescr, prodImg, prodValCom, prodValVen], (err, result) => {
+				db.query(query, [catId, prodNom, prodDescr, prodImg, prodValCom, prodValVen], (err, result: any) => {
 					if (result && result.affectedRows === 1) {
 						resolve(result);
 					} else {
-						reject(new Error(err));
+						reject(err);
 					}
 				});
 			} catch (err) {
@@ -73,7 +72,7 @@ class ProductModel {
 		});
 	}
 
-	static update(data) {
+	static update(data: any) {
 		return new Promise((resolve, reject) => {
 			try {
 				const query =
@@ -83,11 +82,11 @@ class ProductModel {
 					' ' +
 					'WHERE prodId = ?';
 				const { catId, prodNom, prodDescr, prodImg, prodValCom, prodValVen, prodId } = data;
-				db.query(query, [catId, prodNom, prodDescr, prodImg, prodValCom, prodValVen, prodId], (err, result) => {
+				db.query(query, [catId, prodNom, prodDescr, prodImg, prodValCom, prodValVen, prodId], (err, result: any) => {
 					if (result.affectedRows == 1) {
 						resolve(`Se actualizo ${result.affectedRows} registro`);
 					} else {
-						reject(new Error(err));
+						reject(err);
 					}
 				});
 			} catch (error) {
@@ -96,24 +95,25 @@ class ProductModel {
 		});
 	}
 
-	static delete(data) {
+	static delete(data: any) {
 		return new Promise((resolve, reject) => {
 			try {
 				const query = 'DELETE FROM producto WHERE prodId = ?';
 				const { prodId } = data;
 
-				db.query(query, [prodId], (err, result) => {
+				db.query(query, [prodId], (err, result: any) => {
 					if (result.affectedRows == 1) {
 						resolve(`Se elimino ${result.affectedRows} registro`);
 					} else {
-						reject(new Error(err));
+						reject(err);
 					}
 				});
 			} catch (error) {
-				reject(new Error(error));
+				reject(error);
 			}
 		});
 	}
 }
 
 export default ProductModel;
+

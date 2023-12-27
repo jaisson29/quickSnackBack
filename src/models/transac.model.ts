@@ -1,9 +1,14 @@
 /** @format */
 
-import { db, query } from '../config/db.ts';
+import { QueryError } from 'mysql2';
+import { db, query } from '../config/db';
+
+interface CustomError extends QueryError {
+	codigo: number;
+}
 
 class TransacModel {
-	static create(data) {
+	static create(data: any) {
 		return new Promise((resolve, reject) => {
 			const sql = 'INSERT INTO transaccion(transacFecha, transacTipo, usuId) ' + 'VALUES(?, ?, ?)';
 			const { transacFecha, transacTipo, usuId } = data;
@@ -17,7 +22,7 @@ class TransacModel {
 				});
 		});
 	}
-	
+
 	static getAll() {
 		return new Promise((resolve, reject) => {
 			const sql =
@@ -26,16 +31,11 @@ class TransacModel {
 				'INNER JOIN usuario usu ' +
 				'ON ts.usuId = usu.usuId';
 
-			db.query(sql, function (err, res) {
+			db.query(sql, function (err, res: any) {
 				if (err) {
-					const error = new Error(err);
-					error.name = 'Fallo en la consulta';
-					error.cod = 1010;
-					reject(error);
+					reject(err);
 				} else if (res.length === 0) {
 					const error = new Error('No se encontraron transacciones realizadas');
-					error.name = 'Sin registros';
-					error.cod = 1001;
 					reject(error);
 				} else {
 					resolve(res);
@@ -44,7 +44,7 @@ class TransacModel {
 		});
 	}
 
-	static getByUser(data) {
+	static getByUser(data: any) {
 		return new Promise((resolve, reject) => {
 			const sql =
 				'SELECT ts.transacId, ts.transacFecha, ts.transacTipo, ts.usuId, usu.usuNom, usu.usuNoDoc, prv.catId, SUM(dtv.detVenCant * prv.prodValVen) AS tot ' +
@@ -60,14 +60,14 @@ class TransacModel {
 
 			const { usuId } = data;
 
-			db.query(sql, [usuId], (err, res) => {
+			db.query(sql, [usuId], (err, res: any) => {
 				if (err) {
-					const error = new Error(err);
+					const error: CustomError = err as CustomError;
 					error.name = 'Fallo en la consulta';
 					error.codigo = 500;
 					reject(error);
 				} else {
-					const error = new Error();
+					const error = new Error("No se encontraron datos") as CustomError;
 					error.codigo = 204;
 					res.length !== 0 ? resolve(res) : reject(error);
 				}

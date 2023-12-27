@@ -20,7 +20,7 @@ db.connect((err) => {
 const pool = mysql.createPool(dbConfig);
 
 // Ejecuta el pool y utiliza una conexion para ejecutar una query
-function query(sql, values) {
+function query(sql:string, values: any) {
 	return new Promise((resolve, reject) => {
 		//Obteniendo la conexion para usar
 		pool.getConnection((err, connection) => {
@@ -41,3 +41,4 @@ function query(sql, values) {
 }
 
 export { db, query };
+
