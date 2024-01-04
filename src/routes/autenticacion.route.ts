@@ -7,15 +7,14 @@ import { generateToken, authToken } from '../utils/jwt';
 import transporter from '../config/mailer';
 import { verifyToken } from '../middlewares/auth';
 const router = express.Router();
-router.get('/verify', (req: Request, res: Response) => {
-	const head = req.headers.authorizatio as string;
-	authToken(head, process.env.SECRET_KEY as string)
-		.then((verificado) => {
-			res.status(200).json(verificado);
-		})
-		.catch((err) => {
-			res.json({ error: err });
-		});
+router.get('/verify', async (req: Request, res: Response) => {
+	try {
+		const head = req.headers.authorization as string;
+		const verificado = await authToken(head, process.env.SECRET_KEY as string);
+		res.status(200).json(verificado);
+	} catch (err: any) {
+		res.json({ error: err });
+	}
 });
 
 router.get('/verifyRefresh', (req: Request, res: Response) => {

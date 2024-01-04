@@ -28,6 +28,7 @@ router.get('/getByUser/:usuId', verifyToken(process.env.SECRET_KEY), (req: Reque
 		});
 });
 
+//Endpoint para crear una transaccion
 router.post('/', verifyToken(process.env.SECRET_KEY), function (req: Request, res: Response) {
 	const { usuId, transacTipo, det } = req.body;
 	TransacModel.create({ usuId, transacTipo, transacFecha: new Date() })
@@ -38,7 +39,7 @@ router.post('/', verifyToken(process.env.SECRET_KEY), function (req: Request, re
 					res.status(200).json(result);
 				})
 				.catch((err) => {
-					res.status(err.status).json(err);
+					res.status(500).json({ error: 'Fallo en la creacion del detalle', message: err.message });
 				});
 		})
 		.catch((err) => {

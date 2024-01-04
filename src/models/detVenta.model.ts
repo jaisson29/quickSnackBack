@@ -5,20 +5,20 @@ import { db } from '../config/db';
 interface DetVenta {
 	prodId: number;
 	transacId: number;
-	detVenCant: number;
+	cantidad: number;
 }
 export default class DetVentaModel {
 	static create(data: any) {
 		return new Promise((resolve, reject) => {
-			const sql = 'INSERT INTO detventa (prodId, transacId, detVenCant) VALUES ?';
+			const sql = 'INSERT INTO detVenta (prodId, transacId, detVenCant) VALUES ?';
 			let insertItems = data.det.map((item: DetVenta) => {
-				return [item.prodId, data.transacId, item.detVenCant];
+				return [item.prodId, data.transacId, item.cantidad];
 			});
-			db.query(sql, [insertItems], (err, resultado: any) => {
+			db.query(sql, [insertItems], (err: any, resultado: any) => {
 				if (resultado?.affectedRows >= 1) {
 					resolve(resultado);
 				} else {
-					const error = new Error('No se pudo agregar el detalle');
+					const error = new Error(err.message);
 					reject(error);
 				}
 			});
