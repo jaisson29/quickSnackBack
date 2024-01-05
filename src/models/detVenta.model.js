@@ -5,7 +5,7 @@ import { db } from '../config/db.js'
 export default class DetVentaModel {
 	static create(data) {
 		return new Promise((resolve, reject) => {
-			const sql = 'INSERT INTO detventa (prodId, transacId, detVenCant) VALUES ?'
+			const sql = 'INSERT INTO detVenta (prodId, transacId, detVenCant) VALUES ?'
 			let insertItems = data.det.map((item) => {
 				return [item.prodId, data.transacId, item.cantidad]
 			})
@@ -17,7 +17,7 @@ export default class DetVentaModel {
 					error.name = 'Fallo en crear el registro'
 					error.cod = 1500
 					error.status = 501
-					error.error = err
+					error.error = err.message
 					reject(error)
 				}
 			})
@@ -51,7 +51,7 @@ export default class DetVentaModel {
 	static getAllXTrsId(data) {
 		return new Promise((resolve, reject) => {
 			const { transacId } = data
-			const sql = 'SELECT detventaId, prodId, transacId ' + 'FROM detventa' + 'WHERE transacId=?'
+			const sql = 'SELECT detventaId, prodId, transacId ' + 'FROM detVenta' + 'WHERE transacId=?'
 
 			db.query(sql, [transacId], (resultado, err) => {
 				if (err) {
