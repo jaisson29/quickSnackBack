@@ -101,7 +101,7 @@ router.post('/forgotPass', async (req: Request, res: Response) => {
 
 		res.status(200).json({ message: `Correo enviado a ${cont.usuEmail}` });
 	} catch (err: any) {
-		console.error('Mailer', err);
+		console.error('Mailer', err.message);
 		res.status(500).json({ error: 'No se pudo enviar el email', message: err.message });
 	}
 });
