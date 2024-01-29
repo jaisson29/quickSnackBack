@@ -3,6 +3,16 @@
 import { db } from '../config/db';
 import bcrypt from 'bcrypt';
 
+interface UserData {
+	usuTipoDoc: string;
+	usuNoDoc: string;
+	usuGen: string;
+	usuNom: string;
+	usuEmail: string;
+	usuContra: string;
+	usuIngreso: string;
+	perfilId: number;
+}
 class UserModel {
 	static keysPermitidas = [
 		'usuId',
@@ -83,8 +93,7 @@ class UserModel {
 
 			db.query(sql, values, (err, result: any) => {
 				if (err) {
-					const error = new Error('Fallo en obtener los datos');
-					reject(error);
+					reject(err);
 				} else if (result.length === 0) {
 					const error = new Error('Fallo en obtener los datos');
 					reject(error);
@@ -120,30 +129,26 @@ class UserModel {
 
 	static create(data: any) {
 		return new Promise((resolve, reject) => {
-			try {
-				const query = `INSERT INTO usuario(usuTipoDoc, usuNoDoc, usuGen, usuNom, usuEmail, usuContra, usuIngreso, perfilId) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
-				const { usuTipoDoc, usuNoDoc, usuGen, usuNom, usuEmail, usuContra, usuIngreso, perfilId } = data;
-				bcrypt
-					.hash(usuContra, 10)
-					.then((hash) => {
-						db.query(query, [usuTipoDoc, usuNoDoc, usuGen, usuNom, usuEmail, hash, usuIngreso, perfilId], (err, result: any) => {
-							if (result && result.affectedRows === 1) {
-								resolve(result);
-							} else {
-								reject(err);
-							}
-						});
-					})
-					.catch((err) => {
-						throw new Error(err);
+			const query = `INSERT INTO usuario(usuTipoDoc, usuNoDoc, usuGen, usuNom, usuEmail, usuContra, usuIngreso, perfilId) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+			const { usuTipoDoc, usuNoDoc, usuGen, usuNom, usuEmail, usuContra, usuIngreso, perfilId } = data;
+			bcrypt
+				.hash(usuContra, 10)
+				.then((hash) => {
+					db.query(query, [usuTipoDoc, usuNoDoc, usuGen, usuNom, usuEmail, hash, usuIngreso, perfilId], (err, result: any) => {
+						if (result && result.affectedRows === 1) {
+							resolve(result);
+						} else {
+							reject(err);
+						}
 					});
-			} catch (err) {
-				reject(err);
-			}
+				})
+				.catch((err) => {
+					throw new Error(err);
+				});
 		});
 	}
 
-	static update(data: any) {
+	static async update(data: any): Promise<any> {
 		return new Promise((resolve, reject) => {
 			if (!data.usuId) {
 				reject(new Error('No se proporcionaron los datos necesarios'));

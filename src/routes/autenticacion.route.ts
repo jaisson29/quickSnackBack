@@ -7,25 +7,28 @@ import { generateToken, authToken } from '../utils/jwt';
 import transporter from '../config/mailer';
 import { verifyToken } from '../middlewares/auth';
 const router = express.Router();
-router.get('/verify', async (req: Request, res: Response) => {
+router.get('/verify', (req: Request, res: Response) => {
 	try {
 		const head = req.headers.authorization as string;
-		const verificado = await authToken(head, process.env.SECRET_KEY as string);
-		res.status(200).json(verificado);
+		const verificado = authToken(head, process.env.SECRET_KEY as string);
+		if (verificado) {
+			res.status(200).json(verificado);
+		} else {
+			throw new Error();
+		}
 	} catch (err: any) {
 		res.json({ error: err });
 	}
 });
 
 router.get('/verifyRefresh', (req: Request, res: Response) => {
-	const head = req.headers.authorization as string;
-	authToken(head, process.env.SECRET_KEY_EMAIL as string)
-		.then((verificado) => {
-			res.status(200).json(verificado);
-		})
-		.catch((err) => {
-			res.json({ error: err });
-		});
+	try {
+		const head = req.headers.authorization as string;
+		const verificado = authToken(head, process.env.SECRET_KEY_EMAIL as string);
+		res.status(200).json(verificado);
+	} catch (error) {
+		res.json({ error: error });
+	}
 });
 
 router.post('/loguear', (req: Request, res: Response) => {
@@ -106,18 +109,22 @@ router.post('/forgotPass', async (req: Request, res: Response) => {
 	}
 });
 
-router.post('/resetPass', verifyToken(process.env.SECRET_KEY_EMAIL), async (req: Request, res: Response): Promise<void> => {
+router.post('/resetPass', verifyToken(process.env.SECRET_KEY_EMAIL), async (req: Request, res: Response) => {
 	try {
 		const cont = req.body;
 		const token = req.headers.authorization as string;
-		const newContra = await bcrypt.hash(cont.usuContra, 10);
-		const usuInfo: any = await authToken(token, process.env.SECRET_KEY_EMAIL as string);
+		const newContra: string = await bcrypt.hash(cont.usuContra, 10);
+		const usuInfo: any = authToken(token, process.env.SECRET_KEY_EMAIL as string);
 		if (usuInfo) {
 			const updated = await UserModel.update({ usuId: usuInfo.payload.usuId, usuContra: newContra, usuKey: null });
-			if (updated) res.status(200).json({ message: 'contraseña actualizada correctamente' });
+			if (updated) {
+				res.status(200).json({ message: 'contraseña actualizada correctamente' });
+			} else {
+				res.status(500).json({ message: 'No se pudo actualizar la contraseña' });
+			}
 		}
 	} catch (error: any) {
-		res.status(500).json({ message: 'Ocurrio un problema', error: error.message });
+		res.status(500).json({ message: 'Ocurrió un problema al resetear la contraseña', error: error.message });
 	}
 });
 

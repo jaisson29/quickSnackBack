@@ -1,6 +1,6 @@
 /** @format */
 
-import jwt, { Algorithm } from 'jsonwebtoken';
+import jwt, { Algorithm, JwtPayload } from 'jsonwebtoken';
 
 function generateToken(payload: any, secretKey: string): string {
 	try {
@@ -11,10 +11,10 @@ function generateToken(payload: any, secretKey: string): string {
 	}
 }
 
-async function authToken(token: string, secretKey: string): Promise<Object | Error> {
+function authToken(token: string, secretKey: string): JwtPayload | string {
 	try {
 		token = token.replace('Bearer ', '');
-		const decoded = await jwt.verify(token, secretKey);
+		const decoded = jwt.verify(token, secretKey);
 		return decoded;
 	} catch (e: any) {
 		console.error(e);
