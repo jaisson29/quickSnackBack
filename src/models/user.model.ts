@@ -2,17 +2,8 @@
 
 import { db } from '../config/db';
 import bcrypt from 'bcrypt';
+import { Usuario } from '../types';
 
-interface UserData {
-	usuTipoDoc: string;
-	usuNoDoc: string;
-	usuGen: string;
-	usuNom: string;
-	usuEmail: string;
-	usuContra: string;
-	usuIngreso: string;
-	perfilId: number;
-}
 class UserModel {
 	static keysPermitidas = [
 		'usuId',
@@ -104,28 +95,28 @@ class UserModel {
 		});
 	}
 
-	static getOneXEmailXContra(data: any) {
-		return new Promise((resolve, reject) => {
-			try {
-				const sql =
-					'SELECT usu.usuId, usu.usuTipoDoc, usu.usuGen, usu.usuNom, usu.usuEmail, usu.usuContra, usu.usuIngreso, usu.usuImg, per.perfilNom, per.perfilId, per.paginaRuta, usu.usuKey ' +
-					'FROM usuario AS usu ' +
-					'INNER JOIN perfil AS per ' +
-					'ON usu.perfilId = per.perfilId ' +
-					'WHERE usuEmail = ?';
-				const { usuEmail } = data;
-				db.query(sql, [usuEmail], (err, result) => {
-					if (err) {
-						reject(err);
-					} else {
-						resolve(result);
-					}
-				});
-			} catch (err) {
-				reject(err);
-			}
-		});
-	}
+		static getOneXEmailXContra(data: Usuario){
+			return new Promise((resolve, reject) => {
+				try {
+					const sql =
+						'SELECT usu.usuId, usu.usuTipoDoc, usu.usuGen, usu.usuNom, usu.usuEmail, usu.usuContra, usu.usuIngreso, usu.usuImg, per.perfilNom, per.perfilId, per.paginaRuta, usu.usuKey ' +
+						'FROM usuario AS usu ' +
+						'INNER JOIN perfil AS per ' +
+						'ON usu.perfilId = per.perfilId ' +
+						'WHERE usuEmail = ?';
+					const { usuEmail } = data;
+					db.query(sql, [usuEmail], (err, result) => {
+						if (err) {
+							reject(err);
+						} else {
+							resolve(result);
+						}
+					});
+				} catch (err) {
+					reject(err);
+				}
+			});
+		}
 
 	static create(data: any) {
 		return new Promise((resolve, reject) => {

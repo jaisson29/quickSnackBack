@@ -1,11 +1,6 @@
 /** @format */
 
-import { QueryError } from 'mysql2';
-import { db, query } from '../config/db';
-
-interface CustomError extends QueryError {
-	codigo: number;
-}
+import { db, useQuery } from '../config/db';
 
 class TransacModel {
 	static create(data: any) {
@@ -13,7 +8,7 @@ class TransacModel {
 			const sql = 'INSERT INTO transaccion(transacFecha, transacTipo, usuId) ' + 'VALUES(?, ?, ?)';
 			const { transacFecha, transacTipo, usuId } = data;
 
-			query(sql, [transacFecha, transacTipo, usuId])
+			useQuery(sql, [transacFecha, transacTipo, usuId])
 				.then((resultado) => {
 					resolve(resultado);
 				})
@@ -63,13 +58,11 @@ class TransacModel {
 
 			db.query(sql, [usuId], (err, res: any) => {
 				if (err) {
-					const error: CustomError = err as CustomError;
+					const error = err;
 					error.name = 'Fallo en la consulta';
-					error.codigo = 500;
 					reject(error);
 				} else {
-					const error = new Error("No se encontraron datos") as CustomError;
-					error.codigo = 204;
+					const error = new Error("No se encontraron datos");
 					res.length !== 0 ? resolve(res) : reject(error);
 				}
 			});

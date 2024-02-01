@@ -7,6 +7,7 @@ import { generateToken, authToken } from '../utils/jwt';
 import transporter from '../config/mailer';
 import { verifyToken } from '../middlewares/auth';
 const router = express.Router();
+
 router.get('/verify', (req: Request, res: Response) => {
 	try {
 		const head = req.headers.authorization as string;
@@ -46,8 +47,8 @@ router.post('/loguear', (req: Request, res: Response) => {
 				}
 			} else {
 				res.status(400).json({
-					error: 'No existe un usuario con las credenciales enviadas',
-					message: usuario,
+					error: 'Error de autenticación',
+					message: 'No existe un usuario con las credenciales enviadas',
 				});
 			}
 		})
@@ -129,4 +130,5 @@ router.post('/resetPass', verifyToken(process.env.SECRET_KEY_EMAIL), async (req:
 });
 
 export default router;
+
 

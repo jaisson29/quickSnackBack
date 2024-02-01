@@ -1,8 +1,8 @@
 /** @format */
 
-import mysql from 'mysql2';
+import mysql, { ConnectionOptions, PoolOptions } from 'mysql2';
 
-const dbConfig = {
+const dbConfig: ConnectionOptions = {
 	host: process.env.DB_HOST,
 	database: process.env.DB,
 	user: process.env.DB_USER,
@@ -17,10 +17,18 @@ db.connect((err) => {
 	}
 	console.log('Conexión a la base de datos MySQL establecida');
 });
-const pool = mysql.createPool(dbConfig);
+
+//This is only if we going to use a pool of connection if not the following code it's no used
+const poolConfig: PoolOptions = {
+	host: process.env.DB_HOST,
+	database: process.env.DB,
+	user: process.env.DB_USER,
+	password: process.env.DB_PASS,
+};
+const pool = mysql.createPool(poolConfig);
 
 // Ejecuta el pool y utiliza una conexion para ejecutar una query
-function query(sql:string, values: any) {
+function useQuery(sql: string, values: any) {
 	return new Promise((resolve, reject) => {
 		//Obteniendo la conexion para usar
 		pool.getConnection((err, connection) => {
@@ -40,5 +48,5 @@ function query(sql:string, values: any) {
 	});
 }
 
-export { db, query };
+export { db, useQuery };
 
