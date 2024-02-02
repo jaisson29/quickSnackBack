@@ -24,7 +24,7 @@ router.get('/getByUser/:usuId', verifyToken(process.env.SECRET_KEY), (req: Reque
 			res.status(200).json(respuesta);
 		})
 		.catch((err) => {
-			res.status(err.codigo).json({ error: err.message, mensaje: err.name, codigo: err.cod });
+			res.status(500).json({ error: err.message, mensaje: err.name, codigo: err.cod });
 		});
 });
 
