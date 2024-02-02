@@ -2,11 +2,13 @@
 
 import mysql, { ConnectionOptions, PoolOptions } from 'mysql2';
 
+const port = Number(process.env.DB_PORT);
 const dbConfig: ConnectionOptions = {
 	host: process.env.DB_HOST,
 	database: process.env.DB,
 	user: process.env.DB_USER,
 	password: process.env.DB_PASS,
+	port: port,
 };
 
 const db = mysql.createConnection(dbConfig);

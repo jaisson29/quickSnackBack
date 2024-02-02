@@ -1,35 +1,35 @@
--- Active: 1701211025608@@127.0.0.1@3306@quicksnack
+-- Active: 1701211025608@@127.0.0.1@3306@railway
 
 -- MySQL Workbench Forward Engineering
 
 -- -----------------------------------------------------
 
--- Schema quickSnack
+-- Schema railway
 
 -- -----------------------------------------------------
 
-DROP SCHEMA IF EXISTS `quickSnack` ;
+-- DROP SCHEMA IF EXISTS `railway` ;
 
 -- -----------------------------------------------------
 
--- Schema quickSnack
+-- Schema railway
 
 -- -----------------------------------------------------
 
-CREATE SCHEMA IF NOT EXISTS `quickSnack` DEFAULT CHARACTER SET utf8 ;
+-- CREATE SCHEMA IF NOT EXISTS `railway` DEFAULT CHARACTER SET utf8 ;
 
-USE `quickSnack` ;
-
--- -----------------------------------------------------
-
--- Table `quickSnack`.`perfil`
+USE `railway` ;
 
 -- -----------------------------------------------------
 
-DROP TABLE IF EXISTS `quickSnack`.`perfil` ;
+-- Table `railway`.`perfil`
+
+-- -----------------------------------------------------
+
+DROP TABLE IF EXISTS `railway`.`perfil` ;
 
 CREATE TABLE
-    IF NOT EXISTS `quickSnack`.`perfil` (
+    IF NOT EXISTS `railway`.`perfil` (
         `perfilId` INT NOT NULL AUTO_INCREMENT,
         `perfilNom` VARCHAR(45) NOT NULL,
         `paginaRuta` VARCHAR(100) NOT NULL,
@@ -38,14 +38,14 @@ CREATE TABLE
 
 -- -----------------------------------------------------
 
--- Table `quickSnack`.`dominio`
+-- Table `railway`.`dominio`
 
 -- -----------------------------------------------------
 
-DROP TABLE IF EXISTS `quickSnack`.`dominio` ;
+DROP TABLE IF EXISTS `railway`.`dominio` ;
 
 CREATE TABLE
-    IF NOT EXISTS `quickSnack`.`dominio` (
+    IF NOT EXISTS `railway`.`dominio` (
         `domId` INT NOT NULL AUTO_INCREMENT,
         `domNom` VARCHAR(45) NOT NULL,
         PRIMARY KEY (`domId`)
@@ -53,32 +53,32 @@ CREATE TABLE
 
 -- -----------------------------------------------------
 
--- Table `quickSnack`.`valor`
+-- Table `railway`.`valor`
 
 -- -----------------------------------------------------
 
-DROP TABLE IF EXISTS `quickSnack`.`valor` ;
+DROP TABLE IF EXISTS `railway`.`valor` ;
 
 CREATE TABLE
-    IF NOT EXISTS `quickSnack`.`valor` (
+    IF NOT EXISTS `railway`.`valor` (
         `valorId` INT NOT NULL AUTO_INCREMENT,
         `param` VARCHAR(255) NOT NULL,
         `domId` INT NOT NULL,
         PRIMARY KEY (`valorId`),
         INDEX `valueXDomain_idx` (`domId` ASC),
-        CONSTRAINT `valueXDomain` FOREIGN KEY (`domId`) REFERENCES `quickSnack`.`dominio` (`domId`) ON DELETE NO ACTION ON UPDATE NO ACTION
+        CONSTRAINT `valueXDomain` FOREIGN KEY (`domId`) REFERENCES `railway`.`dominio` (`domId`) ON DELETE NO ACTION ON UPDATE NO ACTION
     ) ENGINE = InnoDB;
 
 -- -----------------------------------------------------
 
--- Table `quickSnack`.`usuario`
+-- Table `railway`.`usuario`
 
 -- -----------------------------------------------------
 
-DROP TABLE IF EXISTS `quickSnack`.`usuario` ;
+DROP TABLE IF EXISTS `railway`.`usuario` ;
 
 CREATE TABLE
-    IF NOT EXISTS `quickSnack`.`usuario` (
+    IF NOT EXISTS `railway`.`usuario` (
         `usuId` INT NOT NULL AUTO_INCREMENT,
         `usuTipoDoc` INT NOT NULL,
         `usuNoDoc` VARCHAR(12) NOT NULL,
@@ -99,23 +99,23 @@ CREATE TABLE
         UNIQUE INDEX `usuNoDoc_UNIQUE` (`usuNoDoc` ASC),
         INDEX `usuIngreso` (`usuIngreso` ASC),
         INDEX `usuOlvid` (`usuOlvid` ASC),
-        CONSTRAINT `userXProfile` FOREIGN KEY (`perfilId`) REFERENCES `quickSnack`.`perfil` (`perfilId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-        CONSTRAINT `genderXValue` FOREIGN KEY (`usuGen`) REFERENCES `quickSnack`.`valor` (`valorId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-        CONSTRAINT `docTypeXValue` FOREIGN KEY (`usuTipoDoc`) REFERENCES `quickSnack`.`valor` (`valorId`) ON DELETE NO ACTION ON UPDATE NO ACTION
+        CONSTRAINT `userXProfile` FOREIGN KEY (`perfilId`) REFERENCES `railway`.`perfil` (`perfilId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+        CONSTRAINT `genderXValue` FOREIGN KEY (`usuGen`) REFERENCES `railway`.`valor` (`valorId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+        CONSTRAINT `docTypeXValue` FOREIGN KEY (`usuTipoDoc`) REFERENCES `railway`.`valor` (`valorId`) ON DELETE NO ACTION ON UPDATE NO ACTION
     ) ENGINE = InnoDB;
 
-ALTER TABLE quickSnack.usuario AUTO_INCREMENT = 101;
+ALTER TABLE railway.usuario AUTO_INCREMENT = 101;
 
 -- -----------------------------------------------------
 
--- Table `quickSnack`.`pagina`
+-- Table `railway`.`pagina`
 
 -- -----------------------------------------------------
 
-DROP TABLE IF EXISTS `quickSnack`.`pagina` ;
+DROP TABLE IF EXISTS `railway`.`pagina` ;
 
 CREATE TABLE
-    IF NOT EXISTS `quickSnack`.`pagina` (
+    IF NOT EXISTS `railway`.`pagina` (
         `paginaId` INT NOT NULL AUTO_INCREMENT,
         `paginaNom` VARCHAR(45) NOT NULL,
         `paginaIcon` VARCHAR(45) NOT NULL,
@@ -125,32 +125,32 @@ CREATE TABLE
 
 -- -----------------------------------------------------
 
--- Table `quickSnack`.`perxpag`
+-- Table `railway`.`perxpag`
 
 -- -----------------------------------------------------
 
-DROP TABLE IF EXISTS `quickSnack`.`perxpag` ;
+DROP TABLE IF EXISTS `railway`.`perxpag` ;
 
 CREATE TABLE
-    IF NOT EXISTS `quickSnack`.`perxpag` (
+    IF NOT EXISTS `railway`.`perxpag` (
         `paginaId` INT NOT NULL,
         `perfilId` INT NOT NULL,
         INDEX `profileXPage_idx` (`perfilId` ASC),
         INDEX `pageXProfile_idx` (`paginaId` ASC),
-        CONSTRAINT `profileXPage` FOREIGN KEY (`perfilId`) REFERENCES `quickSnack`.`perfil` (`perfilId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-        CONSTRAINT `pageXProfile` FOREIGN KEY (`paginaId`) REFERENCES `quickSnack`.`pagina` (`paginaId`) ON DELETE NO ACTION ON UPDATE NO ACTION
+        CONSTRAINT `profileXPage` FOREIGN KEY (`perfilId`) REFERENCES `railway`.`perfil` (`perfilId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+        CONSTRAINT `pageXProfile` FOREIGN KEY (`paginaId`) REFERENCES `railway`.`pagina` (`paginaId`) ON DELETE NO ACTION ON UPDATE NO ACTION
     ) ENGINE = InnoDB;
 
 -- -----------------------------------------------------
 
--- Table `quickSnack`.`categoria`
+-- Table `railway`.`categoria`
 
 -- -----------------------------------------------------
 
-DROP TABLE IF EXISTS `quickSnack`.`categoria` ;
+DROP TABLE IF EXISTS `railway`.`categoria` ;
 
 CREATE TABLE
-    IF NOT EXISTS `quickSnack`.`categoria` (
+    IF NOT EXISTS `railway`.`categoria` (
         `catId` INT NOT NULL AUTO_INCREMENT,
         `catNom` VARCHAR(45) NOT NULL,
         PRIMARY KEY (`catId`)
@@ -158,14 +158,14 @@ CREATE TABLE
 
 -- -----------------------------------------------------
 
--- Table `quickSnack`.`producto`
+-- Table `railway`.`producto`
 
 -- -----------------------------------------------------
 
-DROP TABLE IF EXISTS `quickSnack`.`producto` ;
+DROP TABLE IF EXISTS `railway`.`producto` ;
 
 CREATE TABLE
-    IF NOT EXISTS `quickSnack`.`producto` (
+    IF NOT EXISTS `railway`.`producto` (
         `prodId` INT NOT NULL AUTO_INCREMENT,
         `catId` INT NOT NULL,
         `prodNom` VARCHAR(255) NOT NULL,
@@ -178,19 +178,19 @@ CREATE TABLE
         INDEX `prodNom` (`prodNom` ASC),
         INDEX `prodValCom` (`prodValCom` ASC),
         INDEX `prodValVen` (`prodValVen` ASC),
-        CONSTRAINT `productXCategory` FOREIGN KEY (`catId`) REFERENCES `quickSnack`.`categoria` (`catId`) ON DELETE NO ACTION ON UPDATE NO ACTION
+        CONSTRAINT `productXCategory` FOREIGN KEY (`catId`) REFERENCES `railway`.`categoria` (`catId`) ON DELETE NO ACTION ON UPDATE NO ACTION
     ) ENGINE = InnoDB;
 
 -- -----------------------------------------------------
 
--- Table `quickSnack`.`transaccion`
+-- Table `railway`.`transaccion`
 
 -- -----------------------------------------------------
 
-DROP TABLE IF EXISTS `quickSnack`.`transaccion` ;
+DROP TABLE IF EXISTS `railway`.`transaccion` ;
 
 CREATE TABLE
-    IF NOT EXISTS `quickSnack`.`transaccion` (
+    IF NOT EXISTS `railway`.`transaccion` (
         `transacId` INT NOT NULL AUTO_INCREMENT,
         `transacFecha` DATETIME NOT NULL,
         `usuId` INT NOT NULL,
@@ -198,20 +198,20 @@ CREATE TABLE
         PRIMARY KEY (`transacId`),
         INDEX `saleBillXUser_idx` (`usuId` ASC),
         INDEX `transacXValor_idx` (`transacTipo` ASC),
-        CONSTRAINT `saleBillXUser` FOREIGN KEY (`usuId`) REFERENCES `quickSnack`.`usuario` (`usuId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-        CONSTRAINT `transacXValor` FOREIGN KEY (`transacTipo`) REFERENCES `quickSnack`.`valor` (`valorId`) ON DELETE NO ACTION ON UPDATE NO ACTION
+        CONSTRAINT `saleBillXUser` FOREIGN KEY (`usuId`) REFERENCES `railway`.`usuario` (`usuId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+        CONSTRAINT `transacXValor` FOREIGN KEY (`transacTipo`) REFERENCES `railway`.`valor` (`valorId`) ON DELETE NO ACTION ON UPDATE NO ACTION
     ) ENGINE = InnoDB;
 
 -- -----------------------------------------------------
 
--- Table `quickSnack`.`proveedor`
+-- Table `railway`.`proveedor`
 
 -- -----------------------------------------------------
 
-DROP TABLE IF EXISTS `quickSnack`.`proveedor` ;
+DROP TABLE IF EXISTS `railway`.`proveedor` ;
 
 CREATE TABLE
-    IF NOT EXISTS `quickSnack`.`proveedor` (
+    IF NOT EXISTS `railway`.`proveedor` (
         `provId` INT NOT NULL AUTO_INCREMENT,
         `provNom` VARCHAR(45) NOT NULL,
         `provNit` BIGINT(10) NOT NULL,
@@ -220,32 +220,32 @@ CREATE TABLE
 
 -- -----------------------------------------------------
 
--- Table `quickSnack`.`compra`
+-- Table `railway`.`compra`
 
 -- -----------------------------------------------------
 
-DROP TABLE IF EXISTS `quickSnack`.`compra` ;
+DROP TABLE IF EXISTS `railway`.`compra` ;
 
 CREATE TABLE
-    IF NOT EXISTS `quickSnack`.`compra` (
+    IF NOT EXISTS `railway`.`compra` (
         `compraId` INT NOT NULL AUTO_INCREMENT,
         `provId` INT NOT NULL,
         `fechaCompra` DATE NOT NULL,
         PRIMARY KEY (`compraId`),
         INDEX `purchBillXProvider_idx` (`provId` ASC),
-        CONSTRAINT `purchBillXProvider` FOREIGN KEY (`provId`) REFERENCES `quickSnack`.`proveedor` (`provId`) ON DELETE NO ACTION ON UPDATE NO ACTION
+        CONSTRAINT `purchBillXProvider` FOREIGN KEY (`provId`) REFERENCES `railway`.`proveedor` (`provId`) ON DELETE NO ACTION ON UPDATE NO ACTION
     ) ENGINE = InnoDB;
 
 -- -----------------------------------------------------
 
--- Table `quickSnack`.`detVenta`
+-- Table `railway`.`detVenta`
 
 -- -----------------------------------------------------
 
-DROP TABLE IF EXISTS `quickSnack`.`detVenta` ;
+DROP TABLE IF EXISTS `railway`.`detVenta` ;
 
 CREATE TABLE
-    IF NOT EXISTS `quickSnack`.`detVenta` (
+    IF NOT EXISTS `railway`.`detVenta` (
         `detVentaId` INT NOT NULL AUTO_INCREMENT,
         `prodId` INT NOT NULL,
         `transacId` INT NOT NULL,
@@ -253,42 +253,42 @@ CREATE TABLE
         PRIMARY KEY (`detVentaId`),
         INDEX `saleDetXProduct_idx` (`prodId` ASC),
         INDEX `saleDetXSaleBill_idx` (`transacId` ASC),
-        CONSTRAINT `saleDetXProduct` FOREIGN KEY (`prodId`) REFERENCES `quickSnack`.`producto` (`prodId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-        CONSTRAINT `saleDetXSaleBill` FOREIGN KEY (`transacId`) REFERENCES `quickSnack`.`transaccion` (`transacId`) ON DELETE NO ACTION ON UPDATE NO ACTION
+        CONSTRAINT `saleDetXProduct` FOREIGN KEY (`prodId`) REFERENCES `railway`.`producto` (`prodId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+        CONSTRAINT `saleDetXSaleBill` FOREIGN KEY (`transacId`) REFERENCES `railway`.`transaccion` (`transacId`) ON DELETE NO ACTION ON UPDATE NO ACTION
     ) ENGINE = InnoDB;
 
 -- -----------------------------------------------------
 
--- Table `quickSnack`.`detCompra`
+-- Table `railway`.`detCompra`
 
 -- -----------------------------------------------------
 
-DROP TABLE IF EXISTS `quickSnack`.`detCompra` ;
+DROP TABLE IF EXISTS `railway`.`detCompra` ;
 
 CREATE TABLE
-    IF NOT EXISTS `quickSnack`.`detCompra` (
+    IF NOT EXISTS `railway`.`detCompra` (
         `detComId` INT NOT NULL AUTO_INCREMENT,
         `prodId` INT NOT NULL,
         `compraId` INT NOT NULL,
         `detComCant` INT NOT NULL,
         INDEX `productXPurchDet_idx` (`prodId` ASC),
         PRIMARY KEY (`detComId`),
-        CONSTRAINT `productXPurchDet` FOREIGN KEY (`prodId`) REFERENCES `quickSnack`.`producto` (`prodId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-        CONSTRAINT `comXDetCom` FOREIGN KEY (`compraId`) REFERENCES `quickSnack`.`compra` (`compraId`) ON DELETE NO ACTION ON UPDATE NO ACTION
+        CONSTRAINT `productXPurchDet` FOREIGN KEY (`prodId`) REFERENCES `railway`.`producto` (`prodId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+        CONSTRAINT `comXDetCom` FOREIGN KEY (`compraId`) REFERENCES `railway`.`compra` (`compraId`) ON DELETE NO ACTION ON UPDATE NO ACTION
     ) ENGINE = InnoDB;
 
 -- -----------------------------------------------------
 
--- Data for table `quickSnack`.`perfil`
+-- Data for table `railway`.`perfil`
 
 -- -----------------------------------------------------
 
 START TRANSACTION;
 
-USE `quickSnack`;
+USE `railway`;
 
 INSERT INTO
-    `quickSnack`.`perfil` (
+    `railway`.`perfil` (
         `perfilId`,
         `perfilNom`,
         `paginaRuta`
@@ -296,7 +296,7 @@ INSERT INTO
 VALUES (1, 'Administrador', 'usuarios');
 
 INSERT INTO
-    `quickSnack`.`perfil` (
+    `railway`.`perfil` (
         `perfilId`,
         `perfilNom`,
         `paginaRuta`
@@ -304,7 +304,7 @@ INSERT INTO
 VALUES (2, 'Usuario', 'menu');
 
 INSERT INTO
-    `quickSnack`.`perfil` (
+    `railway`.`perfil` (
         `perfilId`,
         `perfilNom`,
         `paginaRuta`
@@ -315,84 +315,84 @@ COMMIT;
 
 -- -----------------------------------------------------
 
--- Data for table `quickSnack`.`dominio`
+-- Data for table `railway`.`dominio`
 
 -- -----------------------------------------------------
 
 START TRANSACTION;
 
-USE `quickSnack`;
+USE `railway`;
 
 INSERT INTO
-    `quickSnack`.`dominio` (`domId`, `domNom`)
+    `railway`.`dominio` (`domId`, `domNom`)
 VALUES (1, 'GENERO');
 
 INSERT INTO
-    `quickSnack`.`dominio` (`domId`, `domNom`)
+    `railway`.`dominio` (`domId`, `domNom`)
 VALUES (2, 'TIPO-DOC');
 
 INSERT INTO
-    `quickSnack`.`dominio` (`domId`, `domNom`)
+    `railway`.`dominio` (`domId`, `domNom`)
 VALUES (3, 'TIPO-TRANSAC');
 
 COMMIT;
 
 -- -----------------------------------------------------
 
--- Data for table `quickSnack`.`valor`
+-- Data for table `railway`.`valor`
 
 -- -----------------------------------------------------
 
 START TRANSACTION;
 
-USE `quickSnack`;
+USE `railway`;
 
 INSERT INTO
-    `quickSnack`.`valor` (`valorId`, `param`, `domId`)
+    `railway`.`valor` (`valorId`, `param`, `domId`)
 VALUES (1, 'masculino', 1);
 
 INSERT INTO
-    `quickSnack`.`valor` (`valorId`, `param`, `domId`)
+    `railway`.`valor` (`valorId`, `param`, `domId`)
 VALUES (2, 'femenino', 1);
 
 INSERT INTO
-    `quickSnack`.`valor` (`valorId`, `param`, `domId`)
+    `railway`.`valor` (`valorId`, `param`, `domId`)
 VALUES (3, 'T.I', 2);
 
 INSERT INTO
-    `quickSnack`.`valor` (`valorId`, `param`, `domId`)
+    `railway`.`valor` (`valorId`, `param`, `domId`)
 VALUES (4, 'C.C', 2);
 
 INSERT INTO
-    `quickSnack`.`valor` (`valorId`, `param`, `domId`)
+    `railway`.`valor` (`valorId`, `param`, `domId`)
 VALUES (5, 'C.E', 2);
 
 INSERT INTO
-    `quickSnack`.`valor` (`valorId`, `param`, `domId`)
+    `railway`.`valor` (`valorId`, `param`, `domId`)
 VALUES (6, 'Recarga', 3);
 
 INSERT INTO
-    `quickSnack`.`valor` (`valorId`, `param`, `domId`)
+    `railway`.`valor` (`valorId`, `param`, `domId`)
 VALUES (7, 'Pago', 3);
 
 INSERT INTO
-    `quickSnack`.`valor` (`valorId`, `param`, `domId`)
+    `railway`.`valor` (`valorId`, `param`, `domId`)
 VALUES (8, 'no definido', 1);
 
 COMMIT;
 
 -- -----------------------------------------------------
 
--- Data for table `quickSnack`.`usuario`
+-- Data for table `railway`.`usuario`
 
 -- -----------------------------------------------------
 
 START TRANSACTION;
 
-USE `quickSnack`;
+USE `railway`;
 
 INSERT INTO
-    `quickSnack`.`usuario` (
+    `railway`.`usuario` (
         `usuId`,
         `usuTipoDoc`,
         `usuNoDoc`,
@@ -424,7 +424,7 @@ VALUES (
 COMMIT;
 
 INSERT INTO
-    `quickSnack`.`usuario` (
+    `railway`.`usuario` (
         `usuId`,
         `usuTipoDoc`,
         `usuNoDoc`,
@@ -444,7 +444,7 @@ VALUES (
         '1070004545',
         1,
         'Jay Val',
-        'jais@outllok.com',
+        'jaissonvalbuena29@outlook.com',
         '$2b$10$YKbM/aw/pv5RG2hatLqnSeoTUThl4RlC1bw4.LliK0y/h/6is1tUu',
         '2023-07-23 12:29:34',
         'default-img.webp',
@@ -454,7 +454,7 @@ VALUES (
     );
 
 INSERT INTO
-    `quickSnack`.`usuario` (
+    `railway`.`usuario` (
         `usuId`,
         `usuTipoDoc`,
         `usuNoDoc`,
@@ -484,7 +484,7 @@ VALUES (
     );
 
 INSERT INTO
-    `quickSnack`.`usuario` (
+    `railway`.`usuario` (
         `usuId`,
         `usuTipoDoc`,
         `usuNoDoc`,
@@ -514,7 +514,7 @@ VALUES (
     );
 
 INSERT INTO
-    `quickSnack`.`usuario` (
+    `railway`.`usuario` (
         `usuId`,
         `usuTipoDoc`,
         `usuNoDoc`,
@@ -547,16 +547,16 @@ COMMIT;
 
 -- -----------------------------------------------------
 
--- Data for table `quickSnack`.`pagina`
+-- Data for table `railway`.`pagina`
 
 -- -----------------------------------------------------
 
 START TRANSACTION;
 
-USE `quickSnack`;
+USE `railway`;
 
 INSERT INTO
-    `quickSnack`.`pagina` (
+    `railway`.`pagina` (
         `paginaId`,
         `paginaNom`,
         `paginaIcon`,
@@ -570,7 +570,7 @@ VALUES (
     );
 
 INSERT INTO
-    `quickSnack`.`pagina` (
+    `railway`.`pagina` (
         `paginaId`,
         `paginaNom`,
         `paginaIcon`,
@@ -579,7 +579,7 @@ INSERT INTO
 VALUES (2, 'Menu', 'fa-list', '/menu');
 
 INSERT INTO
-    `quickSnack`.`pagina` (
+    `railway`.`pagina` (
         `paginaId`,
         `paginaNom`,
         `paginaIcon`,
@@ -593,7 +593,7 @@ VALUES (
     );
 
 INSERT INTO
-    `quickSnack`.`pagina` (
+    `railway`.`pagina` (
         `paginaId`,
         `paginaNom`,
         `paginaIcon`,
@@ -607,7 +607,7 @@ VALUES (
     );
 
 INSERT INTO
-    `quickSnack`.`pagina` (
+    `railway`.`pagina` (
         `paginaId`,
         `paginaNom`,
         `paginaIcon`,
@@ -621,7 +621,7 @@ VALUES (
     );
 
 INSERT INTO
-    `quickSnack`.`pagina` (
+    `railway`.`pagina` (
         `paginaId`,
         `paginaNom`,
         `paginaIcon`,
@@ -635,7 +635,7 @@ VALUES (
     );
 
 INSERT INTO
-    `quickSnack`.`pagina` (
+    `railway`.`pagina` (
         `paginaId`,
         `paginaNom`,
         `paginaIcon`,
@@ -649,7 +649,7 @@ VALUES (
     );
 
 INSERT INTO
-    `quickSnack`.`pagina` (
+    `railway`.`pagina` (
         `paginaId`,
         `paginaNom`,
         `paginaIcon`,
@@ -658,7 +658,7 @@ INSERT INTO
 VALUES (8, 'Valor', 'fa-box', '/valor');
 
 INSERT INTO
-    `quickSnack`.`pagina` (
+    `railway`.`pagina` (
         `paginaId`,
         `paginaNom`,
         `paginaIcon`,
@@ -672,7 +672,7 @@ VALUES (
     );
 
 INSERT INTO
-    `quickSnack`.`pagina` (
+    `railway`.`pagina` (
         `paginaId`,
         `paginaNom`,
         `paginaIcon`,
@@ -686,7 +686,7 @@ VALUES (
     );
 
 INSERT INTO
-    `quickSnack`.`pagina` (
+    `railway`.`pagina` (
         `paginaId`,
         `paginaNom`,
         `paginaIcon`,
@@ -700,7 +700,7 @@ VALUES (
     );
 
 INSERT INTO
-    `quickSnack`.`pagina` (
+    `railway`.`pagina` (
         `paginaId`,
         `paginaNom`,
         `paginaIcon`,
@@ -714,7 +714,7 @@ VALUES (
     );
 
 INSERT INTO
-    `quickSnack`.`pagina` (
+    `railway`.`pagina` (
         `paginaId`,
         `paginaNom`,
         `paginaIcon`,
@@ -731,7 +731,7 @@ COMMIT;
 
 -- -----------------------------------------------------
 
--- Data for table `quickSnack`.`perxpag`
+-- Data for table `railway`.`perxpag`
 
 -- -----------------------------------------------------
 
@@ -739,130 +739,130 @@ COMMIT;
 
 START TRANSACTION;
 
-USE `quickSnack`;
+USE `railway`;
 
 INSERT INTO
-    `quickSnack`.`perxpag` (`paginaId`, `perfilId`)
+    `railway`.`perxpag` (`paginaId`, `perfilId`)
 VALUES (1, 1);
 
 INSERT INTO
-    `quickSnack`.`perxpag` (`paginaId`, `perfilId`)
+    `railway`.`perxpag` (`paginaId`, `perfilId`)
 VALUES (1, 2);
 
 INSERT INTO
-    `quickSnack`.`perxpag` (`paginaId`, `perfilId`)
+    `railway`.`perxpag` (`paginaId`, `perfilId`)
 VALUES (1, 3);
 
 INSERT INTO
-    `quickSnack`.`perxpag` (`paginaId`, `perfilId`)
+    `railway`.`perxpag` (`paginaId`, `perfilId`)
 VALUES (2, 1);
 
 INSERT INTO
-    `quickSnack`.`perxpag` (`paginaId`, `perfilId`)
+    `railway`.`perxpag` (`paginaId`, `perfilId`)
 VALUES (2, 2);
 
 INSERT INTO
-    `quickSnack`.`perxpag` (`paginaId`, `perfilId`)
+    `railway`.`perxpag` (`paginaId`, `perfilId`)
 VALUES (2, 3);
 
 INSERT INTO
-    `quickSnack`.`perxpag` (`paginaId`, `perfilId`)
+    `railway`.`perxpag` (`paginaId`, `perfilId`)
 VALUES (3, 1);
 
 INSERT INTO
-    `quickSnack`.`perxpag` (`paginaId`, `perfilId`)
+    `railway`.`perxpag` (`paginaId`, `perfilId`)
 VALUES (3, 3);
 
 INSERT INTO
-    `quickSnack`.`perxpag` (`paginaId`, `perfilId`)
+    `railway`.`perxpag` (`paginaId`, `perfilId`)
 VALUES (13, 1);
 
 INSERT INTO
-    `quickSnack`.`perxpag` (`paginaId`, `perfilId`)
+    `railway`.`perxpag` (`paginaId`, `perfilId`)
 VALUES (13, 2);
 
 INSERT INTO
-    `quickSnack`.`perxpag` (`paginaId`, `perfilId`)
+    `railway`.`perxpag` (`paginaId`, `perfilId`)
 VALUES (13, 3);
 
 INSERT INTO
-    `quickSnack`.`perxpag` (`paginaId`, `perfilId`)
+    `railway`.`perxpag` (`paginaId`, `perfilId`)
 VALUES (5, 1);
 
 INSERT INTO
-    `quickSnack`.`perxpag` (`paginaId`, `perfilId`)
+    `railway`.`perxpag` (`paginaId`, `perfilId`)
 VALUES (6, 1);
 
 INSERT INTO
-    `quickSnack`.`perxpag` (`paginaId`, `perfilId`)
+    `railway`.`perxpag` (`paginaId`, `perfilId`)
 VALUES (6, 3);
 
 INSERT INTO
-    `quickSnack`.`perxpag` (`paginaId`, `perfilId`)
+    `railway`.`perxpag` (`paginaId`, `perfilId`)
 VALUES (7, 1);
 
 INSERT INTO
-    `quickSnack`.`perxpag` (`paginaId`, `perfilId`)
+    `railway`.`perxpag` (`paginaId`, `perfilId`)
 VALUES (8, 1);
 
 INSERT INTO
-    `quickSnack`.`perxpag` (`paginaId`, `perfilId`)
+    `railway`.`perxpag` (`paginaId`, `perfilId`)
 VALUES (9, 1);
 
 INSERT INTO
-    `quickSnack`.`perxpag` (`paginaId`, `perfilId`)
+    `railway`.`perxpag` (`paginaId`, `perfilId`)
 VALUES (10, 1);
 
 INSERT INTO
-    `quickSnack`.`perxpag` (`paginaId`, `perfilId`)
+    `railway`.`perxpag` (`paginaId`, `perfilId`)
 VALUES (11, 1);
 
 INSERT INTO
-    `quickSnack`.`perxpag` (`paginaId`, `perfilId`)
+    `railway`.`perxpag` (`paginaId`, `perfilId`)
 VALUES (12, 1);
 
 COMMIT;
 
 -- -----------------------------------------------------
 
--- Data for table `quickSnack`.`categoria`
+-- Data for table `railway`.`categoria`
 
 -- -----------------------------------------------------
 
 START TRANSACTION;
 
-USE `quickSnack`;
+USE `railway`;
 
 INSERT INTO
-    `quickSnack`.`categoria` (`catId`, `catNom`)
+    `railway`.`categoria` (`catId`, `catNom`)
 VALUES (2, 'BEBIDAS CALIENTES');
 
 INSERT INTO
-    `quickSnack`.`categoria` (`catId`, `catNom`)
+    `railway`.`categoria` (`catId`, `catNom`)
 VALUES (3, 'BEBIDAS FRIAS');
 
 INSERT INTO
-    `quickSnack`.`categoria` (`catId`, `catNom`)
+    `railway`.`categoria` (`catId`, `catNom`)
 VALUES (4, 'ORGANICOS');
 
 INSERT INTO
-    `quickSnack`.`categoria` (`catId`, `catNom`)
+    `railway`.`categoria` (`catId`, `catNom`)
 VALUES (1, 'OPERACIONES');
 
 COMMIT;
 
 -- -----------------------------------------------------
 
--- Data for table `quickSnack`.`producto`
+-- Data for table `railway`.`producto`
 
 -- -----------------------------------------------------
 
 START TRANSACTION;
 
-USE `quickSnack`;
+USE `railway`;
 
 INSERT INTO
-    `quickSnack`.`producto` (
+    `railway`.`producto` (
         `prodId`,
         `catId`,
         `prodNom`,
@@ -882,7 +882,7 @@ VALUES (
     );
 
 INSERT INTO
-    `quickSnack`.`producto` (
+    `railway`.`producto` (
         `prodId`,
         `catId`,
         `prodNom`,
@@ -902,7 +902,7 @@ VALUES (
     );
 
 INSERT INTO
-    `quickSnack`.`producto` (
+    `railway`.`producto` (
         `prodId`,
         `catId`,
         `prodNom`,
@@ -922,7 +922,7 @@ VALUES (
     );
 
 INSERT INTO
-    `quickSnack`.`producto` (
+    `railway`.`producto` (
         `prodId`,
         `catId`,
         `prodNom`,
@@ -942,7 +942,7 @@ VALUES (
     );
 
 INSERT INTO
-    `quickSnack`.`producto` (
+    `railway`.`producto` (
         `prodId`,
         `catId`,
         `prodNom`,
@@ -962,7 +962,7 @@ VALUES (
     );
 
 INSERT INTO
-    `quickSnack`.`producto` (
+    `railway`.`producto` (
         `prodId`,
         `catId`,
         `prodNom`,
@@ -982,7 +982,7 @@ VALUES (
     );
 
 INSERT INTO
-    `quickSnack`.`producto` (
+    `railway`.`producto` (
         `prodId`,
         `catId`,
         `prodNom`,
@@ -1002,7 +1002,7 @@ VALUES (
     );
 
 INSERT INTO
-    `quickSnack`.`producto` (
+    `railway`.`producto` (
         `prodId`,
         `catId`,
         `prodNom`,
@@ -1022,7 +1022,7 @@ VALUES (
     );
 
 INSERT INTO
-    `quickSnack`.`producto` (
+    `railway`.`producto` (
         `prodId`,
         `catId`,
         `prodNom`,
@@ -1042,7 +1042,7 @@ VALUES (
     );
 
 INSERT INTO
-    `quickSnack`.`producto` (
+    `railway`.`producto` (
         `prodId`,
         `catId`,
         `prodNom`,
@@ -1062,7 +1062,7 @@ VALUES (
     );
 
 INSERT INTO
-    `quickSnack`.`producto` (
+    `railway`.`producto` (
         `prodId`,
         `catId`,
         `prodNom`,
@@ -1082,7 +1082,7 @@ VALUES (
     );
 
 INSERT INTO
-    `quickSnack`.`producto` (
+    `railway`.`producto` (
         `prodId`,
         `catId`,
         `prodNom`,
@@ -1105,16 +1105,16 @@ COMMIT;
 
 -- -----------------------------------------------------
 
--- Data for table `quickSnack`.`proveedor`
+-- Data for table `railway`.`proveedor`
 
 -- -----------------------------------------------------
 
 START TRANSACTION;
 
-USE `quickSnack`;
+USE `railway`;
 
 INSERT INTO
-    `quickSnack`.`proveedor` (`provId`, `provNom`, `provNit`)
+    `railway`.`proveedor` (`provId`, `provNom`, `provNit`)
 VALUES (1, 'QS', 12349 -12349);
 
 COMMIT;
