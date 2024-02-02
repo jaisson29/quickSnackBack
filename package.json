@@ -4,8 +4,8 @@
   "description": "Start app Back-end Smile task in node.js",
   "main": "app.js",
   "scripts": {
-    "build": "tsc --build && node dist/index.js",
-    "dev": "nodemon index.ts",
+    "build": "tsc --build",
+    "dev": "nodemon api/index.ts",
     "start": "tsc && node dist/index.js"
   },
   "repository": {
