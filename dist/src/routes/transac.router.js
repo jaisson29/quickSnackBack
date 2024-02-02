@@ -25,7 +25,7 @@ router.get('/getByUser/:usuId', (0, auth_1.verifyToken)(process.env.SECRET_KEY),
         res.status(200).json(respuesta);
     })
         .catch((err) => {
-        res.status(err.codigo).json({ error: err.message, mensaje: err.name, codigo: err.cod });
+        res.status(500).json({ error: err.message, mensaje: err.name, codigo: err.cod });
     });
 });
 //Endpoint para crear una transaccion
@@ -33,9 +33,11 @@ router.post('/', (0, auth_1.verifyToken)(process.env.SECRET_KEY), function (req,
     const { usuId, transacTipo, det } = req.body;
     transac_model_1.default.create({ usuId, transacTipo, transacFecha: new Date() })
         .then((result) => {
+        console.log("1", result);
         const { insertId } = result;
         detVenta_model_1.default.create({ transacId: insertId, det })
             .then((result) => {
+            console.log("2", result);
             res.status(200).json(result);
         })
             .catch((err) => {

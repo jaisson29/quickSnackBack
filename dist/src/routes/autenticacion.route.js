@@ -96,7 +96,7 @@ router.post('/forgotPass', (req, res) => __awaiter(void 0, void 0, void 0, funct
     try {
         const cont = req.body;
         if (!(cont === null || cont === void 0 ? void 0 : cont.usuEmail)) {
-            return res.status(400).json({ error: 'No se enviaron los datos requeridos' });
+            res.status(400).json({ error: 'No se enviaron los datos requeridos' });
         }
         const usuario = yield user_model_1.default.getOne({ usuEmail: cont.usuEmail });
         const { usuId, usuEmail, usuNoDoc } = usuario;

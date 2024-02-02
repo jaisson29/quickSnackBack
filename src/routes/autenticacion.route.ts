@@ -87,7 +87,7 @@ router.post('/forgotPass', async (req: Request, res: Response) => {
 	try {
 		const cont = req.body;
 		if (!cont?.usuEmail) {
-			return res.status(400).json({ error: 'No se enviaron los datos requeridos' });
+			res.status(400).json({ error: 'No se enviaron los datos requeridos' });
 		}
 
 		const usuario: any = await UserModel.getOne({ usuEmail: cont.usuEmail });

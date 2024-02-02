@@ -33,9 +33,11 @@ router.post('/', verifyToken(process.env.SECRET_KEY), function (req: Request, re
 	const { usuId, transacTipo, det } = req.body;
 	TransacModel.create({ usuId, transacTipo, transacFecha: new Date() })
 		.then((result: any) => {
+			console.log("1",result)
 			const { insertId } = result;
 			DetVenTaModel.create({ transacId: insertId, det })
 				.then((result) => {
+					console.log("2",result)
 					res.status(200).json(result);
 				})
 				.catch((err) => {
