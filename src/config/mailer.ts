@@ -12,7 +12,7 @@ const transporter = nodemailer.createTransport({
 	},
 });
 
-transporter.verify(async () => {
+transporter.verify(() => {
 	console.log('Ready');
 });
 

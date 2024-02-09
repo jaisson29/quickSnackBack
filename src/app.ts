@@ -1,4 +1,3 @@
-/** @format */
 import express, { Application, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import ProductRoutes from './routes/product.route';
@@ -10,7 +9,9 @@ import TransacRouter from './routes/transac.router';
 import CategoRouter from './routes/categoria.route';
 import CompraRoutes from './routes/compra.route';
 import DetVentaRouter from './routes/detVenta.router';
+import ProveedorRouter from './routes/proveedor.router';
 import morgan from 'morgan';
+import { SendError } from './types';
 
 //instancias
 const app: Application = express();
@@ -31,9 +32,14 @@ app.use('/api/auth/', Autenticacion);
 app.use('/api/transac/', TransacRouter);
 app.use('/api/catego/', CategoRouter);
 app.use('/api/detventa/', DetVentaRouter);
+app.use('/api/proveedor/', ProveedorRouter);
 
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-	res.status(500).send({ message: 'Algo salió mal', codigo: 1005, error: err });
+app.use((_error: Error, req: Request, res: Response, next: NextFunction) => {
+	const globalError: SendError = {
+		message: 'Algo salio mal en la aplicación, intentelo mas tarde',
+		error: _error.message,
+	};
+	res.status(500).json(globalError);
 });
 
 export default app;

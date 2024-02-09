@@ -1,24 +1,29 @@
 /** @format */
 
-import { db, useQuery } from '../config/db';
+import { FieldPacket, ResultSetHeader, RowDataPacket } from 'mysql2';
+import { db, pool } from '../config/db';
+import { MysqlError, Transaccion } from '../types';
 
 class TransacModel {
-	static create(data: any) {
-		return new Promise((resolve, reject) => {
-			const sql = 'INSERT INTO transaccion(transacFecha, transacTipo, usuId) ' + 'VALUES(?, ?, ?)';
-			const { transacFecha, transacTipo, usuId } = data;
+	static async create(data: any): Promise<ResultSetHeader | MysqlError> {
+		const sql = 'INSERT INTO transaccion(transacFecha, transacTipo, usuId) ' + 'VALUES(?, ?, ?)';
+		const { transacFecha, transacTipo, usuId } = data;
 
-			useQuery(sql, [transacFecha, transacTipo, usuId])
-				.then((resultado) => {
-					resolve(resultado);
-				})
-				.catch((err) => {
-					reject(err);
-				});
-		});
+		const [result]: [ResultSetHeader, FieldPacket[]] = await pool.query<ResultSetHeader>(sql, [transacFecha, transacTipo, usuId]);
+		if (result.affectedRows !== 1) {
+			const _error: MysqlError = {
+				name: 'MysqlError',
+				errno: 503,
+				code: 'DB_ERROR',
+				message: 'Ocurrió un error al crear el registro en la base de datos',
+				fatal: false,
+			};
+			throw _error;
+		}
+		return result;
 	}
 
-	static getAll() {
+	static getAll(): Promise<RowDataPacket[] | Transaccion[]> {
 		return new Promise((resolve, reject) => {
 			const sql =
 				'SELECT ts.transacId, ts.transacFecha, ts.transacTipo, ts.usuId, usu.usuNom ' +
@@ -62,7 +67,7 @@ class TransacModel {
 					error.name = 'Fallo en la consulta';
 					reject(error);
 				} else {
-					const error = new Error("No se encontraron datos");
+					const error = new Error('No se encontraron datos');
 					res.length !== 0 ? resolve(res) : reject(error);
 				}
 			});
