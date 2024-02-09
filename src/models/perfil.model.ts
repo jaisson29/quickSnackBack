@@ -5,9 +5,9 @@ import { db } from '../config/db';
 class Mpef {
 	static getAll() {
 		return new Promise((resolve, reject) => {
-			const query = 'SELECT * FROM perfil';
+			const sql = 'SELECT * FROM perfil';
 
-			db.query(query, (err, results) => {
+			db.query(sql, (err, results) => {
 				if (err) {
 					reject(err);
 				} else {
@@ -20,9 +20,9 @@ class Mpef {
 	static create(data: any) {
 		return new Promise((resolve, reject) => {
 			try {
-				const query = 'INSERT INTO perfil ( perfilNom ) VALUES (?)';
+				const sql = 'INSERT INTO perfil ( perfilNom ) VALUES (?)';
 
-				db.query(query, [data.perfilNom], (err, result: any) => {
+				db.query(sql, [data.perfilNom], (err, result: any) => {
 					if (result.affectedRows === 1) {
 						resolve(result);
 					} else {
@@ -38,8 +38,8 @@ class Mpef {
 	static update(data: any) {
 		return new Promise((resolve, reject) => {
 			try {
-				const query = 'UPDATE perfil' + ' ' + 'SET perfilNom = ?' + ' ' + 'WHERE perfilId = ?';
-				db.query(query, [data.perfilId, data.perfilNom], (err, result: any) => {
+				const sql = 'UPDATE perfil' + ' ' + 'SET perfilNom = ?' + ' ' + 'WHERE perfilId = ?';
+				db.query(sql, [data.perfilId, data.perfilNom], (err, result: any) => {
 					if (result.affectedRows == 1) {
 						resolve(`Se actualizo ${result.affectedRows} registro`);
 					} else {
@@ -55,9 +55,9 @@ class Mpef {
 	static delete(data: any) {
 		return new Promise((resolve, reject) => {
 			try {
-				const query = 'DELETE FROM perfil WHERE perfilId = ?';
+				const sql = 'DELETE FROM perfil WHERE perfilId = ?';
 
-				db.query(query, [data.perfilId], (err, result: any) => {
+				db.query(sql, [data.perfilId], (err, result: any) => {
 					if (result.affectedRows == 1) {
 						resolve(`Se elimino ${result.affectedRows} registro`);
 					} else {

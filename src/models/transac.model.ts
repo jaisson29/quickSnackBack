@@ -5,12 +5,12 @@ import { db, pool } from '../config/db';
 import { MysqlError, Transaccion } from '../types';
 
 class TransacModel {
-	static async create(data: any): Promise<ResultSetHeader | MysqlError> {
+	static async create(data: Transaccion): Promise<ResultSetHeader | MysqlError> {
 		const sql = 'INSERT INTO transaccion(transacFecha, transacTipo, usuId) ' + 'VALUES(?, ?, ?)';
 		const { transacFecha, transacTipo, usuId } = data;
 
 		const [result]: [ResultSetHeader, FieldPacket[]] = await pool.query<ResultSetHeader>(sql, [transacFecha, transacTipo, usuId]);
-		if (result.affectedRows !== 1) {
+		if (result.affectedRows === 0) {
 			const _error: MysqlError = {
 				name: 'MysqlError',
 				errno: 503,
@@ -23,28 +23,28 @@ class TransacModel {
 		return result;
 	}
 
-	static getAll(): Promise<RowDataPacket[] | Transaccion[]> {
-		return new Promise((resolve, reject) => {
-			const sql =
-				'SELECT ts.transacId, ts.transacFecha, ts.transacTipo, ts.usuId, usu.usuNom ' +
-				'FROM transaccion ts ' +
-				'INNER JOIN usuario usu ' +
-				'ON ts.usuId = usu.usuId';
+	static async getAll(): Promise<RowDataPacket[] | MysqlError> {
+		const sql =
+			'SELECT ts.transacId, ts.transacFecha, ts.transacTipo, ts.usuId, usu.usuNom ' +
+			'FROM transaccion ts ' +
+			'INNER JOIN usuario usu ' +
+			'ON ts.usuId = usu.usuId';
 
-			db.query(sql, function (err, res: any) {
-				if (err) {
-					reject(err);
-				} else if (res.length === 0) {
-					const error = new Error('No se encontraron transacciones realizadas');
-					reject(error);
-				} else {
-					resolve(res);
-				}
-			});
-		});
+		const [result]: [RowDataPacket[], FieldPacket[]] = await pool.query<RowDataPacket[]>(sql);
+		if (result.length === 0) {
+			const _error = {
+				name: 'MysqlError',
+				errno: 502,
+				code: 'DB_NOTFOUND_ERROR',
+				message: 'No se encontraron transacciones realizadas',
+				fatal: false,
+			};
+			return _error;
+		}
+		return result;
 	}
 
-	static getByUser(data: any) {
+	static getByUser(usuId: number) {
 		return new Promise((resolve, reject) => {
 			const sql =
 				'SELECT ts.transacId, ts.transacFecha, ts.transacTipo, ts.usuId, usu.usuNom, usu.usuNoDoc, prv.catId, SUM(dtv.detVenCant * prv.prodValVen) AS tot ' +
@@ -58,8 +58,6 @@ class TransacModel {
 				'WHERE ts.usuId = ?' +
 				'GROUP BY ts.transacId, ts.transacFecha, ts.transacTipo, ts.usuId, usu.usuNom, prv.catId ' +
 				'ORDER BY ts.transacFecha';
-
-			const { usuId } = data;
 
 			db.query(sql, [usuId], (err, res: any) => {
 				if (err) {

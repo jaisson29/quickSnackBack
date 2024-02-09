@@ -22,12 +22,12 @@ class UserModel {
 	static getAll() {
 		return new Promise((resolve, reject) => {
 			try {
-				const query =
+				const sql =
 					'SELECT usu.usuId, usu.usuTipoDoc, usu.usuNoDoc , usu.usuGen, usu.usuNom, usu.usuEmail, usu.usuContra, usu.usuIngreso, usu.usuImg, per.perfilNom, usu.usuKey ' +
 					'FROM usuario AS usu ' +
 					'INNER JOIN perfil AS per ' +
 					'ON usu.perfilId = per.perfilId ';
-				db.query(query, (err, result) => {
+				db.query(sql, (err, result) => {
 					if (err) {
 						reject(err);
 					} else {
@@ -95,37 +95,37 @@ class UserModel {
 		});
 	}
 
-		static getOneXEmailXContra(data: Usuario){
-			return new Promise((resolve, reject) => {
-				try {
-					const sql =
-						'SELECT usu.usuId, usu.usuTipoDoc, usu.usuGen, usu.usuNom, usu.usuEmail, usu.usuContra, usu.usuIngreso, usu.usuImg, per.perfilNom, per.perfilId, per.paginaRuta, usu.usuKey ' +
-						'FROM usuario AS usu ' +
-						'INNER JOIN perfil AS per ' +
-						'ON usu.perfilId = per.perfilId ' +
-						'WHERE usuEmail = ?';
-					const { usuEmail } = data;
-					db.query(sql, [usuEmail], (err, result) => {
-						if (err) {
-							reject(err);
-						} else {
-							resolve(result);
-						}
-					});
-				} catch (err) {
-					reject(err);
-				}
-			});
-		}
+	static getOneXEmailXContra(data: Usuario) {
+		return new Promise((resolve, reject) => {
+			try {
+				const sql =
+					'SELECT usu.usuId, usu.usuTipoDoc, usu.usuGen, usu.usuNom, usu.usuEmail, usu.usuContra, usu.usuIngreso, usu.usuImg, per.perfilNom, per.perfilId, per.paginaRuta, usu.usuKey ' +
+					'FROM usuario AS usu ' +
+					'INNER JOIN perfil AS per ' +
+					'ON usu.perfilId = per.perfilId ' +
+					'WHERE usuEmail = ?';
+				const { usuEmail } = data;
+				db.query(sql, [usuEmail], (err, result) => {
+					if (err) {
+						reject(err);
+					} else {
+						resolve(result);
+					}
+				});
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
 
 	static create(data: any) {
 		return new Promise((resolve, reject) => {
-			const query = `INSERT INTO usuario(usuTipoDoc, usuNoDoc, usuGen, usuNom, usuEmail, usuContra, usuIngreso, perfilId) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+			const sql = `INSERT INTO usuario(usuTipoDoc, usuNoDoc, usuGen, usuNom, usuEmail, usuContra, usuIngreso, perfilId) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
 			const { usuTipoDoc, usuNoDoc, usuGen, usuNom, usuEmail, usuContra, usuIngreso, perfilId } = data;
 			bcrypt
 				.hash(usuContra, 10)
 				.then((hash) => {
-					db.query(query, [usuTipoDoc, usuNoDoc, usuGen, usuNom, usuEmail, hash, usuIngreso, perfilId], (err, result: any) => {
+					db.query(sql, [usuTipoDoc, usuNoDoc, usuGen, usuNom, usuEmail, hash, usuIngreso, perfilId], (err, result: any) => {
 						if (result && result.affectedRows === 1) {
 							resolve(result);
 						} else {
@@ -157,9 +157,9 @@ class UserModel {
 
 			const values = keys.map((key) => fieldsToUpdate[key]);
 			const seteos = keys.map((key) => `${key} = ?`).join(', ');
-			const query = `UPDATE usuario SET ${seteos} WHERE usuId = ?`;
+			const sql = `UPDATE usuario SET ${seteos} WHERE usuId = ?`;
 
-			db.query(query, [...values, usuId], (err, result: any) => {
+			db.query(sql, [...values, usuId], (err, result: any) => {
 				if (err) {
 					reject(err);
 				} else if (result && result.affectedRows === 1) {

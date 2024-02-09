@@ -19,7 +19,7 @@ router.get('/getAll', verifyToken(process.env.SECRET_KEY), function (req: Reques
 
 router.get('/getByUser/:usuId', verifyToken(process.env.SECRET_KEY), (req: Request, res: Response) => {
 	const cont = req.params;
-	TransacModel.getByUser(cont)
+	TransacModel.getByUser(Number(cont.usuId))
 		.then((respuesta: any) => {
 			res.status(200).json(respuesta);
 		})

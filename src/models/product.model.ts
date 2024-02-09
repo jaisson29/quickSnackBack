@@ -5,14 +5,14 @@ import { db } from '../config/db';
 class ProductModel {
 	static getAll() {
 		return new Promise((resolve, reject) => {
-			const query =
+			const sql =
 				'SELECT p.prodId, c.catNom, c.catId, p.prodNom, p.prodDescr, p.prodImg, p.prodValCom, p.prodValVen ' +
 				'FROM producto p ' +
 				'INNER JOIN categoria c ' +
 				'ON p.catId = c.catId ' +
 				'WHERE c.catId != 1';
 
-			db.query(query, (err, results) => {
+			db.query(sql, (err, results) => {
 				if (err) {
 					reject(err);
 				} else {
@@ -24,13 +24,13 @@ class ProductModel {
 
 	static getAllXCat(data: any) {
 		return new Promise((resolve, reject) => {
-			const query =
+			const sql =
 				'SELECT p.prodId, c.catNom, c.catId, p.prodNom, p.prodDescr, p.prodImg, p.prodValCom, p.prodValVen ' +
 				'FROM producto p ' +
 				'INNER JOIN categoria c ' +
 				'ON p.catId = c.catId ' +
 				'WHERE p.catId = ?';
-			db.query(query, [data.catId], (err, results) => {
+			db.query(sql, [data.catId], (err, results) => {
 				if (err) {
 					reject(err);
 				} else {
@@ -42,8 +42,8 @@ class ProductModel {
 
 	static getVenXProd() {
 		return new Promise((resolve, reject) => {
-			const query = 'SELECT prodId, COUNT(prodId) cant ' + 'FROM `detventa` ' + 'GROUP BY prodId;';
-			db.query(query, (err, res) => {
+			const sql = 'SELECT prodId, COUNT(prodId) cant ' + 'FROM `detventa` ' + 'GROUP BY prodId;';
+			db.query(sql, (err, res) => {
 				if (err) {
 					reject(err);
 				} else {
@@ -56,10 +56,10 @@ class ProductModel {
 	static create(data: any) {
 		return new Promise((resolve, reject) => {
 			try {
-				const query = 'INSERT INTO producto (catId, prodNom, prodDescr, prodImg, prodValCom, prodValVen) VALUES (?, ?, ?, ?, ?, ?)';
+				const sql = 'INSERT INTO producto (catId, prodNom, prodDescr, prodImg, prodValCom, prodValVen) VALUES (?, ?, ?, ?, ?, ?)';
 
 				const { catId, prodNom, prodDescr, prodImg, prodValCom, prodValVen } = data;
-				db.query(query, [catId, prodNom, prodDescr, prodImg, prodValCom, prodValVen], (err, result: any) => {
+				db.query(sql, [catId, prodNom, prodDescr, prodImg, prodValCom, prodValVen], (err, result: any) => {
 					if (result && result.affectedRows === 1) {
 						resolve(result);
 					} else {
@@ -75,14 +75,14 @@ class ProductModel {
 	static update(data: any) {
 		return new Promise((resolve, reject) => {
 			try {
-				const query =
+				const sql =
 					'UPDATE producto' +
 					' ' +
 					'SET catId = ?, prodNom = ?, prodDescr = ?, prodImg = ?, prodValCom = ?, prodValVen = ?' +
 					' ' +
 					'WHERE prodId = ?';
 				const { catId, prodNom, prodDescr, prodImg, prodValCom, prodValVen, prodId } = data;
-				db.query(query, [catId, prodNom, prodDescr, prodImg, prodValCom, prodValVen, prodId], (err, result: any) => {
+				db.query(sql, [catId, prodNom, prodDescr, prodImg, prodValCom, prodValVen, prodId], (err, result: any) => {
 					if (result.affectedRows == 1) {
 						resolve(`Se actualizo ${result.affectedRows} registro`);
 					} else {
@@ -98,10 +98,10 @@ class ProductModel {
 	static delete(data: any) {
 		return new Promise((resolve, reject) => {
 			try {
-				const query = 'DELETE FROM producto WHERE prodId = ?';
+				const sql = 'DELETE FROM producto WHERE prodId = ?';
 				const { prodId } = data;
 
-				db.query(query, [prodId], (err, result: any) => {
+				db.query(sql, [prodId], (err, result: any) => {
 					if (result.affectedRows == 1) {
 						resolve(`Se elimino ${result.affectedRows} registro`);
 					} else {
