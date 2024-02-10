@@ -4,17 +4,10 @@
 	"description": "Start app Back-end Smile task in node.js",
 	"main": "app.js",
 	"scripts": {
-		"build": "rimraf dist && tsc",
-		"ts.check": "tsc --project tsconfig.json",
-		"add-build": "git add dist",
+		"build": "ts",
 		"dev": "nodemon index.ts",
 		"start": "tsc && node dist/index.js"
 	},
-	"pre-commit": [
-		"ts.check",
-		"build",
-		"add-build"
-	],
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/"
@@ -46,13 +39,9 @@
 		"@types/morgan": "^1.9.9",
 		"@types/node": "^20.10.5",
 		"@types/nodemailer": "^6.4.14",
-		"@vercel/node": "^3.0.17",
 		"nodemon": "^3.0.1",
 		"pre-commit": "^1.2.2",
-		"rimraf": "^5.0.5",
 		"ts-node": "^10.9.2",
 		"typescript": "^5.3.3"
 	}
 }
-
-
