@@ -1,6 +1,6 @@
 import { FieldPacket, ResultSetHeader, RowDataPacket } from 'mysql2';
 import { pool } from '../config/db';
-import { MysqlError, Proveedor, Usuario } from './../types/index';
+import { MysqlError, Proveedor } from './../types/index';
 export default class ProveedorModel {
 	static async create(data: Proveedor): Promise<ResultSetHeader> {
 		const sql = `
@@ -14,7 +14,7 @@ export default class ProveedorModel {
 		if (result.affectedRows !== 1) {
 			const _error: MysqlError = {
 				name: 'MysqlError',
-				code: 'DB_ERROR',
+				code: 'ER_NOT_CREATED_ERROR',
 				message: 'Ocurrió un error al crear el registro en la base de datos',
 				fatal: false,
 				errno: 501,
@@ -112,7 +112,7 @@ export default class ProveedorModel {
 			const _error: MysqlError = {
 				message: 'No se puede eliminar el proveedor',
 				name: 'NotDeleteError',
-				code: 'NOTDELETE_PROVEEDOR',
+				code: 'NOT_DELETE_PROVEEDOR',
 				fatal: false,
 				errno: 504,
 			};

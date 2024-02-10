@@ -40,7 +40,7 @@ router.post('/getOne', verifyToken(process.env.SECRET_KEY), (req: Request, res: 
 			else res.status(200).json(user);
 		})
 		.catch((err) => {
-			res.status(500).json({ error: 'Fallo en intentar buscar al usuario', message: err });
+			res.status(500).json({ error: 'Fallo en intentar buscar al usuario', message: err.message });
 		});
 });
 

@@ -44,7 +44,7 @@ class UserModel {
 		return new Promise((resolve, reject) => {
 			try {
 				const sql =
-					'SELECT usu.usuId, usu.usuTipoDoc, usu.usuGen, usu.usuNom, usu.usuEmail, usu.usuContra, usu.usuIngreso, usu.usuImg, per.perfilNom, usu.usuKey ' +
+					'SELECT usu.usuId, usu.usuTipoDoc, usu.usuNoDoc, usu.usuGen, usu.usuNom, usu.usuEmail, usu.usuContra, usu.usuIngreso, usu.usuImg, per.perfilNom, usu.usuKey ' +
 					'FROM usuario AS usu ' +
 					'INNER JOIN perfil AS per ' +
 					'ON usu.perfilId = per.perfilId ' +
@@ -80,7 +80,7 @@ class UserModel {
 
 			const values = keys.map((key) => filterData[key]);
 			let conditions = keys.map((key) => `${key} = ?`).join(' AND ');
-			const sql = `SELECT usuId, usuTipoDoc, usuNoDoc, usuGen, usuNom, usuEmail, usuKey, usuOlvid FROM usuario WHERE ${conditions}`;
+			const sql = `SELECT usuId, usuTipoDoc, usuNoDoc, usuGen, usuNom, usuEmail, usuKey, usuOlvid, usuEst FROM usuario WHERE ${conditions}`;
 
 			db.query(sql, values, (err, result: any) => {
 				if (err) {
@@ -99,7 +99,7 @@ class UserModel {
 		return new Promise((resolve, reject) => {
 			try {
 				const sql =
-					'SELECT usu.usuId, usu.usuTipoDoc, usu.usuGen, usu.usuNom, usu.usuEmail, usu.usuContra, usu.usuIngreso, usu.usuImg, per.perfilNom, per.perfilId, per.paginaRuta, usu.usuKey ' +
+					'SELECT usu.usuId, usu.usuTipoDoc, usu.usuNoDoc, usu.usuGen, usu.usuNom, usu.usuEmail, usu.usuContra, usu.usuIngreso, usu.usuImg, per.perfilNom, per.perfilId, per.paginaRuta, usu.usuKey ' +
 					'FROM usuario AS usu ' +
 					'INNER JOIN perfil AS per ' +
 					'ON usu.perfilId = per.perfilId ' +

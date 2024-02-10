@@ -1,6 +1,7 @@
 /** @format */
 
-import { db } from '../config/db';
+import { FieldPacket, RowDataPacket } from 'mysql2';
+import { db, pool } from '../config/db';
 
 interface DetVenta {
 	prodId: number;
@@ -25,20 +26,14 @@ export default class DetVentaModel {
 		});
 	}
 
-	static getAll() {
-		return new Promise((resolve, reject) => {
-			const sql = 'SELECT detVentaId, prodId, transacId ' + 'FROM detventa';
+	static async getAll() {
+		const sql = `
+				SELECT detVentaId, prodId, transacId 
+				FROM detVenta
+			`;
 
-			db.query(sql, (err, resultado: any) => {
-				if (err) {
-					reject(new Error('Error al acceder a los datos'));
-				} else if (resultado.length === 0) {
-					reject(new Error('No se encontraron registros'));
-				} else {
-					resolve(resultado);
-				}
-			});
-		});
+		const [results]: [RowDataPacket[], FieldPacket[]] = await pool.query(sql);
+		return results;
 	}
 
 	static getAllXTrsId(data: any) {

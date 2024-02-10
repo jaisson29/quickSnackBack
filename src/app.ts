@@ -10,6 +10,8 @@ import CategoRouter from './routes/categoria.route';
 import CompraRoutes from './routes/compra.route';
 import DetVentaRouter from './routes/detVenta.router';
 import ProveedorRouter from './routes/proveedor.router';
+import DominioRouter from './routes/dominio.router';
+import ValorRouter from './routes/valor.router';
 import morgan from 'morgan';
 import { SendError } from './types';
 
@@ -33,6 +35,8 @@ app.use('/api/transac/', TransacRouter);
 app.use('/api/catego/', CategoRouter);
 app.use('/api/detventa/', DetVentaRouter);
 app.use('/api/proveedor/', ProveedorRouter);
+app.use('/api/dominio/', DominioRouter);
+app.use('/api/valor/', ValorRouter);
 
 app.use((_error: Error, req: Request, res: Response, next: NextFunction) => {
 	const globalError: SendError = {
