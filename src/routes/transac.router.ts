@@ -9,6 +9,32 @@ import { ResultSetHeader } from 'mysql2';
 
 const router = express.Router();
 
+//Endpoint para crear una transaccion
+router.post('/', verifyToken(process.env.SECRET_KEY), function (req: Request, res: Response) {
+	try{
+
+	}catch(_error:any){
+		res.status(500).json({message: "Ocurrio un error al crear la transacción"})
+	}
+	const { usuId, transacTipo, det } = req.body;
+	TransacModel.create({ usuId, transacTipo, transacFecha: new Date() })
+		.then((result: any) => {
+			console.log('1', result);
+			const { insertId } = result;
+			DetVenTaModel.create({ transacId: insertId, det })
+				.then((result) => {
+					console.log('2', result);
+					res.status(200).json(result);
+				})
+				.catch((err) => {
+					res.status(500).json({ error: 'Fallo en la creacion del detalle', message: err.message });
+				});
+		})
+		.catch((err) => {
+			res.json(err);
+		});
+});
+
 router.post('/', async (req: Request, res: Response) => {
 	try {
 		const cont: Transaccion = req.body;
@@ -56,26 +82,6 @@ router.get('/getByUser/:usuId', verifyToken(process.env.SECRET_KEY), (req: Reque
 		});
 });
 
-//Endpoint para crear una transaccion
-router.post('/', verifyToken(process.env.SECRET_KEY), function (req: Request, res: Response) {
-	const { usuId, transacTipo, det } = req.body;
-	TransacModel.create({ usuId, transacTipo, transacFecha: new Date() })
-		.then((result: any) => {
-			console.log('1', result);
-			const { insertId } = result;
-			DetVenTaModel.create({ transacId: insertId, det })
-				.then((result) => {
-					console.log('2', result);
-					res.status(200).json(result);
-				})
-				.catch((err) => {
-					res.status(500).json({ error: 'Fallo en la creacion del detalle', message: err.message });
-				});
-		})
-		.catch((err) => {
-			res.json(err);
-		});
-});
 
 export default router;
 
