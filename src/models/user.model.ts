@@ -1,4 +1,3 @@
-/** @format */
 
 import { db } from '../config/db';
 import bcrypt from 'bcrypt';
@@ -118,7 +117,10 @@ class UserModel {
 		});
 	}
 
-	static create(data: any) {
+	static create(data: Usuario) {
+		const sql = `INSERT INTO usuario(usuTipoDoc, usuNoDoc, usuGen, usuNom, usuEmail, usuContra, usuIngreso, perfilId) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+		const { usuTipoDoc, usuNoDoc, usuGen, usuNom, usuEmail, usuContra, usuIngreso, perfilId } = data;
+
 		return new Promise((resolve, reject) => {
 			const sql = `INSERT INTO usuario(usuTipoDoc, usuNoDoc, usuGen, usuNom, usuEmail, usuContra, usuIngreso, perfilId) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
 			const { usuTipoDoc, usuNoDoc, usuGen, usuNom, usuEmail, usuContra, usuIngreso, perfilId } = data;
@@ -192,4 +194,3 @@ class UserModel {
 }
 
 export default UserModel;
-

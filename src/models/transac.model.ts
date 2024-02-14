@@ -40,7 +40,7 @@ class TransacModel {
 
 	static async getByUser(usuId: number): Promise<RowDataPacket[]> {
 		const sql = `
-				SELECT ts.transacId, ts.transacFecha, ts.transacTipo, ts.usuId, ts.transacEst, usu.usuNom, usu.usuNoDoc, prv.catId
+				SELECT ts.transacId, ts.transacFecha, ts.transacTipo, ts.usuId, ts.transacEst, usu.usuNom, usu.usuNoDoc, prv.catId, SUM(dtv.detVenCant * prv.prodValVen) AS tot
 				FROM transaccion AS ts
 				INNER JOIN usuario AS usu
 				ON ts.usuId = usu.usuId
@@ -49,6 +49,7 @@ class TransacModel {
 				INNER JOIN producto AS prv
 				ON dtv.prodId = prv.prodId
 				WHERE ts.usuId = ?
+				GROUP BY ts.transacId, ts.transacFecha, ts.transacTipo, ts.usuId, usu.usuNom, prv.catId
 				ORDER BY ts.transacFecha
 			`;
 
@@ -79,5 +80,3 @@ class TransacModel {
 }
 
 export default TransacModel;
-
-

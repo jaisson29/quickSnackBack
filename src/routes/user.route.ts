@@ -1,9 +1,11 @@
+import { bcrypt } from 'bcrypt';
 /** @format */
 
 import express, { Request, Response } from 'express';
 import UserModel from '../models/user.model';
 import { verifyToken } from '../middlewares/auth';
 import multer from 'multer';
+import { Usuario } from 'index';
 
 const router = express.Router();
 
@@ -44,20 +46,28 @@ router.post('/getOne', verifyToken(process.env.SECRET_KEY), (req: Request, res: 
 		});
 });
 
-router.post('/crear', verifyToken(process.env.SECRET_KEY), upload.single('usuImg'), (req: Request, res: Response) => {
-	const cont = req.body;
-	const imgPath: string = req.file?.originalname ?? (cont.usuGen === 1 ? 'icon-male-100-png' : 'icon-female-100.png');
-	const usuData = {
-		...cont,
-		usuImg: imgPath,
-	};
-	UserModel.create(usuData)
-		.then((respuesta) => {
-			res.status(200).json({ message: respuesta });
-		})
-		.catch((err) => {
-			res.status(400).json({ error: 'No se pudo crear al usuario', message: err });
-		});
+router.post('/crear', verifyToken(process.env.SECRET_KEY), upload.single('usuImg'), async (req: Request, res: Response) => {
+	try {
+		const cont: Usuario = req.body;
+		const imgPath: string = req.file?.originalname ?? (cont.usuGen === 1 ? 'icon-male-100-png' : 'icon-female-100.png');
+		const hashedPass = await bcrypt.hash(cont.usuContra, 10);
+
+		const usuData: Usuario = {
+			...cont,
+			usuContra: hashedPass,
+			usuImg: imgPath,
+		};
+		await UserModel.create(usuData);
+		res.status(200).json({ message: 'Registro realizado exitosamente' });
+
+		UserModel.create(usuData)
+			.then((respuesta) => {
+				res.status(200).json({ message: respuesta });
+			})
+			.catch((err) => {});
+	} catch (_error) {
+		res.status(400).json({ error: 'No se pudo crear al usuario', message: _error.message });
+	}
 });
 
 router.put('/actualizar', verifyToken(process.env.SECRET_KEY), (req: Request, res: Response) => {
@@ -92,4 +102,3 @@ router.delete('/borrar/:usuId', verifyToken(process.env.SECRET_KEY), (req: Reque
 });
 
 export default router;
-

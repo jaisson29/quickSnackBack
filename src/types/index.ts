@@ -22,7 +22,8 @@ export interface Producto {
 	prodDescr?: string;
 	prodImg?: string;
 	prodValCom?: number;
-	prpodValVen?: number;
+	prodValVen?: number;
+	prodEst?: number;
 }
 
 export interface Categoria {
@@ -48,6 +49,7 @@ export interface Transaccion {
 	transacFecha?: Date;
 	usuId?: number;
 	transacTipo?: number;
+	transacEst?: number;
 }
 
 export interface DetVenta {
@@ -91,11 +93,12 @@ export interface Usuario {
 	usuGen?: number;
 	usuNom?: string;
 	usuEmail?: string;
-	usuCOntra?: string;
+	usuContra?: string;
 	usuIngreso?: Date;
 	usuImg?: string;
 	perfilId?: number;
 	usuKey?: string;
 	usuOlvid?: Date;
+	usuEst?: number;
 }
 
