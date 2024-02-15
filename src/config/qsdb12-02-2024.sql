@@ -1,4 +1,4 @@
--- Active: 1701211025608@@127.0.0.1@3306@quicksnack
+-- Active: 1697339210603@@127.0.0.1@3306
 
 -- MySQL Workbench Forward Engineering
 
@@ -91,6 +91,7 @@ CREATE TABLE
         `perfilId` INT NOT NULL,
         `usuKey` LONGTEXT NULL,
         `usuOlvid` DATETIME NULL,
+        `usuEst` SMALLINT NOT NULL,
         PRIMARY KEY (`usuId`),
         INDEX `userXProfile_idx` (`perfilId` ASC),
         INDEX `genderXValue_idx` (`usuGen` ASC),
@@ -99,6 +100,7 @@ CREATE TABLE
         UNIQUE INDEX `usuNoDoc_UNIQUE` (`usuNoDoc` ASC),
         INDEX `usuIngreso` (`usuIngreso` ASC),
         INDEX `usuOlvid` (`usuOlvid` ASC),
+        INDEX `usuEst` (`usuEst` ASC),
         CONSTRAINT `userXProfile` FOREIGN KEY (`perfilId`) REFERENCES `quickSnack`.`perfil` (`perfilId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
         CONSTRAINT `genderXValue` FOREIGN KEY (`usuGen`) REFERENCES `quickSnack`.`valor` (`valorId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
         CONSTRAINT `docTypeXValue` FOREIGN KEY (`usuTipoDoc`) REFERENCES `quickSnack`.`valor` (`valorId`) ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -173,11 +175,13 @@ CREATE TABLE
         `prodImg` VARCHAR(255) NOT NULL,
         `prodValCom` BIGINT(10) NOT NULL,
         `prodValVen` BIGINT(10) NOT NULL,
+        `prodEst` SMALLINT NOT NULL,
         PRIMARY KEY (`prodId`),
         INDEX `productXCategory_idx` (`catId` ASC),
         INDEX `prodNom` (`prodNom` ASC),
         INDEX `prodValCom` (`prodValCom` ASC),
         INDEX `prodValVen` (`prodValVen` ASC),
+        INDEX `prodEst` (`prodEst` ASC),
         CONSTRAINT `productXCategory` FOREIGN KEY (`catId`) REFERENCES `quickSnack`.`categoria` (`catId`) ON DELETE NO ACTION ON UPDATE NO ACTION
     ) ENGINE = InnoDB;
 
@@ -195,9 +199,11 @@ CREATE TABLE
         `transacFecha` DATETIME NOT NULL,
         `usuId` INT NOT NULL,
         `transacTipo` INT NOT NULL,
+        `transacEst` SMALLINT NOT NULL,
         PRIMARY KEY (`transacId`),
-        INDEX `saleBillXUser_idx` (`usuId` ASC),
-        INDEX `transacXValor_idx` (`transacTipo` ASC),
+        INDEX `usuId` (`usuId` ASC),
+        INDEX `transacTipo` (`transacTipo` ASC),
+        INDEX `transacEst` (`transacEst` ASC),
         CONSTRAINT `saleBillXUser` FOREIGN KEY (`usuId`) REFERENCES `quickSnack`.`usuario` (`usuId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
         CONSTRAINT `transacXValor` FOREIGN KEY (`transacTipo`) REFERENCES `quickSnack`.`valor` (`valorId`) ON DELETE NO ACTION ON UPDATE NO ACTION
     ) ENGINE = InnoDB;
@@ -213,8 +219,8 @@ DROP TABLE IF EXISTS `quickSnack`.`proveedor` ;
 CREATE TABLE
     IF NOT EXISTS `quickSnack`.`proveedor` (
         `provId` INT NOT NULL AUTO_INCREMENT,
-        `provNom` VARCHAR(45) NOT NULL,
-        `provNit` BIGINT(10) NOT NULL,
+        `provNom` VARCHAR(100) NOT NULL,
+        `provNit` VARCHAR(45) NOT NULL,
         PRIMARY KEY (`provId`)
     ) ENGINE = InnoDB;
 
@@ -231,8 +237,10 @@ CREATE TABLE
         `compraId` INT NOT NULL AUTO_INCREMENT,
         `provId` INT NOT NULL,
         `fechaCompra` DATE NOT NULL,
+        `compraEst` SMALLINT NOT NULL,
         PRIMARY KEY (`compraId`),
-        INDEX `purchBillXProvider_idx` (`provId` ASC),
+        INDEX `provId` (`provId` ASC),
+        INDEX `compraEst` (`compraEst` ASC),
         CONSTRAINT `purchBillXProvider` FOREIGN KEY (`provId`) REFERENCES `quickSnack`.`proveedor` (`provId`) ON DELETE NO ACTION ON UPDATE NO ACTION
     ) ENGINE = InnoDB;
 
@@ -404,7 +412,8 @@ INSERT INTO
         `usuImg`,
         `perfilId`,
         `usuKey`,
-        `usuOlvid`
+        `usuOlvid`,
+        `usuEst`
     )
 VALUES (
         1,
@@ -418,7 +427,8 @@ VALUES (
         'default-img.webp',
         2,
         NULL,
-        NULL
+        NULL,
+        2
     );
 
 COMMIT;
@@ -436,7 +446,8 @@ INSERT INTO
         `usuImg`,
         `perfilId`,
         `usuKey`,
-        `usuOlvid`
+        `usuOlvid`,
+        `usuEst`
     )
 VALUES (
         2,
@@ -444,13 +455,14 @@ VALUES (
         '1070004545',
         1,
         'Jay Val',
-        'jais@outllok.com',
+        'jaissonvalbuena29@outlook.com',
         '$2b$10$YKbM/aw/pv5RG2hatLqnSeoTUThl4RlC1bw4.LliK0y/h/6is1tUu',
         '2023-07-23 12:29:34',
         'default-img.webp',
         1,
         NULL,
-        NULL
+        NULL,
+        1
     );
 
 INSERT INTO
@@ -466,7 +478,8 @@ INSERT INTO
         `usuImg`,
         `perfilId`,
         `usuKey`,
-        `usuOlvid`
+        `usuOlvid`,
+        `usuEst`
     )
 VALUES (
         3,
@@ -480,7 +493,8 @@ VALUES (
         'default-img.webp',
         2,
         NULL,
-        NULL
+        NULL,
+        1
     );
 
 INSERT INTO
@@ -496,7 +510,8 @@ INSERT INTO
         `usuImg`,
         `perfilId`,
         `usuKey`,
-        `usuOlvid`
+        `usuOlvid`,
+        `usuEst`
     )
 VALUES (
         4,
@@ -510,7 +525,8 @@ VALUES (
         'default-img.webp',
         3,
         NULL,
-        NULL
+        NULL,
+        1
     );
 
 INSERT INTO
@@ -526,21 +542,23 @@ INSERT INTO
         `usuImg`,
         `perfilId`,
         `usuKey`,
-        `usuOlvid`
+        `usuOlvid`,
+        `usuEst`
     )
 VALUES (
         5,
         4,
         '987654',
         1,
-        'Camilo',
-        'camilo@outllok.com',
+        'Cajero',
+        'cajero@outllok.com',
         '$2b$08$h/pm./sYdIdw.nEIsjDOKOl5suIzGQNvkDSESMrCkxZVstZ4o80m.',
         '2023-07-23 12:29:34',
         'default-img.webp',
         3,
         NULL,
-        NULL
+        NULL,
+        1
     );
 
 COMMIT;
@@ -869,7 +887,8 @@ INSERT INTO
         `prodDescr`,
         `prodImg`,
         `prodValCom`,
-        `prodValVen`
+        `prodValVen`,
+        `prodEst`
     )
 VALUES (
         1,
@@ -878,7 +897,8 @@ VALUES (
         'Producto de recarga',
         'default-img.webp',
         100000,
-        100000
+        100000,
+        1
     );
 
 INSERT INTO
@@ -889,7 +909,8 @@ INSERT INTO
         `prodDescr`,
         `prodImg`,
         `prodValCom`,
-        `prodValVen`
+        `prodValVen`,
+        `prodEst`
     )
 VALUES (
         2,
@@ -898,7 +919,8 @@ VALUES (
         'Producto de recarga',
         'default-img.webp',
         50000,
-        50000
+        50000,
+        2
     );
 
 INSERT INTO
@@ -909,7 +931,8 @@ INSERT INTO
         `prodDescr`,
         `prodImg`,
         `prodValCom`,
-        `prodValVen`
+        `prodValVen`,
+        `prodEst`
     )
 VALUES (
         3,
@@ -918,7 +941,8 @@ VALUES (
         'Producto de recarga',
         'default-img.webp',
         20000,
-        20000
+        20000,
+        2
     );
 
 INSERT INTO
@@ -929,7 +953,8 @@ INSERT INTO
         `prodDescr`,
         `prodImg`,
         `prodValCom`,
-        `prodValVen`
+        `prodValVen`,
+        `prodEst`
     )
 VALUES (
         4,
@@ -938,7 +963,8 @@ VALUES (
         'Producto de recarga',
         'default-img.webp',
         10000,
-        10000
+        10000,
+        2
     );
 
 INSERT INTO
@@ -949,7 +975,8 @@ INSERT INTO
         `prodDescr`,
         `prodImg`,
         `prodValCom`,
-        `prodValVen`
+        `prodValVen`,
+        `prodEst`
     )
 VALUES (
         5,
@@ -958,7 +985,8 @@ VALUES (
         'Producto de recarga',
         'default-img.webp',
         5000,
-        5000
+        5000,
+        2
     );
 
 INSERT INTO
@@ -969,7 +997,8 @@ INSERT INTO
         `prodDescr`,
         `prodImg`,
         `prodValCom`,
-        `prodValVen`
+        `prodValVen`,
+        `prodEst`
     )
 VALUES (
         6,
@@ -978,7 +1007,8 @@ VALUES (
         'Producto de recarga',
         'default-img.webp',
         2000,
-        2000
+        2000,
+        2
     );
 
 INSERT INTO
@@ -989,7 +1019,8 @@ INSERT INTO
         `prodDescr`,
         `prodImg`,
         `prodValCom`,
-        `prodValVen`
+        `prodValVen`,
+        `prodEst`
     )
 VALUES (
         7,
@@ -998,7 +1029,8 @@ VALUES (
         'Producto de recarga',
         'default-img.webp',
         1000,
-        1000
+        1000,
+        2
     );
 
 INSERT INTO
@@ -1009,7 +1041,8 @@ INSERT INTO
         `prodDescr`,
         `prodImg`,
         `prodValCom`,
-        `prodValVen`
+        `prodValVen`,
+        `prodEst`
     )
 VALUES (
         8,
@@ -1018,7 +1051,8 @@ VALUES (
         'Producto de recarga',
         'default-img.webp',
         500,
-        500
+        500,
+        2
     );
 
 INSERT INTO
@@ -1029,7 +1063,8 @@ INSERT INTO
         `prodDescr`,
         `prodImg`,
         `prodValCom`,
-        `prodValVen`
+        `prodValVen`,
+        `prodEst`
     )
 VALUES (
         9,
@@ -1038,7 +1073,8 @@ VALUES (
         'Producto de recarga',
         'default-img.webp',
         200,
-        200
+        200,
+        2
     );
 
 INSERT INTO
@@ -1049,7 +1085,8 @@ INSERT INTO
         `prodDescr`,
         `prodImg`,
         `prodValCom`,
-        `prodValVen`
+        `prodValVen`,
+        `prodEst`
     )
 VALUES (
         10,
@@ -1058,7 +1095,8 @@ VALUES (
         'Producto de recarga',
         'default-img.webp',
         100,
-        100
+        100,
+        2
     );
 
 INSERT INTO
@@ -1069,7 +1107,8 @@ INSERT INTO
         `prodDescr`,
         `prodImg`,
         `prodValCom`,
-        `prodValVen`
+        `prodValVen`,
+        `prodEst`
     )
 VALUES (
         11,
@@ -1078,7 +1117,8 @@ VALUES (
         'Producto de recarga',
         'default-img.webp',
         50,
-        50
+        50,
+        2
     );
 
 INSERT INTO
@@ -1089,7 +1129,8 @@ INSERT INTO
         `prodDescr`,
         `prodImg`,
         `prodValCom`,
-        `prodValVen`
+        `prodValVen`,
+        `prodEst`
     )
 VALUES (
         12,
@@ -1098,7 +1139,8 @@ VALUES (
         'Product',
         'default-img.webp',
         15000,
-        30000
+        30000,
+        1
     );
 
 COMMIT;
@@ -1115,6 +1157,6 @@ USE `quickSnack`;
 
 INSERT INTO
     `quickSnack`.`proveedor` (`provId`, `provNom`, `provNit`)
-VALUES (1, 'QS', 12349 -12349);
+VALUES (1, 'QS', "12349 -12349");
 
 COMMIT;
