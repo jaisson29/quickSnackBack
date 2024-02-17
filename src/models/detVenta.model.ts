@@ -15,6 +15,7 @@ export default class DetVentaModel {
 			let insertItems = data.det.map((item: DetVenta) => {
 				return [item.prodId, data.transacId, item.cantidad];
 			});
+			console.log(insertItems);
 			db.query(sql, [insertItems], (err: any, resultado: any) => {
 				if (resultado?.affectedRows >= 1) {
 					resolve(resultado);

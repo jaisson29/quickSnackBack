@@ -1,5 +1,6 @@
 /** @format */
 
+import { Perfil } from 'index';
 import { db } from '../config/db';
 
 class Mpef {
@@ -17,7 +18,7 @@ class Mpef {
 		});
 	}
 
-	static create(data: any) {
+	static create(data: Perfil) {
 		return new Promise((resolve, reject) => {
 			try {
 				const sql = 'INSERT INTO perfil ( perfilNom ) VALUES (?)';
@@ -72,4 +73,3 @@ class Mpef {
 }
 
 export default Mpef;
-

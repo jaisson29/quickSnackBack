@@ -1,23 +1,9 @@
-
-import { db } from '../config/db';
+import { db, pool } from '../config/db';
 import bcrypt from 'bcrypt';
-import { Usuario } from '../types';
+import { MysqlError, Usuario } from '../types';
+import { FieldPacket, ResultSetHeader, RowDataPacket } from 'mysql2';
 
 class UserModel {
-	static keysPermitidas = [
-		'usuId',
-		'usuTipoDoc',
-		'usuNoDoc',
-		'usuGen',
-		'usuNom',
-		'usuEmail',
-		'usuContra',
-		'usuIngreso',
-		'usuImg',
-		'perfilI',
-		'usuKey',
-		'usuOlvid',
-	];
 	static getAll() {
 		return new Promise((resolve, reject) => {
 			try {
@@ -63,35 +49,29 @@ class UserModel {
 		});
 	}
 
-	static getOne(data: any) {
-		return new Promise((resolve, reject) => {
-			if (typeof data !== 'object' || data === null || Array.isArray(data)) {
-				reject(new Error('Los datos proporcionados no son válidos'));
-				return;
-			}
+	static async getOne(data: Usuario) {
+		const filterData = { ...data };
+		const keys = Object.keys(filterData);
+		if (!keys.length) {
+			throw new Error('No se encontraron datos');
+		}
 
-			const filterData = { ...data };
-			const keys = Object.keys(filterData).filter((key) => this.keysPermitidas.includes(key));
-			if (keys.length === 0) {
-				reject(new Error('No se encontraron datos'));
-				return;
-			}
+		const values = Object.values(filterData);
+		let conditions = keys.map((key) => `${key} = ?`).join(' AND ');
+		const sql = `SELECT usuId, usuTipoDoc, usuNoDoc, usuGen, usuNom, usuEmail, usuKey, usuOlvid, usuEst FROM usuario WHERE ${conditions}`;
 
-			const values = keys.map((key) => filterData[key]);
-			let conditions = keys.map((key) => `${key} = ?`).join(' AND ');
-			const sql = `SELECT usuId, usuTipoDoc, usuNoDoc, usuGen, usuNom, usuEmail, usuKey, usuOlvid, usuEst FROM usuario WHERE ${conditions}`;
-
-			db.query(sql, values, (err, result: any) => {
-				if (err) {
-					reject(err);
-				} else if (result.length === 0) {
-					const error = new Error('Fallo en obtener los datos');
-					reject(error);
-				} else {
-					resolve(result[0]);
-				}
-			});
-		});
+		const [results]: [RowDataPacket[], FieldPacket[]] = await pool.query<RowDataPacket[]>(sql, values);
+		if (!results.length) {
+			const _error: MysqlError = {
+				name: 'MysqlError',
+				errno: 502,
+				code: 'DB_NOT_FOUND',
+				message: 'No se encontraron resultados',
+				fatal: false,
+			};
+			throw _error;
+		}
+		return results;
 	}
 
 	static getOneXEmailXContra(data: Usuario) {
@@ -117,28 +97,34 @@ class UserModel {
 		});
 	}
 
-	static create(data: Usuario) {
-		const sql = `INSERT INTO usuario(usuTipoDoc, usuNoDoc, usuGen, usuNom, usuEmail, usuContra, usuIngreso, perfilId) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
-		const { usuTipoDoc, usuNoDoc, usuGen, usuNom, usuEmail, usuContra, usuIngreso, perfilId } = data;
+	static async create(data: Usuario) {
+		const sql = `INSERT INTO usuario(usuTipoDoc, usuNoDoc, usuGen, usuNom, usuEmail, usuContra, usuIngreso, perfilId, usuEst) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+		const { usuTipoDoc, usuNoDoc, usuGen, usuNom, usuEmail, usuContra, usuIngreso, perfilId, usuEst } = data;
 
-		return new Promise((resolve, reject) => {
-			const sql = `INSERT INTO usuario(usuTipoDoc, usuNoDoc, usuGen, usuNom, usuEmail, usuContra, usuIngreso, perfilId) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
-			const { usuTipoDoc, usuNoDoc, usuGen, usuNom, usuEmail, usuContra, usuIngreso, perfilId } = data;
-			bcrypt
-				.hash(usuContra, 10)
-				.then((hash) => {
-					db.query(sql, [usuTipoDoc, usuNoDoc, usuGen, usuNom, usuEmail, hash, usuIngreso, perfilId], (err, result: any) => {
-						if (result && result.affectedRows === 1) {
-							resolve(result);
-						} else {
-							reject(err);
-						}
-					});
-				})
-				.catch((err) => {
-					throw new Error(err);
-				});
-		});
+		const [result]: [ResultSetHeader, FieldPacket[]] = await pool.query<ResultSetHeader>(sql, [
+			usuTipoDoc,
+			usuNoDoc,
+			usuGen,
+			usuNom,
+			usuEmail,
+			usuContra,
+			usuIngreso,
+			perfilId,
+			usuEst,
+		]);
+		console.log(result);
+		if (!result.insertId) {
+			const _error: MysqlError = {
+				name: 'MysqlError',
+				errno: 503,
+				code: 'DB_ERROR',
+				message: 'Ocurrió un error al crear el registro',
+				fatal: false,
+			};
+			throw _error;
+		}
+
+		return result;
 	}
 
 	static async update(data: any): Promise<any> {
@@ -151,13 +137,13 @@ class UserModel {
 			const updateData = { ...data };
 			const { usuId, ...fieldsToUpdate } = updateData;
 
-			const keys = Object.keys(fieldsToUpdate).filter((key) => this.keysPermitidas.includes(key));
-			if (keys.length === 0) {
+			const keys = Object.keys(fieldsToUpdate);
+			if (!keys.length) {
 				reject(new Error('No se enviaron parámetros para actualizar'));
 				return;
 			}
 
-			const values = keys.map((key) => fieldsToUpdate[key]);
+			const values = Object.values(fieldsToUpdate);
 			const seteos = keys.map((key) => `${key} = ?`).join(', ');
 			const sql = `UPDATE usuario SET ${seteos} WHERE usuId = ?`;
 
@@ -176,7 +162,7 @@ class UserModel {
 	static delete(data: any) {
 		return new Promise((resolve, reject) => {
 			try {
-				const sql = 'DELETE FROM usuario WHERE usuId = ?';
+				const sql = 'UPDATE usuario SET usuEst = 0 WHERE usuId = ?';
 				const { usuId } = data;
 
 				db.query(sql, [usuId], (err, result: any) => {

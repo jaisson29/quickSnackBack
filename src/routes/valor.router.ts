@@ -76,11 +76,10 @@ router.delete('/:valorId', async (req: Request, res: Response) => {
 		const cont: Valor = req.params;
 		const result = await ValorModel.delete(Number(cont.valorId));
 		res.status(200).json({ message: `${result.affectedRows} registro eliminado.` });
-	} catch (_error) {
-		console.error(_error);
+	} catch (_error: any) {
 		const resError = {
-			message: _error.message,
-			error: _error.name,
+			message: _error?.message,
+			error: _error?.name,
 		};
 		res.status(500).json(resError);
 	}

@@ -76,11 +76,11 @@ router.delete('/:provId', async (req: Request, res: Response) => {
 		const cont: Proveedor = req.params;
 		const result = await ProveedorModel.delete(Number(cont.provId));
 		res.status(200).json({ message: `${result.affectedRows} registro eliminado.` });
-	} catch (_error) {
+	} catch (_error: any) {
 		console.error(_error);
 		const resError = {
-			message: _error.message,
-			error: _error.name,
+			message: _error?.message,
+			error: _error?.name,
 		};
 		res.status(500).json(resError);
 	}

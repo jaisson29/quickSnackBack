@@ -75,11 +75,11 @@ router.delete('/:domId', async (req: Request, res: Response) => {
 		const cont: Dominio = req.params;
 		const result = await DominioModel.delete(Number(cont.domId));
 		res.status(200).json({ message: `${result.affectedRows} registro eliminado.` });
-	} catch (_error) {
+	} catch (_error: any) {
 		console.error(_error);
 		const resError = {
-			message: _error.message,
-			error: _error.name,
+			message: _error?.message,
+			error: _error?.name,
 		};
 		res.status(500).json(resError);
 	}

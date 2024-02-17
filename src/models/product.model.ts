@@ -56,10 +56,10 @@ class ProductModel {
 	static create(data: any) {
 		return new Promise((resolve, reject) => {
 			try {
-				const sql = 'INSERT INTO producto (catId, prodNom, prodDescr, prodImg, prodValCom, prodValVen) VALUES (?, ?, ?, ?, ?, ?)';
+				const sql = 'INSERT INTO producto (catId, prodNom, prodDescr, prodImg, prodValCom, prodValVen, prodEst) VALUES (?, ?, ?, ?, ?, ?, ?)';
 
 				const { catId, prodNom, prodDescr, prodImg, prodValCom, prodValVen } = data;
-				db.query(sql, [catId, prodNom, prodDescr, prodImg, prodValCom, prodValVen], (err, result: any) => {
+				db.query(sql, [catId, prodNom, prodDescr, prodImg, prodValCom, prodValVen, 1], (err, result: any) => {
 					if (result && result.affectedRows === 1) {
 						resolve(result);
 					} else {
