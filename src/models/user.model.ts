@@ -74,27 +74,16 @@ class UserModel {
 		return results;
 	}
 
-	static getOneXEmailXContra(data: Usuario) {
-		return new Promise((resolve, reject) => {
-			try {
-				const sql =
-					'SELECT usu.usuId, usu.usuTipoDoc, usu.usuNoDoc, usu.usuGen, usu.usuNom, usu.usuEmail, usu.usuContra, usu.usuIngreso, usu.usuImg, per.perfilNom, per.perfilId, per.paginaRuta, usu.usuKey ' +
-					'FROM usuario AS usu ' +
-					'INNER JOIN perfil AS per ' +
-					'ON usu.perfilId = per.perfilId ' +
-					'WHERE usuEmail = ?';
-				const { usuEmail } = data;
-				db.query(sql, [usuEmail], (err, result) => {
-					if (err) {
-						reject(err);
-					} else {
-						resolve(result);
-					}
-				});
-			} catch (err) {
-				reject(err);
-			}
-		});
+	static async getOneXEmailXContra(data: Usuario): Promise<RowDataPacket[]> {
+		const sql =
+			'SELECT usu.usuId, usu.usuTipoDoc, usu.usuNoDoc, usu.usuGen, usu.usuNom, usu.usuEmail, usu.usuContra, usu.usuIngreso, usu.usuImg, per.perfilNom, per.perfilId, per.paginaRuta, usu.usuKey ' +
+			'FROM usuario AS usu ' +
+			'INNER JOIN perfil AS per ' +
+			'ON usu.perfilId = per.perfilId ' +
+			'WHERE usuEmail = ?';
+		const { usuEmail } = data;
+		const [results]: [RowDataPacket[], FieldPacket[]] = await pool.query<RowDataPacket[]>(sql, [usuEmail]);
+		return results;
 	}
 
 	static async create(data: Usuario) {

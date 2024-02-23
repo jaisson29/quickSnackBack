@@ -12,15 +12,12 @@ const dbConfig: ConnectionOptions = {
 
 const db = mysql.createConnection(dbConfig);
 
-const connectionDb = () => {
-	db.connect((_error) => {
-		if (_error) console.error('Error al conectar a la base de datos:', _error);
-		console.log('Conexión a la base de datos MySQL establecida');
-		return db;
-	});
-};
-
-connectionDb();
+db.connect((_error) => {
+	if (_error) {
+		console.error('Error al conectar a la base de datos:', _error);
+	}
+	console.log('Conexión a la base de datos MySQL establecida');
+});
 
 //This is only if we going to use a pool of connection if not the following code it's no used
 const poolConfig: PoolOptions = {
@@ -33,4 +30,3 @@ const poolConfig: PoolOptions = {
 const pool = mysql2.createPool(poolConfig);
 
 export { db, pool };
-

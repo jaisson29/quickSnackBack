@@ -3,21 +3,9 @@
 import express, { Request, Response } from 'express';
 import ProductModel from '../models/product.model';
 import { verifyToken } from '../middlewares/auth';
-import multer from 'multer';
+import { upload } from '../utils/storage';
 
 const router = express.Router();
-
-const storage = multer.diskStorage({
-	destination: function (req: Request, file: any, cb) {
-		cb(null, 'uploads');
-	},
-	filename: function (req: Request, file: any, cb) {
-		const ext = file.originalname.split('.').pop();
-		cb(null, file.originalname);
-	},
-});
-
-const upload = multer({ storage: storage });
 
 router.get('/getAll', verifyToken(process.env.SECRET_KEY), async (req: Request, res: Response) => {
 	try {
@@ -59,7 +47,7 @@ router.get('/getVenXProd', verifyToken(process.env.SECRET_KEY), async (req: Requ
 
 router.post('/create', verifyToken(process.env.SECRET_KEY), upload.single('prodImg'), async (req: Request, res: Response) => {
 	const cont = req.body;
-	const imgPath = req.file ? req.file.originalname : 'default-img.webp';
+	const imgPath = req.file ? req.file.filename : 'default-img.webp';
 	const prodData = {
 		...cont,
 		prodImg: imgPath,
@@ -79,7 +67,7 @@ router.post('/create', verifyToken(process.env.SECRET_KEY), upload.single('prodI
 
 router.put('/update', verifyToken(process.env.SECRET_KEY), upload.single('prodImg'), async (req: Request, res: Response) => {
 	const cont = req.body;
-	const imgPath = req.file ? req.file.originalname : cont.prodImg;
+	const imgPath = req.file ? req.file.filename : cont.prodImg;
 	const newProdData = {
 		...cont,
 
