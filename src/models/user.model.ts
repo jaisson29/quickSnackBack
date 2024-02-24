@@ -1,52 +1,51 @@
+import { FieldPacket, ResultSetHeader, RowDataPacket } from 'mysql2/promise';
 import { db, pool } from '../config/db';
 import bcrypt from 'bcrypt';
 import { MysqlError, Usuario } from '../types';
-import { FieldPacket, ResultSetHeader, RowDataPacket } from 'mysql2';
 
 class UserModel {
-	static getAll() {
-		return new Promise((resolve, reject) => {
-			try {
-				const sql =
-					'SELECT usu.usuId, usu.usuTipoDoc, usu.usuNoDoc , usu.usuGen, usu.usuNom, usu.usuEmail, usu.usuContra, usu.usuIngreso, usu.usuImg, per.perfilNom, usu.usuKey ' +
-					'FROM usuario AS usu ' +
-					'INNER JOIN perfil AS per ' +
-					'ON usu.perfilId = per.perfilId ';
-				db.query(sql, (err, result) => {
-					if (err) {
-						reject(err);
-					} else {
-						resolve(result);
-					}
-				});
-			} catch (err) {
-				reject(err);
-			}
-		});
+	static async getAll() {
+		const sql =
+			'SELECT usu.usuId, usu.usuTipoDoc, usu.usuNoDoc , usu.usuGen, usu.usuNom, usu.usuEmail, usu.usuContra, usu.usuIngreso, usu.usuImg, per.perfilNom, usu.usuKey ' +
+			'FROM usuario AS usu ' +
+			'INNER JOIN perfil AS per ' +
+			'ON usu.perfilId = per.perfilId ';
+		const [results]: [RowDataPacket[], FieldPacket[]] = await pool.query<RowDataPacket[]>(sql);
+		if (results.length === 0) {
+			const _error: MysqlError = {
+				message: 'No se encontraron registros',
+				name: 'NotFoundError',
+				code: 'NOT_FOUND_VALOR',
+				fatal: false,
+				errno: 502,
+			};
+			throw _error;
+		}
+		return results;
 	}
 
-	static getOneXId(data: any) {
-		return new Promise((resolve, reject) => {
-			try {
-				const sql =
-					'SELECT usu.usuId, usu.usuTipoDoc, usu.usuNoDoc, usu.usuGen, usu.usuNom, usu.usuEmail, usu.usuContra, usu.usuIngreso, usu.usuImg, per.perfilNom, usu.usuKey ' +
-					'FROM usuario AS usu ' +
-					'INNER JOIN perfil AS per ' +
-					'ON usu.perfilId = per.perfilId ' +
-					'WHERE usu.usuId = ? ';
-				const { usuId } = data;
+	static async getOneXId(data: any) {
+		const sql =
+			'SELECT usu.usuId, usu.usuTipoDoc, usu.usuNoDoc, usu.usuGen, usu.usuNom, usu.usuEmail, usu.usuContra, usu.usuIngreso, usu.usuImg, per.perfilNom, usu.usuKey ' +
+			'FROM usuario AS usu ' +
+			'INNER JOIN perfil AS per ' +
+			'ON usu.perfilId = per.perfilId ' +
+			'WHERE usu.usuId = ? ';
+		const { usuId } = data;
 
-				db.query(sql, [usuId], (err, result) => {
-					if (err) {
-						reject(err);
-					} else {
-						resolve(result);
-					}
-				});
-			} catch (err) {
-				reject(err);
-			}
-		});
+		const [result]: [RowDataPacket[], FieldPacket[]] = await pool.query<RowDataPacket[]>(sql, [usuId]);
+		if (result.length === 0) {
+			const _error: MysqlError = {
+				message: 'No se encontraron registros',
+				name: 'NotFoundError',
+				code: 'NOT_FOUND_VALOR',
+				fatal: false,
+				errno: 502,
+			};
+			throw _error;
+		}
+
+		return result;
 	}
 
 	static async getOne(data: Usuario) {
@@ -117,54 +116,32 @@ class UserModel {
 	}
 
 	static async update(data: any): Promise<any> {
-		return new Promise((resolve, reject) => {
-			if (!data.usuId) {
-				reject(new Error('No se proporcionaron los datos necesarios'));
-				return;
-			}
+		if (!data.usuId) {
+			throw new Error('No se proporcionaron los datos necesarios');
+		}
 
-			const updateData = { ...data };
-			const { usuId, ...fieldsToUpdate } = updateData;
+		const updateData = { ...data };
+		const { usuId, ...fieldsToUpdate } = updateData;
 
-			const keys = Object.keys(fieldsToUpdate);
-			if (!keys.length) {
-				reject(new Error('No se enviaron parámetros para actualizar'));
-				return;
-			}
+		const keys = Object.keys(fieldsToUpdate);
+		if (!keys.length) {
+			throw new Error('No se enviaron parámetros para actualizar');
+		}
 
-			const values = Object.values(fieldsToUpdate);
-			const seteos = keys.map((key) => `${key} = ?`).join(', ');
-			const sql = `UPDATE usuario SET ${seteos} WHERE usuId = ?`;
+		const values = Object.values(fieldsToUpdate);
+		const seteos = keys.map((key) => `${key} = ?`).join(', ');
+		const sql = `UPDATE usuario SET ${seteos} WHERE usuId = ?`;
 
-			db.query(sql, [...values, usuId], (err, result: any) => {
-				if (err) {
-					reject(err);
-				} else if (result && result.affectedRows === 1) {
-					resolve(result);
-				} else {
-					reject(new Error('No se pudo actualizar el usuario'));
-				}
-			});
-		});
+		const [result]: [ResultSetHeader, FieldPacket[]] = await pool.query<ResultSetHeader>(sql, [...values, usuId]);
+		return result;
 	}
 
-	static delete(data: any) {
-		return new Promise((resolve, reject) => {
-			try {
-				const sql = 'UPDATE usuario SET usuEst = 0 WHERE usuId = ?';
-				const { usuId } = data;
+	static async delete(data: any) {
+		const sql = 'UPDATE usuario SET usuEst = 0 WHERE usuId = ?';
+		const { usuId } = data;
 
-				db.query(sql, [usuId], (err, result: any) => {
-					if (result && result.affectedRows === 1) {
-						resolve(result);
-					} else {
-						reject(err);
-					}
-				});
-			} catch (err) {
-				reject(err);
-			}
-		});
+		const [result]: [ResultSetHeader, FieldPacket[]] = await pool.query<ResultSetHeader>(sql, [usuId]);
+		return result;
 	}
 }
 
