@@ -10,7 +10,7 @@ export default class ProveedorModel {
 
 		const { provNom, provNit } = data;
 
-		const [result] = await pool.query<ResultSetHeader>(sql, [provNom, provNit]);
+		const [result] : [ResultSetHeader, FieldPacket[]] = await pool.query<ResultSetHeader>(sql, [provNom, provNit]);
 		if (result.affectedRows !== 1) {
 			const _error: MysqlError = {
 				name: 'MysqlError',
@@ -28,7 +28,7 @@ export default class ProveedorModel {
 		const sql = `
 		SELECT provId, provNom, provNit FROM proveedor;
 		`;
-		const results = await pool.query<RowDataPacket[]>(sql);
+		const [results]: [RowDataPacket[], FieldPacket[]] = await pool.query<RowDataPacket[]>(sql);
 		if (!results?.length) {
 			const _error: MysqlError = {
 				message: 'No se encontró el proveedor',
@@ -40,14 +40,14 @@ export default class ProveedorModel {
 			throw _error;
 		}
 
-		return results[0];
+		return results;
 	}
 
 	static async getOne(provId: number): Promise<RowDataPacket[]> {
 		const sql = `
 			SELECT provId, provNom, provNit FROM proveedor WHERE provId=?;
 			`;
-		const [result]: [RowDataPacket[], FieldPacket[]] = await pool.query<RowDataPacket[]>(sql, [provId]);
+		const [result] : [RowDataPacket[], FieldPacket[]] = await pool.query<RowDataPacket[]>(sql, [provId]);
 		if (!result?.length) {
 			const _error: MysqlError = {
 				message: 'No se encontró el proveedor',

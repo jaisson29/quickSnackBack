@@ -100,7 +100,6 @@ class UserModel {
 			perfilId,
 			usuEst,
 		]);
-		console.log(result);
 		if (!result.insertId) {
 			const _error: MysqlError = {
 				name: 'MysqlError',

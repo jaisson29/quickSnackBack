@@ -16,9 +16,10 @@ class PaginaModel {
 	}
 
 	static async getOne(data: Pagina) {
-		return new Promise((resolve, reject) => {
-			const sql = 'SELECT paginaId, paginaNom, paginaIcon, paginaRuta ' + 'FROM pagina ' + 'WHERE paginaId = ?';
-		});
+		const sql = 'SELECT paginaId, paginaNom, paginaIcon, paginaRuta ' + 'FROM pagina ' + 'WHERE paginaId = ?';
+
+		const [results]: [RowDataPacket[], FieldPacket[]] = await pool.query<RowDataPacket[]>(sql, [data.paginaId]);
+		return results;
 	}
 
 	static async create(data: Pagina) {
@@ -67,7 +68,7 @@ class PaginaModel {
 			'WHERE perfilId = ?';
 
 		const [results]: [RowDataPacket[], FieldPacket[]] = await pool.query<RowDataPacket[]>(sql, [perfilId]);
-		return results
+		return results;
 	}
 }
 

@@ -1,74 +1,38 @@
 /** @format */
 
 import { Perfil } from 'index';
-import { db } from '../config/db';
+import { db, pool } from '../config/db';
+import { FieldPacket, ResultSetHeader, RowDataPacket } from 'mysql2';
 
 class Mpef {
-	static getAll() {
-		return new Promise((resolve, reject) => {
-			const sql = 'SELECT * FROM perfil';
+	static async getAll() {
+		const sql = 'SELECT * FROM perfil';
 
-			db.query(sql, (err, results) => {
-				if (err) {
-					reject(err);
-				} else {
-					resolve(results);
-				}
-			});
-		});
+		const [results]: [RowDataPacket[], FieldPacket[]] = await pool.query<RowDataPacket[]>(sql);
+		return results;
 	}
 
-	static create(data: Perfil) {
-		return new Promise((resolve, reject) => {
-			try {
-				const sql = 'INSERT INTO perfil ( perfilNom ) VALUES (?)';
+	static async create(data: Perfil) {
+		const sql = 'INSERT INTO perfil ( perfilNom ) VALUES (?)';
 
-				db.query(sql, [data.perfilNom], (err, result: any) => {
-					if (result.affectedRows === 1) {
-						resolve(result);
-					} else {
-						reject(err);
-					}
-				});
-			} catch (err) {
-				reject(err);
-			}
-		});
+		const [result]: [ResultSetHeader, FieldPacket[]] = await pool.query<ResultSetHeader>(sql, [data.perfilNom]);
+		return result;
 	}
 
-	static update(data: any) {
-		return new Promise((resolve, reject) => {
-			try {
-				const sql = 'UPDATE perfil' + ' ' + 'SET perfilNom = ?' + ' ' + 'WHERE perfilId = ?';
-				db.query(sql, [data.perfilId, data.perfilNom], (err, result: any) => {
-					if (result.affectedRows == 1) {
-						resolve(`Se actualizo ${result.affectedRows} registro`);
-					} else {
-						reject(err);
-					}
-				});
-			} catch (error) {
-				reject(error);
-			}
-		});
+	static async update(data: any) {
+		const sql = 'UPDATE perfil' + ' ' + 'SET perfilNom = ?' + ' ' + 'WHERE perfilId = ?';
+		const [result]: [ResultSetHeader, FieldPacket[]] = await pool.query<ResultSetHeader>(sql, [
+			data.perfilId,
+			data.perfilNom,
+		]);
+		return result;
 	}
 
-	static delete(data: any) {
-		return new Promise((resolve, reject) => {
-			try {
-				const sql = 'DELETE FROM perfil WHERE perfilId = ?';
+	static async delete(data: any) {
+		const sql = 'DELETE FROM perfil WHERE perfilId = ?';
 
-				db.query(sql, [data.perfilId], (err, result: any) => {
-					if (result.affectedRows == 1) {
-						resolve(`Se elimino ${result.affectedRows} registro`);
-					} else {
-						reject(err);
-					}
-				});
-			} catch (error) {
-				reject(error);
-			}
-		});
+		const [result]: [ResultSetHeader, FieldPacket[]] = await pool.query<ResultSetHeader>(sql, [data.perfilId]);
+		return result;
 	}
 }
 

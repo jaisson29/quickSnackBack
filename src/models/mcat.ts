@@ -1,86 +1,43 @@
-import { db } from '../config/db';
+import { FieldPacket, ResultSetHeader, RowDataPacket } from 'mysql2';
+import { db, pool } from '../config/db';
 
 class Mcat {
-	static getAll() {
-		return new Promise((resolve, reject) => {
-			const sql = 'SELECT * FROM categoria';
+	static async getAll() {
+		const sql = 'SELECT * FROM categoria';
 
-			db.query(sql, (err, results) => {
-				if (err) {
-					reject(err);
-				} else {
-					resolve(results);
-				}
-			});
-		});
+		const [results]: [RowDataPacket[], FieldPacket[]] = await pool.query<RowDataPacket[]>(sql);
+		return results;
 	}
 
-	static create(data: any) {
-		return new Promise((resolve, reject) => {
-			try {
-				const sql = 'INSERT INTO categoria ( catNom) VALUES (?)';
+	static async create(data: any) {
+		const sql = 'INSERT INTO categoria ( catNom) VALUES (?)';
 
-				db.query(sql, [data.catNom], (err, result: any) => {
-					if (result.affectedRows === 1) {
-						resolve(result);
-					} else {
-						reject(err);
-					}
-				});
-			} catch (err) {
-				reject(err);
-			}
-		});
+		const [result]: [ResultSetHeader, FieldPacket[]] = await pool.query<ResultSetHeader>(sql, [data.catNom]);
+		return result;
 	}
 
-	static update(data: any) {
-		return new Promise((resolve, reject) => {
-			try {
-				const sql = 'UPDATE categoria' + ' ' + 'SET catNom = ?' + ' ' + 'WHERE catId = ?';
-				db.query(sql, [data.catNom, data.catId], (err, result: any) => {
-					if (result.affectedRows == 1) {
-						resolve(`Se actualizo ${result.affectedRows} registro`);
-					} else {
-						reject(err);
-					}
-				});
-			} catch (error) {
-				reject(error);
-			}
-		});
+	static async update(data: any) {
+		const sql = 'UPDATE categoria' + ' ' + 'SET catNom = ?' + ' ' + 'WHERE catId = ?';
+		const [result]: [ResultSetHeader, FieldPacket[]] = await pool.query<ResultSetHeader>(sql, [
+			data.catNom,
+			data.catId,
+		]);
+
+		return result;
 	}
 
-	static delete(data: any) {
-		return new Promise((resolve, reject) => {
-			try {
-				const sql = 'DELETE FROM categoria WHERE catId = ?';
+	static async delete(data: any) {
+		const sql = 'DELETE FROM categoria WHERE catId = ?';
 
-				db.query(sql, [data.catId], (err, result: any) => {
-					if (result.affectedRows == 1) {
-						resolve(`Se elimino ${result.affectedRows} registro`);
-					} else {
-						reject(err);
-					}
-				});
-			} catch (error) {
-				reject(error);
-			}
-		});
+		const [result]: [ResultSetHeader, FieldPacket[]] = await pool.query<ResultSetHeader>(sql, [data.catId]);
+		return result;
 	}
 
-	static getMxP() {
-		return new Promise((resolve, reject) => {
-			const sql = 'SELECT catId, COUNT(catId) as can FROM producto group by catId';
-			db.query(sql, (err, results: any) => {
-				if (err) {
-					reject(err);
-				} else {
-					resolve(results);
-				}
-			});
-		});
+	static async getMxP() {
+		const sql = 'SELECT catId, COUNT(catId) as can FROM producto group by catId';
+		const [results]: [RowDataPacket[], FieldPacket[]] = await pool.query<RowDataPacket[]>(sql);
+		return results;
 	}
 }
 
 export default Mcat;
-
