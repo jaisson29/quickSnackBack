@@ -4,8 +4,8 @@ const db_1 = require("../config/db");
 class Mcat {
     static getAll() {
         return new Promise((resolve, reject) => {
-            const query = 'SELECT * FROM categoria';
-            db_1.db.query(query, (err, results) => {
+            const sql = 'SELECT * FROM categoria';
+            db_1.db.query(sql, (err, results) => {
                 if (err) {
                     reject(err);
                 }
@@ -18,8 +18,8 @@ class Mcat {
     static create(data) {
         return new Promise((resolve, reject) => {
             try {
-                const query = 'INSERT INTO categoria ( catNom) VALUES (?)';
-                db_1.db.query(query, [data.catNom], (err, result) => {
+                const sql = 'INSERT INTO categoria ( catNom) VALUES (?)';
+                db_1.db.query(sql, [data.catNom], (err, result) => {
                     if (result.affectedRows === 1) {
                         resolve(result);
                     }
@@ -36,8 +36,8 @@ class Mcat {
     static update(data) {
         return new Promise((resolve, reject) => {
             try {
-                const query = 'UPDATE categoria' + ' ' + 'SET catNom = ?' + ' ' + 'WHERE catId = ?';
-                db_1.db.query(query, [data.catNom, data.catId], (err, result) => {
+                const sql = 'UPDATE categoria' + ' ' + 'SET catNom = ?' + ' ' + 'WHERE catId = ?';
+                db_1.db.query(sql, [data.catNom, data.catId], (err, result) => {
                     if (result.affectedRows == 1) {
                         resolve(`Se actualizo ${result.affectedRows} registro`);
                     }
@@ -54,8 +54,8 @@ class Mcat {
     static delete(data) {
         return new Promise((resolve, reject) => {
             try {
-                const query = 'DELETE FROM categoria WHERE catId = ?';
-                db_1.db.query(query, [data.catId], (err, result) => {
+                const sql = 'DELETE FROM categoria WHERE catId = ?';
+                db_1.db.query(sql, [data.catId], (err, result) => {
                     if (result.affectedRows == 1) {
                         resolve(`Se elimino ${result.affectedRows} registro`);
                     }
@@ -71,8 +71,8 @@ class Mcat {
     }
     static getMxP() {
         return new Promise((resolve, reject) => {
-            const query = 'SELECT catId, COUNT(catId) as can FROM producto group by catId';
-            db_1.db.query(query, (err, results) => {
+            const sql = 'SELECT catId, COUNT(catId) as can FROM producto group by catId';
+            db_1.db.query(sql, (err, results) => {
                 if (err) {
                     reject(err);
                 }

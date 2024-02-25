@@ -1,5 +1,4 @@
 "use strict";
-/** @format */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -30,11 +29,11 @@ class UserModel {
     static getAll() {
         return new Promise((resolve, reject) => {
             try {
-                const query = 'SELECT usu.usuId, usu.usuTipoDoc, usu.usuNoDoc , usu.usuGen, usu.usuNom, usu.usuEmail, usu.usuContra, usu.usuIngreso, usu.usuImg, per.perfilNom, usu.usuKey ' +
+                const sql = 'SELECT usu.usuId, usu.usuTipoDoc, usu.usuNoDoc , usu.usuGen, usu.usuNom, usu.usuEmail, usu.usuContra, usu.usuIngreso, usu.usuImg, per.perfilNom, usu.usuKey ' +
                     'FROM usuario AS usu ' +
                     'INNER JOIN perfil AS per ' +
                     'ON usu.perfilId = per.perfilId ';
-                db_1.db.query(query, (err, result) => {
+                db_1.db.query(sql, (err, result) => {
                     if (err) {
                         reject(err);
                     }
@@ -51,7 +50,7 @@ class UserModel {
     static getOneXId(data) {
         return new Promise((resolve, reject) => {
             try {
-                const sql = 'SELECT usu.usuId, usu.usuTipoDoc, usu.usuGen, usu.usuNom, usu.usuEmail, usu.usuContra, usu.usuIngreso, usu.usuImg, per.perfilNom, usu.usuKey ' +
+                const sql = 'SELECT usu.usuId, usu.usuTipoDoc, usu.usuNoDoc, usu.usuGen, usu.usuNom, usu.usuEmail, usu.usuContra, usu.usuIngreso, usu.usuImg, per.perfilNom, usu.usuKey ' +
                     'FROM usuario AS usu ' +
                     'INNER JOIN perfil AS per ' +
                     'ON usu.perfilId = per.perfilId ' +
@@ -85,7 +84,7 @@ class UserModel {
             }
             const values = keys.map((key) => filterData[key]);
             let conditions = keys.map((key) => `${key} = ?`).join(' AND ');
-            const sql = `SELECT usuId, usuTipoDoc, usuNoDoc, usuGen, usuNom, usuEmail, usuKey, usuOlvid FROM usuario WHERE ${conditions}`;
+            const sql = `SELECT usuId, usuTipoDoc, usuNoDoc, usuGen, usuNom, usuEmail, usuKey, usuOlvid, usuEst FROM usuario WHERE ${conditions}`;
             db_1.db.query(sql, values, (err, result) => {
                 if (err) {
                     reject(err);
@@ -103,7 +102,7 @@ class UserModel {
     static getOneXEmailXContra(data) {
         return new Promise((resolve, reject) => {
             try {
-                const sql = 'SELECT usu.usuId, usu.usuTipoDoc, usu.usuGen, usu.usuNom, usu.usuEmail, usu.usuContra, usu.usuIngreso, usu.usuImg, per.perfilNom, per.perfilId, per.paginaRuta, usu.usuKey ' +
+                const sql = 'SELECT usu.usuId, usu.usuTipoDoc, usu.usuNoDoc, usu.usuGen, usu.usuNom, usu.usuEmail, usu.usuContra, usu.usuIngreso, usu.usuImg, per.perfilNom, per.perfilId, per.paginaRuta, usu.usuKey ' +
                     'FROM usuario AS usu ' +
                     'INNER JOIN perfil AS per ' +
                     'ON usu.perfilId = per.perfilId ' +
@@ -124,13 +123,15 @@ class UserModel {
         });
     }
     static create(data) {
+        const sql = `INSERT INTO usuario(usuTipoDoc, usuNoDoc, usuGen, usuNom, usuEmail, usuContra, usuIngreso, perfilId) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+        const { usuTipoDoc, usuNoDoc, usuGen, usuNom, usuEmail, usuContra, usuIngreso, perfilId } = data;
         return new Promise((resolve, reject) => {
-            const query = `INSERT INTO usuario(usuTipoDoc, usuNoDoc, usuGen, usuNom, usuEmail, usuContra, usuIngreso, perfilId) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+            const sql = `INSERT INTO usuario(usuTipoDoc, usuNoDoc, usuGen, usuNom, usuEmail, usuContra, usuIngreso, perfilId) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
             const { usuTipoDoc, usuNoDoc, usuGen, usuNom, usuEmail, usuContra, usuIngreso, perfilId } = data;
             bcrypt_1.default
                 .hash(usuContra, 10)
                 .then((hash) => {
-                db_1.db.query(query, [usuTipoDoc, usuNoDoc, usuGen, usuNom, usuEmail, hash, usuIngreso, perfilId], (err, result) => {
+                db_1.db.query(sql, [usuTipoDoc, usuNoDoc, usuGen, usuNom, usuEmail, hash, usuIngreso, perfilId], (err, result) => {
                     if (result && result.affectedRows === 1) {
                         resolve(result);
                     }
@@ -160,8 +161,8 @@ class UserModel {
                 }
                 const values = keys.map((key) => fieldsToUpdate[key]);
                 const seteos = keys.map((key) => `${key} = ?`).join(', ');
-                const query = `UPDATE usuario SET ${seteos} WHERE usuId = ?`;
-                db_1.db.query(query, [...values, usuId], (err, result) => {
+                const sql = `UPDATE usuario SET ${seteos} WHERE usuId = ?`;
+                db_1.db.query(sql, [...values, usuId], (err, result) => {
                     if (err) {
                         reject(err);
                     }

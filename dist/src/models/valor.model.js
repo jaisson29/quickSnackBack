@@ -21,20 +21,20 @@ var __rest = (this && this.__rest) || function (s, e) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = require("../config/db");
-class ProveedorModel {
+class ValorModel {
     static create(data) {
         return __awaiter(this, void 0, void 0, function* () {
             const sql = `
-		INSERT INTO proveedor (provNom, provNit) 
+		INSERT INTO valor (param, domId) 
 		VALUES (?, ?);
 		`;
-            const { provNom, provNit } = data;
-            const [result] = yield db_1.pool.query(sql, [provNom, provNit]);
+            const { param, domId } = data;
+            const [result] = yield db_1.pool.query(sql, [param, domId]);
             if (result.affectedRows !== 1) {
                 const _error = {
                     name: 'MysqlError',
                     code: 'ER_NOT_CREATED_ERROR',
-                    message: 'Ocurrió un error al crear el registro en la base de datos',
+                    message: 'Ocurrió un error al crear el registro',
                     fatal: false,
                     errno: 501,
                 };
@@ -46,14 +46,14 @@ class ProveedorModel {
     static getAll() {
         return __awaiter(this, void 0, void 0, function* () {
             const sql = `
-		SELECT provId, provNom, provNit FROM proveedor;
+		SELECT valorId, param, domId FROM valor;
 		`;
             const results = yield db_1.pool.query(sql);
             if (!(results === null || results === void 0 ? void 0 : results.length)) {
                 const _error = {
-                    message: 'No se encontró el proveedor',
+                    message: 'No se encontró el valor',
                     name: 'NotFoundError',
-                    code: 'NOTFOUND_PROVEEDOR',
+                    code: 'NOTFOUND_VALOR',
                     fatal: false,
                     errno: 502,
                 };
@@ -62,17 +62,17 @@ class ProveedorModel {
             return results[0];
         });
     }
-    static getOne(provId) {
+    static getOne(valorId) {
         return __awaiter(this, void 0, void 0, function* () {
             const sql = `
-			SELECT provId, provNom, provNit FROM proveedor WHERE provId=?;
+			SELECT valorId, param, domId FROM valor WHERE valorId=?;
 			`;
-            const [result] = yield db_1.pool.query(sql, [provId]);
+            const [result] = yield db_1.pool.query(sql, [valorId]);
             if (!(result === null || result === void 0 ? void 0 : result.length)) {
                 const _error = {
-                    message: 'No se encontró el proveedor',
+                    message: 'No se encontró el valor',
                     name: 'NotFoundError',
-                    code: 'NOTFOUND_PROVEEDOR',
+                    code: 'NOTFOUND_VALOR',
                     fatal: false,
                     errno: 502,
                 };
@@ -84,10 +84,10 @@ class ProveedorModel {
     static update(data) {
         return __awaiter(this, void 0, void 0, function* () {
             const updateData = Object.assign({}, data);
-            const { provId } = updateData, fieldsToUpdate = __rest(updateData, ["provId"]);
-            if (!provId) {
+            const { valorId } = updateData, fieldsToUpdate = __rest(updateData, ["valorId"]);
+            if (!valorId) {
                 const noDataError = {
-                    message: 'No se pudo actualizar al proveedor',
+                    message: 'No se pudo actualizar al valor',
                     code: 'NotIdSendError',
                     name: 'NOT_DATA_SEND',
                     fatal: false,
@@ -100,14 +100,14 @@ class ProveedorModel {
                 .join(', ');
             const values = Object.values(fieldsToUpdate);
             const sql = `
-			UPDATE proveedor SET ${seteos} WHERE provId=?;
+			UPDATE valor SET ${seteos} WHERE valorId=?;
 		`;
-            const [result] = yield db_1.pool.query(sql, [...values, provId]);
+            const [result] = yield db_1.pool.query(sql, [...values, valorId]);
             if (result.affectedRows === 0) {
                 const _error = {
-                    message: 'No se pudo actualizar al proveedor',
+                    message: 'No se pudo actualizar al valor',
                     name: 'NotUpdateError',
-                    code: 'NOTUPDATE_PROVEEDOR',
+                    code: 'NOTUPDATE_VALOR',
                     fatal: false,
                     errno: 503,
                 };
@@ -116,17 +116,17 @@ class ProveedorModel {
             return result;
         });
     }
-    static delete(provId) {
+    static delete(valorId) {
         return __awaiter(this, void 0, void 0, function* () {
             const sql = `
-			DELETE FROM proveedor WHERE provId = ?
+			DELETE FROM valor WHERE valorId = ?
 		`;
-            const [result] = yield db_1.pool.query(sql, [provId]);
+            const [result] = yield db_1.pool.query(sql, [valorId]);
             if (result.affectedRows === 0) {
                 const _error = {
-                    message: 'No se puede eliminar el proveedor',
+                    message: 'No se puede eliminar el valor',
                     name: 'NotDeleteError',
-                    code: 'NOT_DELETE_PROVEEDOR',
+                    code: 'NOT_DELETE_VALOR',
                     fatal: false,
                     errno: 504,
                 };
@@ -136,5 +136,5 @@ class ProveedorModel {
         });
     }
 }
-exports.default = ProveedorModel;
-//# sourceMappingURL=proveedor.model.js.map
+exports.default = ValorModel;
+//# sourceMappingURL=valor.model.js.map
