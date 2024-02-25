@@ -1,11 +1,9 @@
-import { bcrypt } from 'bcrypt';
-/** @format */
-
-import express, { Request, Response } from 'express';
 import UserModel from '../models/user.model';
 import { verifyToken } from '../middlewares/auth';
-import multer from 'multer';
 import { Usuario } from 'index';
+import express, { Request, Response } from 'express';
+import multer from 'multer';
+import bcrypt from 'bcrypt';
 
 const router = express.Router();
 
@@ -34,16 +32,18 @@ router.get('/getAll', verifyToken(process.env.SECRET_KEY), (req: Request, res: R
 		});
 });
 
-router.post('/getOne', verifyToken(process.env.SECRET_KEY), (req: Request, res: Response) => {
-	const cont = req.body;
-	UserModel.getOne(cont)
-		.then((user: any) => {
-			if (user.length === 0) res.status(500).json({ message: 'fallo en obtener el resultado' });
-			else res.status(200).json(user);
-		})
-		.catch((err) => {
-			res.status(500).json({ error: 'Fallo en intentar buscar al usuario', message: err.message });
-		});
+router.post('/getOne', verifyToken(process.env.SECRET_KEY), async (req: Request, res: Response) => {
+	try {
+		const cont: Usuario = req.body;
+		const result = await UserModel.getOne(cont);
+		if (result.length === 0) {
+			res.status(500).json({ message: 'No se encontraron datos' });
+		}
+		res.status(200).json(result);
+	} catch (_error: any) {
+		console.error(_error)
+		res.status(500).json({ error: 'Fallo en intentar buscar al usuario', message: _error?.message });
+	}
 });
 
 <<<<<<< HEAD:src/routes/user.route.js
@@ -66,23 +66,20 @@ router.post('/crear', verifyToken(process.env.SECRET_KEY), upload.single('usuImg
 	try {
 		const cont: Usuario = req.body;
 		const imgPath: string = req.file?.originalname ?? (cont.usuGen === 1 ? 'icon-male-100-png' : 'icon-female-100.png');
-		const hashedPass = await bcrypt.hash(cont.usuContra, 10);
+		const hashedPass: string = await bcrypt.hash(cont?.usuContra!, 10);
 
 		const usuData: Usuario = {
 			...cont,
 			usuContra: hashedPass,
 			usuImg: imgPath,
 		};
-		await UserModel.create(usuData);
-		res.status(200).json({ message: 'Registro realizado exitosamente' });
 
-		UserModel.create(usuData)
-			.then((respuesta) => {
-				res.status(200).json({ message: respuesta });
-			})
-			.catch((err) => {});
-	} catch (_error) {
-		res.status(400).json({ error: 'No se pudo crear al usuario', message: _error.message });
+		const result = await UserModel.create(usuData);
+
+		res.status(200).json({ message: 'Registro realizado exitosamente', id: result.insertId });
+	} catch (_error: any) {
+		console.error(_error);
+		res.status(400).json({ error: _error.code, message: _error.message });
 	}
 >>>>>>> 2f5b29d44870060bcd79de742495dee92cafabe4:src/routes/user.route.ts
 });

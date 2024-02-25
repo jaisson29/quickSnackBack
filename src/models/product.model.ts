@@ -1,119 +1,90 @@
-/** @format */
-
-import { db } from '../config/db';
+import { ResultSetHeader, FieldPacket, RowDataPacket } from 'mysql2/promise';
+import { pool } from '../config/db';
 
 class ProductModel {
-	static getAll() {
-		return new Promise((resolve, reject) => {
-			const sql =
-				'SELECT p.prodId, c.catNom, c.catId, p.prodNom, p.prodDescr, p.prodImg, p.prodValCom, p.prodValVen ' +
-				'FROM producto p ' +
-				'INNER JOIN categoria c ' +
-				'ON p.catId = c.catId ' +
-				'WHERE c.catId != 1';
+	static async getAll() {
+		const sql = `
+				SELECT p.prodId, c.catNom, c.catId, p.prodNom, p.prodDescr, p.prodImg, 
+					p.prodValCom, p.prodValVen, p.prodEst
+				FROM producto p
+				INNER JOIN categoria AS c
+				ON p.catId = c.catId
+				WHERE c.catId != 1
+			`;
 
-			db.query(sql, (err, results) => {
-				if (err) {
-					reject(err);
-				} else {
-					resolve(results);
-				}
-			});
-		});
+		const [results]: [RowDataPacket[], FieldPacket[]] = await pool.query<RowDataPacket[]>(sql);
+		return results;
 	}
 
-	static getAllXCat(data: any) {
-		return new Promise((resolve, reject) => {
-			const sql =
-				'SELECT p.prodId, c.catNom, c.catId, p.prodNom, p.prodDescr, p.prodImg, p.prodValCom, p.prodValVen ' +
-				'FROM producto p ' +
-				'INNER JOIN categoria c ' +
-				'ON p.catId = c.catId ' +
-				'WHERE p.catId = ?';
-			db.query(sql, [data.catId], (err, results) => {
-				if (err) {
-					reject(err);
-				} else {
-					resolve(results);
-				}
-			});
-		});
+	static async getAllXCat(data: any) {
+		const sql = `
+			SELECT p.prodId, c.catNom, c.catId, p.prodNom, p.prodDescr, p.prodImg, p.prodValCom, p.prodValVen, p.prodEst
+			FROM producto AS p
+			INNER JOIN categoria AS c
+			ON p.catId = c.catId
+			WHERE p.catId = ?
+		`;
+		const [results]: [RowDataPacket[], FieldPacket[]] = await pool.query<RowDataPacket[]>(sql, [data.catId]);
+		return results;
 	}
 
-	static getVenXProd() {
-		return new Promise((resolve, reject) => {
-			const sql = 'SELECT prodId, COUNT(prodId) cant ' + 'FROM `detventa` ' + 'GROUP BY prodId;';
-			db.query(sql, (err, res) => {
-				if (err) {
-					reject(err);
-				} else {
-					resolve(res);
-				}
-			});
-		});
+	static async getVenXProd() {
+		const sql = `
+			SELECT prodId, COUNT(prodId) cant 
+			FROM detventa 
+			GROUP BY prodId
+		`;
+		const [results]: [RowDataPacket[], FieldPacket[]] = await pool.query<RowDataPacket[]>(sql);
+		return results;
 	}
 
-	static create(data: any) {
-		return new Promise((resolve, reject) => {
-			try {
-				const sql = 'INSERT INTO producto (catId, prodNom, prodDescr, prodImg, prodValCom, prodValVen) VALUES (?, ?, ?, ?, ?, ?)';
+	static async create(data: any) {
+		const sql =
+			'INSERT INTO producto (catId, prodNom, prodDescr, prodImg, prodValCom, prodValVen, prodEst) VALUES (?, ?, ?, ?, ?, ?, ?)';
 
-				const { catId, prodNom, prodDescr, prodImg, prodValCom, prodValVen } = data;
-				db.query(sql, [catId, prodNom, prodDescr, prodImg, prodValCom, prodValVen], (err, result: any) => {
-					if (result && result.affectedRows === 1) {
-						resolve(result);
-					} else {
-						reject(err);
-					}
-				});
-			} catch (err) {
-				reject(err);
-			}
-		});
+		const { catId, prodNom, prodDescr, prodImg, prodValCom, prodValVen } = data;
+		const [result]: [ResultSetHeader, FieldPacket[]] = await pool.query<ResultSetHeader>(sql, [
+			catId,
+			prodNom,
+			prodDescr,
+			prodImg,
+			prodValCom,
+			prodValVen,
+			1,
+		]);
+		return result;
 	}
 
-	static update(data: any) {
-		return new Promise((resolve, reject) => {
-			try {
-				const sql =
-					'UPDATE producto' +
-					' ' +
-					'SET catId = ?, prodNom = ?, prodDescr = ?, prodImg = ?, prodValCom = ?, prodValVen = ?' +
-					' ' +
-					'WHERE prodId = ?';
-				const { catId, prodNom, prodDescr, prodImg, prodValCom, prodValVen, prodId } = data;
-				db.query(sql, [catId, prodNom, prodDescr, prodImg, prodValCom, prodValVen, prodId], (err, result: any) => {
-					if (result.affectedRows == 1) {
-						resolve(`Se actualizo ${result.affectedRows} registro`);
-					} else {
-						reject(err);
-					}
-				});
-			} catch (error) {
-				reject(error);
-			}
-		});
+	static async update(data: any) {
+		const sql = `
+			UPDATE producto
+			SET catId = ?, prodNom = ?, prodDescr = ?, prodImg = ?, prodValCom = ?, prodValVen = ?
+			WHERE prodId = ?
+		`;
+		const { catId, prodNom, prodDescr, prodImg, prodValCom, prodValVen, prodId } = data;
+		const [result]: [ResultSetHeader, FieldPacket[]] = await pool.query(sql, [
+			catId,
+			prodNom,
+			prodDescr,
+			prodImg,
+			prodValCom,
+			prodValVen,
+			prodId,
+		]);
+		return result;
 	}
 
-	static delete(data: any) {
-		return new Promise((resolve, reject) => {
-			try {
-				const sql = 'DELETE FROM producto WHERE prodId = ?';
-				const { prodId } = data;
+	static async delete(data: any) {
+		const sql = `
+			UPDATE producto 
+			SET prodEst = ? 
+			WHERE prodId = ?
+		`;
+		const { prodId } = data;
 
-				db.query(sql, [prodId], (err, result: any) => {
-					if (result.affectedRows == 1) {
-						resolve(`Se elimino ${result.affectedRows} registro`);
-					} else {
-						reject(err);
-					}
-				});
-			} catch (error) {
-				reject(error);
-			}
-		});
+		const [result]: [ResultSetHeader, FieldPacket[]] = await pool.query<ResultSetHeader>(sql, [0, prodId]);
+		return result;
 	}
 }
 
 export default ProductModel;
-

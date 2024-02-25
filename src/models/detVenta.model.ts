@@ -1,29 +1,18 @@
 /** @format */
 
-import { FieldPacket, RowDataPacket } from 'mysql2';
+import { FieldPacket, ResultSetHeader, RowDataPacket } from 'mysql2';
 import { db, pool } from '../config/db';
+import { DetVenta } from '../types';
 
-interface DetVenta {
-	prodId: number;
-	transacId: number;
-	cantidad: number;
-}
 export default class DetVentaModel {
-	static create(data: any) {
-		return new Promise((resolve, reject) => {
-			const sql = 'INSERT INTO detVenta (prodId, transacId, detVenCant) VALUES ?';
-			let insertItems = data.det.map((item: DetVenta) => {
-				return [item.prodId, data.transacId, item.cantidad];
-			});
-			db.query(sql, [insertItems], (err: any, resultado: any) => {
-				if (resultado?.affectedRows >= 1) {
-					resolve(resultado);
-				} else {
-					const error = new Error(err.message);
-					reject(error);
-				}
-			});
+	static async create(data: any) {
+		const sql = 'INSERT INTO detVenta (prodId, transacId, detVenCant) VALUES ?';
+		let insertItems = data.det.map((item: DetVenta) => {
+			return [item.prodId, data.transacId, item.detVentaCant];
 		});
+		console.log(insertItems);
+		const [result]: [ResultSetHeader, FieldPacket[]] = await pool.query<ResultSetHeader>(sql, [insertItems]);
+		return result;
 	}
 
 	static async getAll() {
@@ -36,20 +25,11 @@ export default class DetVentaModel {
 		return results;
 	}
 
-	static getAllXTrsId(data: any) {
-		return new Promise((resolve, reject) => {
-			const { transacId } = data;
-			const sql = 'SELECT detventaId, prodId, transacId ' + 'FROM detventa' + 'WHERE transacId=?';
+	static async getAllXTrsId(data: any) {
+		const { transacId } = data;
+		const sql = 'SELECT detventaId, prodId, transacId ' + 'FROM detventa' + 'WHERE transacId=?';
 
-			db.query(sql, [transacId], (resultado, err) => {
-				if (err) {
-					const error = new Error('No se encontraron registros');
-					reject(error);
-				} else {
-					resolve(resultado);
-				}
-			});
-		});
+		const [results]: [RowDataPacket[], FieldPacket[]] = await pool.query<RowDataPacket[]>(sql, [transacId]);
+		return results;
 	}
 }
-

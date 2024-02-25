@@ -30,6 +30,7 @@ router.post('/', verifyToken(process.env.SECRET_KEY), async (req: Request, res: 
 			transacFecha: new Date(Date.now()),
 			det: det,
 		};
+		
 		const transacResult = await TransacModel.create(transacData);
 
 		const { insertId } = transacResult;
@@ -47,8 +48,7 @@ router.get('/getAll', verifyToken(process.env.SECRET_KEY), async (req: Request, 
 	try {
 		const results = await TransacModel.getAll();
 		res.status(200).json(results);
-	} catch (_error) {
-		console.error(_error);
+	} catch (_error: any) {
 		const resError: SendError = {
 			message: _error?.message || 'Ocurrió un error inesperado al obtener los datos',
 			error: _error?.code,

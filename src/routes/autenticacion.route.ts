@@ -6,6 +6,8 @@ import bcrypt from 'bcrypt';
 import { generateToken, authToken } from '../utils/jwt';
 import transporter from '../config/mailer';
 import { verifyToken } from '../middlewares/auth';
+import { Usuario } from 'index';
+import { RowDataPacket } from 'mysql2';
 const router = express.Router();
 
 router.get('/verify', (req: Request, res: Response) => {
@@ -32,29 +34,26 @@ router.get('/verifyRefresh', (req: Request, res: Response) => {
 	}
 });
 
-router.post('/loguear', (req: Request, res: Response) => {
-	const cont = req.body;
-	UserModel.getOneXEmailXContra({
-		usuEmail: cont.usuEmail,
-	})
-		.then(async (usuario: any) => {
-			if (usuario.length !== 0 && (await bcrypt.compare(cont.usuContra, usuario[0].usuContra))) {
-				try {
-					const usuToken: string = generateToken(usuario, process.env.SECRET_KEY as string);
-					res.status(200).json({ token: usuToken, pg: usuario.paginaRuta });
-				} catch (err: any) {
-					res.status(500).json({ error: 'No se pudo generar el token', message: err });
-				}
-			} else {
-				res.status(400).json({
-					error: 'Error de autenticación',
-					message: 'No existe un usuario con las credenciales enviadas',
-				});
-			}
-		})
-		.catch((err) => {
-			res.status(500).json({ error: 'Acesso invalido Intentelo de Nuevo', message: err.message });
+router.post('/loguear', async (req: Request, res: Response) => {
+	try {
+		const cont = req.body;
+		const result = await UserModel.getOneXEmailXContra({
+			usuEmail: cont.usuEmail,
 		});
+		if (result?.length !== 0 && (await bcrypt.compare(cont.usuContra, result[0]?.usuContra))) {
+			const usuario = result[0]
+			const usuToken: string = generateToken(usuario, process.env.SECRET_KEY as string);
+			res.status(200).json({ token: usuToken, pg: usuario.paginaRuta });
+		} else {
+			res.status(400).json({
+				error: 'Error de autenticación',
+				message: 'No existe un usuario con las credenciales enviadas',
+			});
+		}
+	} catch (_error: any) {
+		console.error(_error);
+		res.status(500).json({ error: 'Acesso invalido Intentelo de Nuevo', message: _error.message });
+	}
 });
 
 router.post('/crearUsu', (req: Request, res: Response) => {
@@ -130,5 +129,3 @@ router.post('/resetPass', verifyToken(process.env.SECRET_KEY_EMAIL), async (req:
 });
 
 export default router;
-
-

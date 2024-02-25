@@ -10,7 +10,7 @@ export default class ValorModel {
 
 		const { param, domId } = data;
 
-		const [result] = await pool.query<ResultSetHeader>(sql, [param, domId]);
+		const [result]: [ResultSetHeader, FieldPacket[]] = await pool.query<ResultSetHeader>(sql, [param, domId]);
 		if (result.affectedRows !== 1) {
 			const _error: MysqlError = {
 				name: 'MysqlError',
@@ -24,23 +24,12 @@ export default class ValorModel {
 		return result;
 	}
 
-	static async getAll(): Promise<RowDataPacket[] | Valor[]> {
+	static async getAll(): Promise<RowDataPacket[]> {
 		const sql = `
 		SELECT valorId, param, domId FROM valor;
 		`;
-		const results = await pool.query<RowDataPacket[]>(sql);
-		if (!results?.length) {
-			const _error: MysqlError = {
-				message: 'No se encontró el valor',
-				name: 'NotFoundError',
-				code: 'NOTFOUND_VALOR',
-				fatal: false,
-				errno: 502,
-			};
-			throw _error;
-		}
-
-		return results[0];
+		const [results]: [RowDataPacket[], FieldPacket[]] = await pool.query<RowDataPacket[]>(sql);
+		return results;
 	}
 
 	static async getOne(valorId: number): Promise<RowDataPacket[]> {
