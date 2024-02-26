@@ -73,7 +73,7 @@ router.put('/actualizar', verifyToken(process.env.SECRET_KEY), async (req: Reque
 	}
 });
 // http://localhost:5000/api/usuario/borrar/#
-router.delete('/borrar/:usuId', verifyToken(process.env.SECRET_KEY), async (req: Request, res: Response) => {
+router.delete('/eliminar/:usuId', verifyToken(process.env.SECRET_KEY), async (req: Request, res: Response) => {
 	try {
 		const cont = req.params;
 		const respuesta = await UserModel.delete(cont);

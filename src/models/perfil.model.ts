@@ -1,6 +1,6 @@
 /** @format */
 
-import { Perfil } from 'index';
+import { Pagina, Perfil } from 'index';
 import { db, pool } from '../config/db';
 import { FieldPacket, ResultSetHeader, RowDataPacket } from 'mysql2';
 
@@ -32,6 +32,26 @@ class Mpef {
 		const sql = 'DELETE FROM perfil WHERE perfilId = ?';
 
 		const [result]: [ResultSetHeader, FieldPacket[]] = await pool.query<ResultSetHeader>(sql, [data.perfilId]);
+		return result;
+	}
+
+	static async createPxP(data: Perfil & Pagina) {
+		const sql = 'INSERT INTO perxpag(paginaId,perfilId) VALUES (?,?)';
+		const [result]: [ResultSetHeader, FieldPacket[]] = await pool.query(sql, [data.paginaId, data.perfilId]);
+		return result;
+	}
+
+	static async delPxP(perfilId: number | string) {
+		const sql = 'DELETE FROM perxpag WHERE perfilId = ?';
+
+		const [result]: [ResultSetHeader, FieldPacket[]] = await pool.query(sql, [perfilId]);
+		return result;
+	}
+
+	static async selPxp(perfilId: number | string) {
+		const sql = 'SELECT paginaId FROM perxpag WHERE perfilId = ?';
+
+		const [result]: [ResultSetHeader, FieldPacket[]] = await pool.query<ResultSetHeader>(sql, [perfilId]);
 		return result;
 	}
 }

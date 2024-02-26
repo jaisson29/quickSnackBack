@@ -31,7 +31,7 @@ router.post('/create', verifyToken(process.env.SECRET_KEY), async (req: Request,
 	}
 });
 
-router.put('/update', verifyToken(process.env.SECRET_KEY), async (req: Request, res: Response) => {
+router.put('/actualizar', verifyToken(process.env.SECRET_KEY), async (req: Request, res: Response) => {
 	const cont = req.body;
 	try {
 		const update = await PaginaModel.update(cont);
@@ -41,7 +41,7 @@ router.put('/update', verifyToken(process.env.SECRET_KEY), async (req: Request, 
 	}
 });
 
-router.delete('/delete/:paginaId', verifyToken(process.env.SECRET_KEY), async (req: Request, res: Response) => {
+router.delete('/eliminar/:paginaId', verifyToken(process.env.SECRET_KEY), async (req: Request, res: Response) => {
 	const cont = req.params;
 	try {
 		const resultado = await PaginaModel.delete({

@@ -6,7 +6,7 @@ import { ResultSetHeader, RowDataPacket } from 'mysql2';
 const router = express.Router();
 
 //create endpoint
-router.post('/', async (req: Request, res: Response) => {
+router.post('/crear', async (req: Request, res: Response) => {
 	try {
 		const cont: Proveedor = req.body;
 		const result: ResultSetHeader = await ProveedorModel.create(cont);
@@ -23,7 +23,7 @@ router.post('/', async (req: Request, res: Response) => {
 });
 
 // getAll endpoint
-router.get('/', async (req: Request, res: Response) => {
+router.get('/getAll', async (req: Request, res: Response) => {
 	try {
 		const proveedores = await ProveedorModel.getAll();
 		return res.status(200).json(proveedores);
@@ -38,7 +38,7 @@ router.get('/', async (req: Request, res: Response) => {
 });
 
 // getOne endpoint
-router.get('/:provId', async (req: Request, res: Response) => {
+router.get('/getOne/:provId', async (req: Request, res: Response) => {
 	try {
 		const cont = req.params;
 		const proveedor = await ProveedorModel.getOne(Number(cont.provId));
@@ -55,7 +55,7 @@ router.get('/:provId', async (req: Request, res: Response) => {
 });
 
 // update endpoint
-router.put('/', async (req: Request, res: Response) => {
+router.put('/actualizar', async (req: Request, res: Response) => {
 	try {
 		const cont: Proveedor = req.body;
 		const result = await ProveedorModel.update(cont);
@@ -71,7 +71,7 @@ router.put('/', async (req: Request, res: Response) => {
 });
 
 // delete endpoint
-router.delete('/:provId', async (req: Request, res: Response) => {
+router.delete('/eliminar/:provId', async (req: Request, res: Response) => {
 	try {
 		const cont: Proveedor = req.params;
 		const result = await ProveedorModel.delete(Number(cont.provId));
@@ -87,4 +87,3 @@ router.delete('/:provId', async (req: Request, res: Response) => {
 });
 
 export default router;
-

@@ -6,7 +6,7 @@ import { ResultSetHeader, RowDataPacket } from 'mysql2';
 const router = express.Router();
 
 //create endpoint
-router.post('/', async (req: Request, res: Response) => {
+router.post('/crear', async (req: Request, res: Response) => {
 	try {
 		const cont: Dominio = req.body;
 		const result: ResultSetHeader = await DominioModel.create(cont);
@@ -22,7 +22,7 @@ router.post('/', async (req: Request, res: Response) => {
 });
 
 // getAll endpoint
-router.get('/', async (req: Request, res: Response) => {
+router.get('/getAll', async (req: Request, res: Response) => {
 	try {
 		const dominios: Dominio[] | RowDataPacket[] = await DominioModel.getAll();
 		return res.status(200).json(dominios);
@@ -37,7 +37,7 @@ router.get('/', async (req: Request, res: Response) => {
 });
 
 // getOne endpoint
-router.get('/:domId', async (req: Request, res: Response) => {
+router.get('/getOne/:domId', async (req: Request, res: Response) => {
 	try {
 		const cont = req.params;
 		const proveedor = await DominioModel.getOne(Number(cont.domId));
@@ -54,7 +54,7 @@ router.get('/:domId', async (req: Request, res: Response) => {
 });
 
 // update endpoint
-router.put('/', async (req: Request, res: Response) => {
+router.put('/actualizar', async (req: Request, res: Response) => {
 	try {
 		const cont: Dominio = req.body;
 		const result = await DominioModel.update(cont);
@@ -70,7 +70,7 @@ router.put('/', async (req: Request, res: Response) => {
 });
 
 // delete endpoint
-router.delete('/:domId', async (req: Request, res: Response) => {
+router.delete('/eliminar/:domId', async (req: Request, res: Response) => {
 	try {
 		const cont: Dominio = req.params;
 		const result = await DominioModel.delete(Number(cont.domId));

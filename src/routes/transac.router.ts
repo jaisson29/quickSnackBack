@@ -17,7 +17,7 @@ interface Venta {
 }
 
 //Endpoint para crear una transaccion
-router.post('/', verifyToken(process.env.SECRET_KEY), async (req: Request, res: Response) => {
+router.post('/crear', verifyToken(process.env.SECRET_KEY), async (req: Request, res: Response) => {
 	try {
 		const cont: Venta = req.body;
 		const { usuId, transacTipo, det } = cont;

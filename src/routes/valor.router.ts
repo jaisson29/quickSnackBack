@@ -6,7 +6,7 @@ import { ResultSetHeader, RowDataPacket } from 'mysql2';
 const router = express.Router();
 
 //create endpoint
-router.post('/', async (req: Request, res: Response) => {
+router.post('/crear', async (req: Request, res: Response) => {
 	try {
 		const cont: Valor = req.body;
 		const result: ResultSetHeader = await ValorModel.create(cont);
@@ -23,7 +23,7 @@ router.post('/', async (req: Request, res: Response) => {
 });
 
 // getAll endpoint
-router.get('/', async (req: Request, res: Response) => {
+router.get('/getAll', async (req: Request, res: Response) => {
 	try {
 		const Valores: Valor[] | RowDataPacket[] = await ValorModel.getAll();
 		return res.status(200).json(Valores);
@@ -38,7 +38,7 @@ router.get('/', async (req: Request, res: Response) => {
 });
 
 // getOne endpoint
-router.get('/:valorId', async (req: Request, res: Response) => {
+router.get('/getOne/:valorId', async (req: Request, res: Response) => {
 	try {
 		const cont = req.params;
 		const Valor = await ValorModel.getOne(Number(cont.valorId));
@@ -55,7 +55,7 @@ router.get('/:valorId', async (req: Request, res: Response) => {
 });
 
 // update endpoint
-router.put('/', async (req: Request, res: Response) => {
+router.put('/actualizar', async (req: Request, res: Response) => {
 	try {
 		const cont: Valor = req.body;
 		const result = await ValorModel.update(cont);
@@ -71,7 +71,7 @@ router.put('/', async (req: Request, res: Response) => {
 });
 
 // delete endpoint
-router.delete('/:valorId', async (req: Request, res: Response) => {
+router.delete('/eliminar/:valorId', async (req: Request, res: Response) => {
 	try {
 		const cont: Valor = req.params;
 		const result = await ValorModel.delete(Number(cont.valorId));
@@ -86,4 +86,3 @@ router.delete('/:valorId', async (req: Request, res: Response) => {
 });
 
 export default router;
-

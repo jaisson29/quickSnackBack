@@ -28,7 +28,7 @@ router.post('/create', verifyToken(process.env.SECRET_KEY), async (req: Request,
 		});
 	}
 });
-router.put('/update', verifyToken(process.env.SECRET_KEY), async (req: Request, res: Response) => {
+router.put('/actualizar', verifyToken(process.env.SECRET_KEY), async (req: Request, res: Response) => {
 	const cont = req.body;
 	try {
 		const update = await Mcat.update(cont);
@@ -38,7 +38,7 @@ router.put('/update', verifyToken(process.env.SECRET_KEY), async (req: Request, 
 	}
 });
 
-router.delete('/delete/:catId', verifyToken(process.env.SECRET_KEY), async (req: Request, res: Response) => {
+router.delete('/eliminar/:catId', verifyToken(process.env.SECRET_KEY), async (req: Request, res: Response) => {
 	const cont = req.params;
 	try {
 		const del = await Mcat.delete({
@@ -59,4 +59,5 @@ router.get('/getmxp', async (req: Request, res: Response) => {
 		res.json(error);
 	}
 });
+
 export default router;
