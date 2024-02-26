@@ -70,14 +70,14 @@ export interface Valor {
 }
 
 export interface Pagina {
-	paginaId?: number;
+	paginaId?: number | String;
 	paginaNom?: string;
 	paginaIcon?: string;
 	paginaRuta?: string;
 }
 
 export interface Perfil {
-	perfilId?: number;
+	perfilId?: number | String;
 	perfilNom?: string;
 	paginaRuta?: string;
 }

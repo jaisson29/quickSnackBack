@@ -2,34 +2,21 @@ import UserModel from '../models/user.model';
 import { verifyToken } from '../middlewares/auth';
 import { Usuario } from 'index';
 import express, { Request, Response } from 'express';
-import multer from 'multer';
 import bcrypt from 'bcrypt';
+import { upload } from '../utils/storage';
 
 const router = express.Router();
 
-const storage = multer.diskStorage({
-	destination: function (req: Request, file, cb) {
-		cb(null, 'uploads');
-	},
-	filename: function (req: Request, file, cb) {
-		const ext = file.originalname.split('.').pop();
-		cb(null, `prod_${req.body.prodId}.${ext}`);
-	},
-});
-
-const upload = multer({ storage: storage });
-
-router.get('/getAll', verifyToken(process.env.SECRET_KEY), (req: Request, res: Response) => {
-	UserModel.getAll()
-		.then((users) => {
-			res.status(200).json(users);
-		})
-		.catch((error) => {
-			res.status(400).json({
-				error: 'Fallo en intentar obtener los usuarios',
-				mesage: error,
-			});
+router.get('/getAll', verifyToken(process.env.SECRET_KEY), async (req: Request, res: Response) => {
+	try {
+		const users = await UserModel.getAll();
+		res.status(200).json(users);
+	} catch (_error: any) {
+		res.status(400).json({
+			error: 'Fallo en intentar obtener los usuarios',
+			mesage: _error?.message,
 		});
+	}
 });
 
 router.post('/getOne', verifyToken(process.env.SECRET_KEY), async (req: Request, res: Response) => {
@@ -41,61 +28,65 @@ router.post('/getOne', verifyToken(process.env.SECRET_KEY), async (req: Request,
 		}
 		res.status(200).json(result);
 	} catch (_error: any) {
-		console.error(_error)
+		console.error(_error);
 		res.status(500).json({ error: 'Fallo en intentar buscar al usuario', message: _error?.message });
 	}
 });
 
-router.post('/crear', verifyToken(process.env.SECRET_KEY), upload.single('usuImg'), async (req: Request, res: Response) => {
+router.post(
+	'/crear',
+	verifyToken(process.env.SECRET_KEY),
+	upload.single('usuImg'),
+	async (req: Request, res: Response) => {
+		try {
+			const cont: Usuario = req.body;
+			const imgPath: string =
+				req.file?.originalname ?? (cont.usuGen === 1 ? 'icon-male-100-png' : 'icon-female-100.png');
+			const hashedPass: string = await bcrypt.hash(cont?.usuContra!, 10);
+
+			const usuData: Usuario = {
+				...cont,
+				usuContra: hashedPass,
+				usuImg: imgPath,
+			};
+
+			const result = await UserModel.create(usuData);
+
+			res.status(200).json({ message: 'Registro realizado exitosamente', id: result.insertId });
+		} catch (_error: any) {
+			console.error(_error);
+			res.status(400).json({ error: _error.code, message: _error.message });
+		}
+	},
+);
+
+router.put('/actualizar', verifyToken(process.env.SECRET_KEY), async (req: Request, res: Response) => {
 	try {
-		const cont: Usuario = req.body;
-		const imgPath: string = req.file?.originalname ?? (cont.usuGen === 1 ? 'icon-male-100-png' : 'icon-female-100.png');
-		const hashedPass: string = await bcrypt.hash(cont?.usuContra!, 10);
-
-		const usuData: Usuario = {
-			...cont,
-			usuContra: hashedPass,
-			usuImg: imgPath,
-		};
-
-		const result = await UserModel.create(usuData);
-
-		res.status(200).json({ message: 'Registro realizado exitosamente', id: result.insertId });
+		const cont = req.body;
+		const respuesta = await UserModel.update(cont);
+		res.status(200).json({
+			message: 'Usuario actualizado correctamente',
+			content: respuesta,
+		});
 	} catch (_error: any) {
-		console.error(_error);
-		res.status(400).json({ error: _error.code, message: _error.message });
+		res.status(500).json({ error: 'No se pudo actualizar a el usuario', message: _error?.message });
 	}
 });
-
-router.put('/actualizar', verifyToken(process.env.SECRET_KEY), (req: Request, res: Response) => {
-	const cont = req.body;
-	UserModel.update(cont)
-		.then((respuesta) => {
-			res.status(200).json({
-				message: 'Usuario actualizado correctamente',
-				content: respuesta,
-			});
-		})
-		.catch((err) => {
-			res.status(500).json({ error: 'No se pudo actualizar a el usuario', message: err.message });
-		});
-});
 // http://localhost:5000/api/usuario/borrar/#
-router.delete('/borrar/:usuId', verifyToken(process.env.SECRET_KEY), (req: Request, res: Response) => {
-	const cont = req.params;
-	UserModel.delete(cont)
-		.then((respuesta) => {
-			res.status(200).json({
-				message: 'Usuario eliminado',
-				content: respuesta,
-			});
-		})
-		.catch((err) => {
-			res.status(400).json({
-				error: 'Error al eliminar al usuario',
-				message: err,
-			});
+router.delete('/borrar/:usuId', verifyToken(process.env.SECRET_KEY), async (req: Request, res: Response) => {
+	try {
+		const cont = req.params;
+		const respuesta = await UserModel.delete(cont);
+		res.status(200).json({
+			message: 'Usuario eliminado',
+			content: respuesta,
 		});
+	} catch (_error: any) {
+		res.status(400).json({
+			error: 'Error al eliminar al usuario',
+			message: _error.message,
+		});
+	}
 });
 
 export default router;

@@ -41,7 +41,7 @@ router.post('/loguear', async (req: Request, res: Response) => {
 			usuEmail: cont.usuEmail,
 		});
 		if (result?.length !== 0 && (await bcrypt.compare(cont.usuContra, result[0]?.usuContra))) {
-			const usuario = result[0]
+			const usuario = result[0];
 			const usuToken: string = generateToken(usuario, process.env.SECRET_KEY as string);
 			res.status(200).json({ token: usuToken, pg: usuario.paginaRuta });
 		} else {
@@ -56,30 +56,29 @@ router.post('/loguear', async (req: Request, res: Response) => {
 	}
 });
 
-router.post('/crearUsu', (req: Request, res: Response) => {
-	const cont = req.body;
+router.post('/crearUsu', async (req: Request, res: Response) => {
+	try {
+		const cont = req.body;
 
-	UserModel.create({
-		...cont,
-		usuIngreso: new Date(),
-		perfilId: 2,
-	})
-		.then((usuario) => {
-			res.status(200).json({ response: usuario, message: 'Usuario creado exitosamente' });
-		})
-		.catch((error) => {
-			if (error.code === 'ER_DUP_ENTRY') {
-				res.status(400).json({
-					error: 'Ya existe un usuario registrado con este numero de documento o correo electronico',
-					message: error,
-				});
-			} else {
-				res.status(401).json({
-					error: 'Faltan credenciales para crear al usuario',
-					message: error,
-				});
-			}
+		const usuario = await UserModel.create({
+			...cont,
+			usuIngreso: new Date(),
+			perfilId: 2,
 		});
+		res.status(200).json({ response: usuario, message: 'Usuario creado exitosamente' });
+	} catch (_error: any) {
+		if (_error?.code === 'ER_DUP_ENTRY') {
+			res.status(400).json({
+				error: 'Ya existe un usuario registrado con este numero de documento o correo electronico',
+				message: _error?.message,
+			});
+		} else {
+			res.status(401).json({
+				error: 'Faltan credenciales para crear al usuario',
+				message: _error?.message,
+			});
+		}
+	}
 });
 
 router.post('/forgotPass', async (req: Request, res: Response) => {

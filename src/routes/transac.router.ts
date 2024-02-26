@@ -30,7 +30,7 @@ router.post('/', verifyToken(process.env.SECRET_KEY), async (req: Request, res: 
 			transacFecha: new Date(Date.now()),
 			det: det,
 		};
-		
+
 		const transacResult = await TransacModel.create(transacData);
 
 		const { insertId } = transacResult;
@@ -57,24 +57,20 @@ router.get('/getAll', verifyToken(process.env.SECRET_KEY), async (req: Request, 
 	}
 });
 
-router.get('/getByUser/:usuId', verifyToken(process.env.SECRET_KEY), (req: Request, res: Response) => {
-	const cont = req.params;
-	TransacModel.getByUser(Number(cont.usuId))
-		.then((respuesta: any) => {
-			if (respuesta.length === 0) {
-				res.status(204).json(respuesta);
-			} else {
-				res.status(200).json(respuesta);
-			}
-		})
-		.catch((err) => {
-			console.error(err);
-			res.status(500).json({ error: err.message, mensaje: err.name, codigo: err.cod });
-		});
+router.get('/getByUser/:usuId', verifyToken(process.env.SECRET_KEY), async (req: Request, res: Response) => {
+	try {
+		const cont = req.params;
+		const respuesta = await TransacModel.getByUser(Number(cont.usuId));
+		if (respuesta.length === 0) {
+			res.status(204).json(respuesta);
+		} else {
+			res.status(200).json(respuesta);
+		}
+	} catch (_error: any) {
+		console.error(_error);
+		res.status(500).json({ error: _error.message, mensaje: _error.name });
+	}
 });
 
-router.put('/', async () => {
-	
-})
 
 export default router;

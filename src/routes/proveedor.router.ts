@@ -25,7 +25,7 @@ router.post('/', async (req: Request, res: Response) => {
 // getAll endpoint
 router.get('/', async (req: Request, res: Response) => {
 	try {
-		const proveedores: Proveedor[] | RowDataPacket[] = await ProveedorModel.getAll();
+		const proveedores = await ProveedorModel.getAll();
 		return res.status(200).json(proveedores);
 	} catch (_error: any) {
 		console.error(_error);

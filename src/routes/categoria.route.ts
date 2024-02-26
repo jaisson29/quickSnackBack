@@ -16,18 +16,17 @@ router.get('/getAll', verifyToken(process.env.SECRET_KEY), async (req: Request, 
 });
 
 router.post('/create', verifyToken(process.env.SECRET_KEY), async (req: Request, res: Response) => {
-	const cont = req.body;
-	Mcat.create(cont)
-		.then((create) => {
-			res.json(create);
-		})
-		.catch((error) => {
-			res.json({
-				code: 500,
-				error: 'Fallo la creacion de la categoria',
-				message: error,
-			});
+	try {
+		const cont = req.body;
+		const respuesta = await Mcat.create(cont);
+		res.json(respuesta);
+	} catch (_error: any) {
+		res.json({
+			code: 500,
+			error: 'Fallo la creacion de la categoria',
+			message: _error.message,
 		});
+	}
 });
 router.put('/update', verifyToken(process.env.SECRET_KEY), async (req: Request, res: Response) => {
 	const cont = req.body;
@@ -53,13 +52,11 @@ router.delete('/delete/:catId', verifyToken(process.env.SECRET_KEY), async (req:
 
 router.get('/getmxp', async (req: Request, res: Response) => {
 	try {
-		Mcat.getMxP().then((result) => {
-			res.status(200).json(result);
-		});
+		const respuesta = await Mcat.getMxP();
+		res.status(200).json(respuesta);
 	} catch (error) {
 		console.log(error);
 		res.json(error);
 	}
 });
 export default router;
-
