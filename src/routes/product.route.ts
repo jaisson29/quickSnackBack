@@ -36,7 +36,7 @@ router.get('/getVenXProd', verifyToken(process.env.SECRET_KEY), async (req: Requ
 });
 
 router.post(
-	'/create',
+	'/crear',
 	verifyToken(process.env.SECRET_KEY),
 	upload.single('prodImg'),
 	async (req: Request, res: Response) => {
@@ -60,7 +60,7 @@ router.post(
 );
 
 router.put(
-	'/update',
+	'/actualizar',
 	verifyToken(process.env.SECRET_KEY),
 	upload.single('prodImg'),
 	async (req: Request, res: Response) => {
@@ -81,7 +81,7 @@ router.put(
 	},
 );
 
-router.delete('/delete/:prodId', verifyToken(process.env.SECRET_KEY), async (req: Request, res: Response) => {
+router.delete('/eliminar/:prodId', verifyToken(process.env.SECRET_KEY), async (req: Request, res: Response) => {
 	const cont = req.params;
 	try {
 		const del = await ProductModel.delete({

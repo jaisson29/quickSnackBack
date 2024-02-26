@@ -7,7 +7,7 @@ import { verifyToken } from '../middlewares/auth';
 const router = express.Router();
 
 //Obtener todas los detalles
-router.get('/', verifyToken(process.env.SECRET_KEY), async (req: Request, res: Response) => {
+router.get('/getAll', verifyToken(process.env.SECRET_KEY), async (req: Request, res: Response) => {
 	try {
 		const result: any = await DetVentaModel.getAll();
 		res.status(200).json(result);
@@ -16,7 +16,7 @@ router.get('/', verifyToken(process.env.SECRET_KEY), async (req: Request, res: R
 	}
 });
 
-router.get('/:transacId', verifyToken(process.env.SECRET_KEY), async (req: Request, res: Response) => {
+router.get('/getAll/:transacId', verifyToken(process.env.SECRET_KEY), async (req: Request, res: Response) => {
 	try {
 		const cont: any = req.params;
 		const result: any = await DetVentaModel.getAllXTrsId(cont);

@@ -7,7 +7,7 @@ import { DetVenta } from '../types';
 export default class DetVentaModel {
 	static async create(data: any) {
 		const sql = 'INSERT INTO detVenta (prodId, transacId, detVenCant) VALUES ?';
-		let insertItems = data.det.map((item: any) => {
+		const insertItems = data.det.map((item: any) => {
 			return [item.prodId, data.transacId, item.cantidad];
 		});
 		console.log(insertItems);

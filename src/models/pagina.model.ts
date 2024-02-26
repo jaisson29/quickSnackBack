@@ -3,15 +3,10 @@ import { pool } from '../config/db';
 import { FieldPacket, ResultSetHeader, RowDataPacket } from 'mysql2';
 
 class PaginaModel {
-	static async getAll(data: any) {
-		const sql =
-			'SELECT pg.paginaId, pg.paginaNom, pg.paginaIcon, pg.paginaRuta, pxp.perfilId ' +
-			'FROM pagina pg ' +
-			'INNER JOIN perxpag pxp ' +
-			'ON pg.paginaId = pxp.paginaId ' +
-			'WHERE perfilId = ?';
+	static async getAll() {
+		const sql = 'SELECT * FROM pagina';
 
-		const [results]: [RowDataPacket[], FieldPacket[]] = await pool.query<RowDataPacket[]>(sql, [data.perfilId]);
+		const [results]: [RowDataPacket[], FieldPacket[]] = await pool.query<RowDataPacket[]>(sql);
 		return results;
 	}
 

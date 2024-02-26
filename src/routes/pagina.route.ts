@@ -9,8 +9,17 @@ const router = express.Router();
 
 router.get('/getAll', async (req: Request, res: Response) => {
 	try {
-		const cont = req.params;
-		const paginas = await PaginaModel.getAll(cont);
+		const paginas = await PaginaModel.getAll();
+		res.json(paginas);
+	} catch (error) {
+		res.json(error);
+	}
+});
+
+router.get('/getPefPag/:perfilId', async (req: Request, res: Response) => {
+	try {
+		const cont: any = req.params;
+		const paginas = await PaginaModel.getPefPag(cont.perfilId);
 		res.json(paginas);
 	} catch (error) {
 		res.json(error);
@@ -31,7 +40,7 @@ router.post('/create', verifyToken(process.env.SECRET_KEY), async (req: Request,
 	}
 });
 
-router.put('/update', verifyToken(process.env.SECRET_KEY), async (req: Request, res: Response) => {
+router.put('/actualizar', verifyToken(process.env.SECRET_KEY), async (req: Request, res: Response) => {
 	const cont = req.body;
 	try {
 		const update = await PaginaModel.update(cont);
@@ -41,7 +50,7 @@ router.put('/update', verifyToken(process.env.SECRET_KEY), async (req: Request, 
 	}
 });
 
-router.delete('/delete/:paginaId', verifyToken(process.env.SECRET_KEY), async (req: Request, res: Response) => {
+router.delete('/eliminar/:paginaId', verifyToken(process.env.SECRET_KEY), async (req: Request, res: Response) => {
 	const cont = req.params;
 	try {
 		const resultado = await PaginaModel.delete({

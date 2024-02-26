@@ -60,11 +60,18 @@ router.post('/crearUsu', async (req: Request, res: Response) => {
 	try {
 		const cont = req.body;
 
-		const usuario = await UserModel.create({
+		const hashedPass = await bcrypt.hash(cont.usuContra, 10);
+		
+		const usuData = {
 			...cont,
 			usuIngreso: new Date(),
 			perfilId: 2,
-		});
+			usuEst: 1,
+			usuContra: hashedPass,
+		};
+
+		const usuario = await UserModel.create(usuData);
+
 		res.status(200).json({ response: usuario, message: 'Usuario creado exitosamente' });
 	} catch (_error: any) {
 		if (_error?.code === 'ER_DUP_ENTRY') {

@@ -9,7 +9,7 @@ class UserModel {
 			'SELECT usu.usuId, usu.usuTipoDoc, usu.usuNoDoc , usu.usuGen, usu.usuNom, usu.usuEmail, usu.usuContra, usu.usuIngreso, usu.usuImg, per.perfilNom, usu.usuKey ' +
 			'FROM usuario AS usu ' +
 			'INNER JOIN perfil AS per ' +
-			'ON usu.perfilId = per.perfilId ';
+			'ON usu.perfilId = per.perfilId WHERE usuEst=1';
 		const [results]: [RowDataPacket[], FieldPacket[]] = await pool.query<RowDataPacket[]>(sql);
 		if (results.length === 0) {
 			const _error: MysqlError = {

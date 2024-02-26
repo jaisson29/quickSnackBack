@@ -39,7 +39,7 @@ app.use('/api/dominio/', DominioRouter);
 app.use('/api/valor/', ValorRouter);
 
 app.use((_error: Error, req: Request, res: Response, next: NextFunction) => {
-	console.error(_error)
+	console.error(_error);
 	const globalError: SendError = {
 		message: 'Algo salio mal en la aplicación, intentelo mas tarde',
 		error: _error.message,
@@ -48,4 +48,3 @@ app.use((_error: Error, req: Request, res: Response, next: NextFunction) => {
 });
 
 export default app;
-

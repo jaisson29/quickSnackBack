@@ -1,6 +1,6 @@
 /** @format */
 
-import { Perfil } from 'index';
+import { Pagina, Perfil } from 'index';
 import { db, pool } from '../config/db';
 import { FieldPacket, ResultSetHeader, RowDataPacket } from 'mysql2';
 
@@ -32,6 +32,36 @@ class Mpef {
 		const sql = 'DELETE FROM perfil WHERE perfilId = ?';
 
 		const [result]: [ResultSetHeader, FieldPacket[]] = await pool.query<ResultSetHeader>(sql, [data.perfilId]);
+		return result;
+	}
+
+	static async createPxP(data: any) {
+		const queryData = data.pxp.map((paginaId: any) => {
+			return [parseInt(paginaId), parseInt(data.perfilId)];
+		});
+		console.log(queryData);
+		const sql = 'INSERT INTO perxpag(paginaId,perfilId) VALUES ?';
+		const [result]: [ResultSetHeader, FieldPacket[]] = await pool.query<ResultSetHeader>(sql, [queryData]);
+		return result;
+	}
+
+	static async delPxP(perfilId: number | string) {
+		const sql = 'DELETE FROM perxpag WHERE perfilId = ?';
+
+		const [result]: [ResultSetHeader, FieldPacket[]] = await pool.query(sql, [perfilId]);
+		return result;
+	}
+
+	static async selPxp() {
+		const sql = 'SELECT paginaId, perfilId FROM perxpag';
+
+		const [result]: [ResultSetHeader, FieldPacket[]] = await pool.query<ResultSetHeader>(sql);
+		return result;
+	}
+	static async selPxpId(perfilId: number | string) {
+		const sql = 'SELECT paginaId, perfilId FROM perxpag WHERE perfilId = ?';
+
+		const [result]: [ResultSetHeader, FieldPacket[]] = await pool.query<ResultSetHeader>(sql, [perfilId]);
 		return result;
 	}
 }

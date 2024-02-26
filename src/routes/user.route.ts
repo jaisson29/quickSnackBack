@@ -26,7 +26,7 @@ router.post('/getOne', verifyToken(process.env.SECRET_KEY), async (req: Request,
 		if (result.length === 0) {
 			res.status(500).json({ message: 'No se encontraron datos' });
 		}
-		res.status(200).json(result);
+		res.status(200).json(result[0]);
 	} catch (_error: any) {
 		console.error(_error);
 		res.status(500).json({ error: 'Fallo en intentar buscar al usuario', message: _error?.message });
@@ -73,7 +73,7 @@ router.put('/actualizar', verifyToken(process.env.SECRET_KEY), async (req: Reque
 	}
 });
 // http://localhost:5000/api/usuario/borrar/#
-router.delete('/borrar/:usuId', verifyToken(process.env.SECRET_KEY), async (req: Request, res: Response) => {
+router.delete('/eliminar/:usuId', verifyToken(process.env.SECRET_KEY), async (req: Request, res: Response) => {
 	try {
 		const cont = req.params;
 		const respuesta = await UserModel.delete(cont);
