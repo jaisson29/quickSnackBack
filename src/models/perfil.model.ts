@@ -1,6 +1,7 @@
 /** @format */
 
 import { Pagina, Perfil } from 'index';
+import { Pagina, Perfil } from 'index';
 import { db, pool } from '../config/db';
 import { FieldPacket, ResultSetHeader, RowDataPacket } from 'mysql2';
 
