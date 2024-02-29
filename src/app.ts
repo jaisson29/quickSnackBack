@@ -1,5 +1,5 @@
 import express, { Application, Request, Response, NextFunction } from 'express';
-import cors from 'cors';
+import cors, { CorsOptions } from 'cors';
 import ProductRoutes from './routes/product.route';
 import UserRoutes from './routes/user.route';
 import PaginaRoutes from './routes/pagina.route';
@@ -18,12 +18,17 @@ import { SendError } from './types';
 //instancias
 const app: Application = express();
 
-app.use('/uploads', express.static('uploads'));
-
 app.use(morgan('dev'));
 
-app.use(cors());
+const corsOptions: CorsOptions = {
+	origin: [process.env.FRONT_URL!],
+};
+
+
+app.use(cors(corsOptions));
 app.use(express.json());
+
+app.use('/uploads', express.static('uploads'));
 
 app.use('/api/perfil/', PerfilRoutes);
 app.use('/api/compra/', CompraRoutes);

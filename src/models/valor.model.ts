@@ -26,7 +26,10 @@ export default class ValorModel {
 
 	static async getAll(): Promise<RowDataPacket[]> {
 		const sql = `
-		SELECT valorId, param, domId FROM valor;
+		SELECT v.valorId, v.param, v.domId, d.domNom 
+		FROM valor AS v 
+		INNER JOIN dominio AS d 
+		ON v.domId = d.domId
 		`;
 		const [results]: [RowDataPacket[], FieldPacket[]] = await pool.query<RowDataPacket[]>(sql);
 		return results;
@@ -110,4 +113,3 @@ export default class ValorModel {
 		return result;
 	}
 }
-
