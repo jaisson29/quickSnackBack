@@ -25,6 +25,7 @@ const poolConfig: PoolOptions = {
 	database: process.env.DB,
 	user: process.env.DB_USER,
 	password: process.env.DB_PASS,
+	port: port,
 	connectionLimit: 20,
 };
 const pool = mysql2.createPool(poolConfig);
