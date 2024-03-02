@@ -20,12 +20,11 @@ const app: Application = express();
 
 app.use(morgan('dev'));
 
-const corsOptions: CorsOptions = {
-	origin: [process.env.FRONT_URL!],
-};
-
-
-app.use(cors(corsOptions));
+// const corsOptions: CorsOptions = {
+// origin: [process.env.FRONT_URL!],
+// };
+// app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json());
 
 app.use('/uploads', express.static('uploads'));
