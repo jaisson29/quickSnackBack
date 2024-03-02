@@ -10,10 +10,11 @@ class CompraModel {
 	}
 
 	static async create(data: Compra): Promise<ResultSetHeader> {
-		const sql = 'INSERT INTO compra (provId, fechaCompra) VALUES (?, ?)';
+		const sql = 'INSERT INTO compra (provId, fechaCompra, compraEst) VALUES (?, ?, ?)';
 		const { provId, fechaCompra } = data;
-		const [result] = await pool.query<ResultSetHeader>(sql, [provId, fechaCompra]);
-		if (result.affectedRows === 1) {
+		const [result] = await pool.query<ResultSetHeader>(sql, [provId, fechaCompra, 1]);
+		console.log(result)
+		if (result.affectedRows === 0) {
 			const _error: MysqlError = {
 				name: 'MysqlError',
 				code: 'ER_NOT_CREATED_ERROR',

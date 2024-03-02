@@ -89,6 +89,7 @@ export default class DominioModel {
 
 		const [result]: [ResultSetHeader, FieldPacket[]] = await pool.query<ResultSetHeader>(sql, [...values, domId]);
 
+		console.log(result)
 		if (result.affectedRows === 0) {
 			const _error: MysqlError = {
 				message: 'No se pudo actualizar el dominio',

@@ -13,17 +13,21 @@ class Mpef {
 	}
 
 	static async create(data: Perfil) {
-		const sql = 'INSERT INTO perfil ( perfilNom ) VALUES (?)';
+		const sql = 'INSERT INTO perfil ( perfilNom, paginaRuta ) VALUES (?, ?)';
 
-		const [result]: [ResultSetHeader, FieldPacket[]] = await pool.query<ResultSetHeader>(sql, [data.perfilNom]);
+		const [result]: [ResultSetHeader, FieldPacket[]] = await pool.query<ResultSetHeader>(sql, [
+			data.perfilNom,
+			data.paginaRuta,
+		]);
 		return result;
 	}
 
 	static async update(data: any) {
-		const sql = 'UPDATE perfil' + ' ' + 'SET perfilNom = ?' + ' ' + 'WHERE perfilId = ?';
+		const sql = 'UPDATE perfil SET perfilNom = ?, paginaRuta = ? WHERE perfilId = ?';
 		const [result]: [ResultSetHeader, FieldPacket[]] = await pool.query<ResultSetHeader>(sql, [
-			data.perfilId,
 			data.perfilNom,
+			data.paginaRuta,
+			data.perfilId,
 		]);
 		return result;
 	}

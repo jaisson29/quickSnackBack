@@ -26,7 +26,7 @@ router.get('/getPefPag/:perfilId', async (req: Request, res: Response) => {
 	}
 });
 
-router.post('/create', verifyToken(process.env.SECRET_KEY), async (req: Request, res: Response) => {
+router.post('/crear', verifyToken(process.env.SECRET_KEY), async (req: Request, res: Response) => {
 	try {
 		const cont = req.body;
 		const resultado = await PaginaModel.create(cont);

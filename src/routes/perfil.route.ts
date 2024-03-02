@@ -35,20 +35,20 @@ router.put('/actualizar', verifyToken(process.env.SECRET_KEY), async (req: Reque
 	try {
 		const update = await Mpef.update(cont);
 		res.json(update);
-	} catch (error) {
-		res.json('Fallo la actualizacion del perfil');
+	} catch (_error: any) {
+		res.json({ error: 'Fallo la actualizacion del perfil', message: _error.message });
 	}
 });
 
 router.post('/createPxP', verifyToken(process.env.SECRET_KEY), async (req: Request, res: Response) => {
 	try {
 		const cont = req.body;
-		console.log(req.body)
+		console.log(req.body);
 		await Mpef.delPxP(cont.perfilId);
 		const result = await Mpef.createPxP(cont);
 		res.json(result);
 	} catch (error) {
-		console.error(error)
+		console.error(error);
 		res.json({
 			code: 500,
 			error: 'Fallos la creacion de la relacion',
@@ -77,7 +77,7 @@ router.get('/selPxp', async (req: Request, res: Response) => {
 });
 router.get('/selPxp/:perfilId', async (req: Request, res: Response) => {
 	try {
-		const cont = req.params
+		const cont = req.params;
 		const pagxper = await Mpef.selPxpId(cont.perfilId);
 		res.json(pagxper);
 	} catch (error) {
