@@ -15,7 +15,7 @@ router.get('/getAll', verifyToken(process.env.SECRET_KEY), async (req: Request, 
 	}
 });
 
-router.post('/create', verifyToken(process.env.SECRET_KEY), async (req: Request, res: Response) => {
+router.post('/crear', verifyToken(process.env.SECRET_KEY), async (req: Request, res: Response) => {
 	try {
 		const cont = req.body;
 		const respuesta = await Mcat.create(cont);

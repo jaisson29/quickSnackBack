@@ -115,6 +115,7 @@ class UserModel {
 	}
 
 	static async update(data: any): Promise<any> {
+		console.log(data)
 		if (!data.usuId) {
 			throw new Error('No se proporcionaron los datos necesarios');
 		}

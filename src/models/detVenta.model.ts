@@ -27,7 +27,11 @@ export default class DetVentaModel {
 
 	static async getAllXTrsId(data: any) {
 		const { transacId } = data;
-		const sql = 'SELECT detventaId, prodId, transacId ' + 'FROM detventa' + 'WHERE transacId=?';
+		const sql = `
+			SELECT detventaId, prodId, transacId 
+			FROM detventa 
+			WHERE transacId = ?
+		`;
 
 		const [results]: [RowDataPacket[], FieldPacket[]] = await pool.query<RowDataPacket[]>(sql, [transacId]);
 		return results;

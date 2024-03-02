@@ -61,7 +61,7 @@ router.post('/crearUsu', async (req: Request, res: Response) => {
 		const cont = req.body;
 
 		const hashedPass = await bcrypt.hash(cont.usuContra, 10);
-		
+
 		const usuData = {
 			...cont,
 			usuIngreso: new Date(),
@@ -96,9 +96,9 @@ router.post('/forgotPass', async (req: Request, res: Response) => {
 		}
 
 		const usuario: any = await UserModel.getOne({ usuEmail: cont.usuEmail });
-		const { usuId, usuEmail, usuNoDoc } = usuario;
+		const { usuId, usuEmail, usuNoDoc } = usuario[0];
 		const token = generateToken({ usuId, usuNoDoc, usuEmail }, process.env.SECRET_KEY_EMAIL as string);
-		await UserModel.update({ usuKey: token, usuId: usuario.usuId });
+		await UserModel.update({ usuKey: token, usuId: usuId });
 
 		await transporter.sendMail({
 			from: '"Recuperar su contraseña" <jayVal029@gmail.com>',

@@ -36,10 +36,9 @@ router.post('/crear', verifyToken(process.env.SECRET_KEY), async (req: Request, 
 
 		const { insertId } = transacResult;
 
-		const detVentaResult = await DetVenTaModel.create({ transacId: insertId, det });
+		await DetVenTaModel.create({ transacId: insertId, det });
 
-		console.log(detVentaResult);
-		res.status(200).json({ message: `Transaccion realizada correctamente con ${det.length} productos}` });
+		res.status(200).json({ message: `Transaccion realizada correctamente con ${det.length} productos}`, transacId: insertId });
 	} catch (_error: any) {
 		res.status(500).json({ message: 'Ocurrio un error al crear la transacción', error: _error.message });
 	}
