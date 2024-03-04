@@ -13,7 +13,12 @@ class TransacModel {
 
 		const { transacFecha, transacTipo, usuId } = data;
 
-		const [result]: [ResultSetHeader, FieldPacket[]] = await pool.query<ResultSetHeader>(sql, [transacFecha, transacTipo, usuId, 1]);
+		const [result]: [ResultSetHeader, FieldPacket[]] = await pool.query<ResultSetHeader>(sql, [
+			transacFecha,
+			transacTipo,
+			usuId,
+			1,
+		]);
 		if (result.affectedRows === 0) {
 			const _error: MysqlError = {
 				name: 'MysqlError',
@@ -28,13 +33,40 @@ class TransacModel {
 	}
 
 	static async getAll(): Promise<RowDataPacket[]> {
-		const sql =
-			'SELECT ts.transacId, ts.transacFecha, ts.transacTipo, ts.usuId, ts.transacEst, usu.usuNom ' +
-			'FROM transaccion ts ' +
-			'INNER JOIN usuario usu ' +
-			'ON ts.usuId = usu.usuId';
+		const sql = `
+		SELECT ts.transacId, ts.transacFecha, ts.transacTipo, ts.usuId, ts.transacEst, usu.usuNom
+		FROM transaccion ts
+		INNER JOIN usuario usu
+		ON ts.usuId = usu.usuId
+		`;
 
 		const [result]: [RowDataPacket[], FieldPacket[]] = await pool.query<RowDataPacket[]>(sql);
+		return result;
+	}
+
+	static async getAllXUser(usuId: number): Promise<RowDataPacket[]> {
+		const sql = `
+		SELECT ts.transacId, ts.transacFecha, ts.transacTipo, ts.usuId, ts.transacEst, usu.usuNom
+		FROM transaccion ts
+		INNER JOIN usuario usu
+		ON ts.usuId = usu.usuId
+		WHERE usu.usuId = ? AND (ts.transacEst = 1 OR ts.transacEst = 2)
+		`;
+
+		const [result]: [RowDataPacket[], FieldPacket[]] = await pool.query<RowDataPacket[]>(sql, [usuId]);
+		return result;
+	}
+
+	static async getOne(transacId: number): Promise<RowDataPacket[]> {
+		const sql = `
+		SELECT ts.transacId, ts.transacFecha, ts.transacTipo, ts.usuId, ts.transacEst, usu.usuNom
+		FROM transaccion ts
+		INNER JOIN usuario usu
+		ON ts.usuId = usu.usuId
+		WHERE transacId = ?
+		`;
+
+		const [result]: [RowDataPacket[], FieldPacket[]] = await pool.query<RowDataPacket[]>(sql, [transacId]);
 		return result;
 	}
 
@@ -48,7 +80,7 @@ class TransacModel {
 				ON ts.transacId = dtv.transacId
 				INNER JOIN producto AS prv
 				ON dtv.prodId = prv.prodId
-				WHERE ts.usuId = ?
+				WHERE ts.usuId = ? AND (ts.transacEst in (0,1,2))
 				GROUP BY ts.transacId, ts.transacFecha, ts.transacTipo, ts.usuId, usu.usuNom, prv.catId
 				ORDER BY ts.transacFecha
 			`;
