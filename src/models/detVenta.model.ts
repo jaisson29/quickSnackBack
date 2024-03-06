@@ -28,7 +28,7 @@ export default class DetVentaModel {
 		const { transacId } = data;
 		const sql = `
 			SELECT dt.detventaId, dt.prodId, dt.transacId, dt.detVenCant, p.prodNom, p.prodValVen, p.catId 
-			FROM detventa AS dt
+			FROM detVenta AS dt
 			INNER JOIN producto AS p 
 			ON dt.prodId = p.prodId
 			WHERE transacId = ?
