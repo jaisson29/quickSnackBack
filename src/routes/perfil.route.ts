@@ -43,12 +43,10 @@ router.put('/actualizar', verifyToken(process.env.SECRET_KEY), async (req: Reque
 router.post('/createPxP', verifyToken(process.env.SECRET_KEY), async (req: Request, res: Response) => {
 	try {
 		const cont = req.body;
-		console.log(req.body);
 		await Mpef.delPxP(cont.perfilId);
 		const result = await Mpef.createPxP(cont);
 		res.json(result);
 	} catch (error) {
-		console.error(error);
 		res.json({
 			code: 500,
 			error: 'Fallos la creacion de la relacion',

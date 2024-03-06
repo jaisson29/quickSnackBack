@@ -55,7 +55,6 @@ router.get('/getmxp', async (req: Request, res: Response) => {
 		const respuesta = await Mcat.getMxP();
 		res.status(200).json(respuesta);
 	} catch (error) {
-		console.log(error);
 		res.json(error);
 	}
 });

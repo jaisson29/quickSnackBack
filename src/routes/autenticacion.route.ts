@@ -51,7 +51,6 @@ router.post('/loguear', async (req: Request, res: Response) => {
 			});
 		}
 	} catch (_error: any) {
-		console.error(_error);
 		res.status(500).json({ error: 'Acesso invalido Intentelo de Nuevo', message: _error.message });
 	}
 });

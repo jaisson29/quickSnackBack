@@ -85,6 +85,18 @@ class ProductModel {
 		const [result]: [ResultSetHeader, FieldPacket[]] = await pool.query<ResultSetHeader>(sql, [0, prodId]);
 		return result;
 	}
+
+	static async estPrd(data: any) {
+		const sql = `
+			UPDATE producto 
+			SET prodEst = ? 
+			WHERE prodId = ?
+		`;
+		const { prodEst, prodId } = data;
+
+		const [result]: [ResultSetHeader, FieldPacket[]] = await pool.query<ResultSetHeader>(sql, [prodEst, prodId]);
+		return result;
+	}
 }
 
 export default ProductModel;

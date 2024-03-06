@@ -13,7 +13,6 @@ class CompraModel {
 		const sql = 'INSERT INTO compra (provId, fechaCompra, compraEst) VALUES (?, ?, ?)';
 		const { provId, fechaCompra } = data;
 		const [result] = await pool.query<ResultSetHeader>(sql, [provId, fechaCompra, 1]);
-		console.log(result)
 		if (result.affectedRows === 0) {
 			const _error: MysqlError = {
 				name: 'MysqlError',

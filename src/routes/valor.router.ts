@@ -13,7 +13,6 @@ router.post('/crear', async (req: Request, res: Response) => {
 		if (!result.insertId) throw new Error('No se pudo crear el valor');
 		res.status(201).json({ msg: `Valor con ID ${result.insertId} creado correctamente` });
 	} catch (_error: any) {
-		console.error(_error);
 		const resError: SendError = {
 			message: _error?.message || 'Ocurrió un error inesperado al crear el Valor',
 			error: _error?.code,
@@ -28,7 +27,6 @@ router.get('/getAll', async (req: Request, res: Response) => {
 		const Valores: Valor[] | RowDataPacket[] = await ValorModel.getAll();
 		return res.status(200).json(Valores);
 	} catch (_error: any) {
-		console.error(_error);
 		const resError: SendError = {
 			message: 'Hubo un error obteniendo la informacion del Valor',
 			error: _error?.message,
@@ -45,7 +43,6 @@ router.get('/getOne/:valorId', async (req: Request, res: Response) => {
 		if (!Valor) res.status(404).send('Valor no encontrado');
 		res.status(200).json(Valor[0]);
 	} catch (_error: any) {
-		console.error(_error);
 		const resError: SendError = {
 			message: 'Hubo un error obteniendo la informacion del Valor',
 			error: _error?.message,
@@ -61,7 +58,6 @@ router.put('/actualizar', async (req: Request, res: Response) => {
 		const result = await ValorModel.update(cont);
 		res.status(200).json({ message: `Se ha actializado ${result.affectedRows} Valor correctamente` });
 	} catch (_error: any) {
-		console.error(_error);
 		const resError = {
 			message: _error.message,
 			error: _error.name,

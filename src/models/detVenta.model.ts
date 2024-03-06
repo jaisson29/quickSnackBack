@@ -10,7 +10,6 @@ export default class DetVentaModel {
 		const insertItems = data.det.map((item: any) => {
 			return [item.prodId, data.transacId, item.cantidad];
 		});
-		console.log(insertItems);
 		const [result]: [ResultSetHeader, FieldPacket[]] = await pool.query<ResultSetHeader>(sql, [insertItems]);
 		return result;
 	}

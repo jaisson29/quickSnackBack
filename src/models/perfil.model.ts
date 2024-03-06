@@ -43,7 +43,6 @@ class Mpef {
 		const queryData = data.pxp.map((paginaId: any) => {
 			return [parseInt(paginaId), parseInt(data.perfilId)];
 		});
-		console.log(queryData);
 		const sql = 'INSERT INTO perxpag(paginaId,perfilId) VALUES ?';
 		const [result]: [ResultSetHeader, FieldPacket[]] = await pool.query<ResultSetHeader>(sql, [queryData]);
 		return result;

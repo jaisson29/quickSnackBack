@@ -13,7 +13,6 @@ router.post('/crear', async (req: Request, res: Response) => {
 		if (!result.insertId) throw new Error('No se pudo crear el proveedor');
 		res.status(201).json({ message: `Proveedor con ID ${result.insertId} creado correctamente` });
 	} catch (_error: any) {
-		console.error(_error);
 		const resError: SendError = {
 			message: _error?.message || 'Ocurrió un error inesperado al crear el proveedor',
 			error: _error?.code,
@@ -28,7 +27,6 @@ router.get('/getAll', async (req: Request, res: Response) => {
 		const proveedores = await ProveedorModel.getAll();
 		return res.status(200).json(proveedores);
 	} catch (_error: any) {
-		console.error(_error);
 		const resError: SendError = {
 			message: 'Hubo un error obteniendo la informacion del proveedor',
 			error: _error?.message,
@@ -45,7 +43,6 @@ router.get('/getOne/:provId', async (req: Request, res: Response) => {
 		if (!proveedor) res.status(404).send('Proveedor no encontrado');
 		res.status(200).json(proveedor[0]);
 	} catch (_error: any) {
-		console.error(_error);
 		const resError: SendError = {
 			message: 'Hubo un error obteniendo la informacion del proveedor',
 			error: _error?.message,
@@ -61,7 +58,6 @@ router.put('/actualizar', async (req: Request, res: Response) => {
 		const result = await ProveedorModel.update(cont);
 		res.status(200).json({ message: `Se ha actializado ${result.affectedRows} proveedor correctamente` });
 	} catch (_error: any) {
-		console.error(_error);
 		const resError = {
 			message: _error.message,
 			error: _error.name,
@@ -77,7 +73,6 @@ router.delete('/eliminar/:provId', async (req: Request, res: Response) => {
 		const result = await ProveedorModel.delete(Number(cont.provId));
 		res.status(200).json({ message: `${result.affectedRows} registro eliminado.` });
 	} catch (_error: any) {
-		console.error(_error);
 		const resError = {
 			message: _error?.message,
 			error: _error?.name,

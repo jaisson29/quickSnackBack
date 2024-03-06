@@ -11,10 +11,12 @@ function verifyToken(secretKey: string = process.env.SECRET_KEY as string) {
 		}
 
 		const decoded = jwt.verify(token, secretKey);
-		if (decoded) next();
-		else res.status(400).json({ error: 'Sesión expirada', message: 'Vuelva a inciar sesión' });
+		if (decoded) {
+			next();
+		} else {
+			res.status(401).json({ error: 'Sesión expirada', message: 'Vuelva a inciar sesión' });
+		}
 	};
 }
 
 export { verifyToken };
-

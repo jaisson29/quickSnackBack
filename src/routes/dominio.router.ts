@@ -12,7 +12,6 @@ router.post('/crear', async (req: Request, res: Response) => {
 		const result: ResultSetHeader = await DominioModel.create(cont);
 		res.status(201).json({ message: `Dominio con ID ${result.insertId} creado correctamente` });
 	} catch (_error: any) {
-		console.error(_error);
 		const resError: SendError = {
 			message: _error?.message || 'Ocurrió un error inesperado al crear el dominio',
 			error: _error?.code,
@@ -27,7 +26,6 @@ router.get('/getAll', async (req: Request, res: Response) => {
 		const dominios: Dominio[] | RowDataPacket[] = await DominioModel.getAll();
 		return res.status(200).json(dominios);
 	} catch (_error: any) {
-		console.error(_error);
 		const resError: SendError = {
 			message: 'Hubo un error obteniendo la informacion de los dominios',
 			error: _error?.message,
@@ -44,7 +42,6 @@ router.get('/getOne/:domId', async (req: Request, res: Response) => {
 		if (!proveedor) res.status(404).json({ message: 'Dominio no encontrado' });
 		res.status(200).json(proveedor[0]);
 	} catch (_error: any) {
-		console.error(_error);
 		const resError: SendError = {
 			message: 'Hubo un error obteniendo la informacion del dominio',
 			error: _error?.message,
@@ -60,7 +57,6 @@ router.put('/actualizar', async (req: Request, res: Response) => {
 		const result = await DominioModel.update(cont);
 		res.status(200).json({ message: `Se ha actializado ${result.affectedRows} dominio correctamente` });
 	} catch (_error: any) {
-		console.error(_error);
 		const resError = {
 			message: _error.message,
 			error: _error.name,
@@ -76,7 +72,6 @@ router.delete('/eliminar/:domId', async (req: Request, res: Response) => {
 		const result = await DominioModel.delete(Number(cont.domId));
 		res.status(200).json({ message: `${result.affectedRows} registro eliminado.` });
 	} catch (_error: any) {
-		console.error(_error);
 		const resError = {
 			message: _error?.message,
 			error: _error?.name,

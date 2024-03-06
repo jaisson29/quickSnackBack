@@ -28,7 +28,6 @@ router.post('/getOne', verifyToken(process.env.SECRET_KEY), async (req: Request,
 		}
 		res.status(200).json(result[0]);
 	} catch (_error: any) {
-		console.error(_error);
 		res.status(500).json({ error: 'Fallo en intentar buscar al usuario', message: _error?.message });
 	}
 });
@@ -48,13 +47,14 @@ router.post(
 				...cont,
 				usuContra: hashedPass,
 				usuImg: imgPath,
+				usuIngreso: new Date(Date.now()),
+				usuEst: 1,
 			};
 
 			const result = await UserModel.create(usuData);
 
 			res.status(200).json({ message: 'Registro realizado exitosamente', id: result.insertId });
 		} catch (_error: any) {
-			console.error(_error);
 			res.status(400).json({ error: _error.code, message: _error.message });
 		}
 	},

@@ -20,7 +20,6 @@ router.post('/crear', verifyToken(process.env.SECRET_KEY), async (req: Request, 
 	try {
 		const cont: Venta = req.body;
 		const { usuId, transacTipo, det } = cont;
-		console.log(cont);
 		if (!usuId || !transacTipo || !det) {
 			throw new Error('Faltan datos');
 		}
@@ -82,7 +81,6 @@ router.get('/getAll/:usuId', verifyToken(process.env.SECRET_KEY), async (req: Re
 
 		res.status(200).json(filteredTransac.valid);
 	} catch (_error: any) {
-		console.error(_error);
 		const resError: SendError = {
 			message: _error?.message || 'Ocurrió un error inesperado al obtener los datos',
 			error: _error?.code,
@@ -115,7 +113,6 @@ router.get('/getByUser/:usuId', verifyToken(process.env.SECRET_KEY), async (req:
 			res.status(200).json(respuesta);
 		}
 	} catch (_error: any) {
-		console.error(_error);
 		res.status(500).json({ error: _error.message, mensaje: _error.name });
 	}
 });

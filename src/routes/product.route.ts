@@ -11,8 +11,8 @@ router.get('/getAll', verifyToken(process.env.SECRET_KEY), async (req: Request, 
 	try {
 		const products = await ProductModel.getAll();
 		res.json(products);
-	} catch (error) {
-		res.json({ code: 500, error: 'Failed to load the products' });
+	} catch (error: any) {
+		res.json({ code: 500, error: 'Failed to load the products', message: error.message });
 	}
 });
 
@@ -75,6 +75,22 @@ router.put(
 			const update = await ProductModel.update(newProdData);
 
 			res.json(update);
+		} catch (error) {
+			res.json('Fallo en actualizar el registro');
+		}
+	},
+);
+
+router.put(
+	'/estado',
+	verifyToken(process.env.SECRET_KEY),
+	async (req: Request, res: Response) => {
+		const cont = req.body;
+
+		try {
+			const resultado = await ProductModel.estPrd({prodEst: cont.prodEst, prodId: cont.prodId});
+
+			res.json(resultado);
 		} catch (error) {
 			res.json('Fallo en actualizar el registro');
 		}
