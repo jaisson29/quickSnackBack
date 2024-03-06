@@ -27,8 +27,10 @@ export default class DetVentaModel {
 	static async getAllXTrsId(data: any) {
 		const { transacId } = data;
 		const sql = `
-			SELECT detventaId, prodId, transacId 
-			FROM detventa 
+			SELECT dt.detventaId, dt.prodId, dt.transacId, dt.detVenCant, p.prodNom, p.prodValVen, p.catId 
+			FROM detventa AS dt
+			INNER JOIN producto AS p 
+			ON dt.prodId = p.prodId
 			WHERE transacId = ?
 		`;
 

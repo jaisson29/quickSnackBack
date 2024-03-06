@@ -80,7 +80,7 @@ class TransacModel {
 				ON ts.transacId = dtv.transacId
 				INNER JOIN producto AS prv
 				ON dtv.prodId = prv.prodId
-				WHERE ts.usuId = ? AND (ts.transacEst in (0,1,2))
+				WHERE ts.usuId = ? AND (ts.transacEst in (1,2))
 				GROUP BY ts.transacId, ts.transacFecha, ts.transacTipo, ts.usuId, usu.usuNom, prv.catId
 				ORDER BY ts.transacFecha
 			`;

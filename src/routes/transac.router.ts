@@ -117,4 +117,14 @@ router.get('/getByUser/:usuId', verifyToken(process.env.SECRET_KEY), async (req:
 	}
 });
 
+router.get('/complete/:transacId', verifyToken(process.env.SECRET_KEY), async (req: Request, res: Response) => {
+	try {
+		const cont = req.params;
+		const respuesta = await TransacModel.complete(Number(cont.transacId));
+		res.status(204).json(respuesta);
+	} catch (_error: any) {
+		res.status(500).json({ error: _error.message, mensaje: _error.name });
+	}
+});
+
 export default router;
