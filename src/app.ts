@@ -46,12 +46,16 @@ app.use('/api/dominio/', DominioRouter);
 app.use('/api/valor/', ValorRouter);
 
 app.use((_error: Error, req: Request, res: Response, next: NextFunction) => {
-	console.error(_error);
+	console.log(_error);
 	const globalError: SendError = {
 		message: 'Algo salio mal en la aplicación, intentelo mas tarde',
 		error: _error.message,
 	};
-	res.status(500).json(globalError);
+	if (_error.name === 'TokenExpiredError' || _error.message === 'jwt expired') {
+		res.sendStatus(401);
+	} else {
+		res.status(500).json(globalError);
+	}
 });
 
 export default app;

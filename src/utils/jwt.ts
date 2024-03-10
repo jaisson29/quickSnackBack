@@ -17,7 +17,7 @@ function authToken(token: string, secretKey: string): JwtPayload | string {
 		const decoded = jwt.verify(token, secretKey);
 		return decoded;
 	} catch (e: any) {
-		console.error(e);
+		// console.error(e);
 		return e;
 	}
 }

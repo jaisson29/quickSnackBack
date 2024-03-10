@@ -50,7 +50,7 @@ class TransacModel {
 		FROM transaccion ts
 		INNER JOIN usuario usu
 		ON ts.usuId = usu.usuId
-		WHERE usu.usuId = ? AND (ts.transacEst = 1 OR ts.transacEst = 2)
+		WHERE usu.usuId = ? AND ts.transacTipo = 7 AND (ts.transacEst = 1 OR ts.transacEst = 2)
 		`;
 
 		const [result]: [RowDataPacket[], FieldPacket[]] = await pool.query<RowDataPacket[]>(sql, [usuId]);
